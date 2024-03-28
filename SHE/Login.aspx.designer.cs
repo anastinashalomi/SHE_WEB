@@ -7,11 +7,13 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace SHE {
-    
-    
-    public partial class Login {
-        
+namespace SHE
+{
+
+
+    public partial class Login
+    {
+
         /// <summary>
         /// LoginErrVisibility control.
         /// </summary>
@@ -20,7 +22,7 @@ namespace SHE {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl LoginErrVisibility;
-        
+
         /// <summary>
         /// LoginError control.
         /// </summary>
@@ -29,7 +31,7 @@ namespace SHE {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label LoginError;
-        
+
         /// <summary>
         /// Username control.
         /// </summary>
@@ -38,7 +40,7 @@ namespace SHE {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox Username;
-        
+
         /// <summary>
         /// Password control.
         /// </summary>
@@ -47,7 +49,7 @@ namespace SHE {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox Password;
-        
+
         /// <summary>
         /// LoginButton control.
         /// </summary>

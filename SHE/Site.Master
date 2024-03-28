@@ -45,10 +45,14 @@
         <nav class="navbar navbar-expand-sm bg-she">
             <div class="container-fluid">
                 <div class="d-flex align-items-center gap-2">
-                    <asp:ImageButton runat="server" ImageUrl="~/images/bee.jpg" Style="width: 55px;" class="rounded-pill" />
-                    <a runat="server" class="navbar-brand" href="~/Default.aspx">SLIC MEDI</a>
+                    
+                    <a runat="server" class="navbar-brand" href="~/Default.aspx" style="color: white;" >SLIC MEDI</a>
+
                 </div>
-                <asp:Button runat="server" CssClass="btn btn-danger" Text="Logout" ID="Logout" OnClick="Logout_Click" />
+                <asp:ImageButton runat="server" ImageUrl="~/images/ri_settings-fill.png" Style="width: 30px;" OnClick="Logout_Click" />
+            </div>
+            </div>
+                <asp:ImageButton runat="server" ImageUrl="~/images/ic_sharp-logout.png" Style="width: 30px;" OnClick="Logout_Click" />
             </div>
         </nav>
 
