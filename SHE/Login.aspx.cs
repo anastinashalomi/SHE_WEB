@@ -26,10 +26,11 @@ namespace SHE
 
             LoginAuth loginAuth = new LoginAuth();
             bool auth =  loginAuth.as400_login(username,password);
+
             if (auth)
             {
                 Session["LoggedUser"] = username;
-                Session.Timeout = 10;
+                Session.Timeout = 60;
                 Response.Redirect("~/default.aspx");
 
             }

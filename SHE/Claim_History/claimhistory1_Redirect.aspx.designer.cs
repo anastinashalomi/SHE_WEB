@@ -7,56 +7,65 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace SHE
+namespace SHE.Claim_History
 {
 
 
-    public partial class Login
+    public partial class claimhistory1_Redirect
     {
 
         /// <summary>
-        /// LoginErrVisibility control.
+        /// policyno control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl LoginErrVisibility;
+        protected global::System.Web.UI.HtmlControls.HtmlInputText policyno;
 
         /// <summary>
-        /// LoginError control.
+        /// epf control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label LoginError;
+        protected global::System.Web.UI.HtmlControls.HtmlInputText epf;
 
         /// <summary>
-        /// Username control.
+        /// error1 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox Username;
+        protected global::System.Web.UI.WebControls.Label error1;
 
         /// <summary>
-        /// Password control.
+        /// error2 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox Password;
+        protected global::System.Web.UI.WebControls.Label error2;
 
         /// <summary>
-        /// LoginButton control.
+        /// claimhist_submit control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button LoginButton;
+        protected global::System.Web.UI.WebControls.Button claimhist_submit;
+
+        /// <summary>
+        /// exitbutton control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button exitbutton;
     }
 }
