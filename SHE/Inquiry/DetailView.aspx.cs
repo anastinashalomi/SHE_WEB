@@ -125,8 +125,8 @@ namespace SHE.Inquiry
 
         protected void history_Click(object sender, EventArgs e)
         {
-            string policy = policyNo.Value.ToString();
-            string epfno = employeeNo.Value.ToString();
+            string policy = dc.Encrypt(policyNo.Value.ToString());
+            string epfno = dc.Encrypt(employeeNo.Value.ToString());
             Response.Redirect("~/Claim_History/claimhistory1_Redirect.aspx?policy=" + policy + "&epf=" + epfno);
             
         }

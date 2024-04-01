@@ -11,7 +11,9 @@ namespace SHE.App_Code.DTO
         public string AdmittedType { get; set; }
         public string PatientName { get; set; }
         public string Hospital { get; set; }
+        public string ClaimRef1 { get; set; }
 
-      
+
+
     }
 }

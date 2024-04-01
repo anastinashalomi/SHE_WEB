@@ -114,6 +114,7 @@
     <Content Include="About.aspx" />
     <Content Include="Claim_History\claimhist1.aspx" />
     <Content Include="Claim_History\claimhist2.aspx" />
+    <Content Include="Claim_History\claimhistory1_Redirect.aspx" />
     <Content Include="Contact.aspx" />
     <Content Include="Content\bootstrap-grid.css" />
     <Content Include="Content\bootstrap-grid.min.css" />
@@ -136,8 +137,25 @@
     <Content Include="Error.aspx" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
+    <Content Include="Images\1.PNG" />
+    <Content Include="Images\bee.jpg" />
+    <Content Include="Images\blue.png" />
+    <Content Include="Images\carbon_password.png" />
+    <Content Include="Images\charm_person.png" />
+    <Content Include="Images\GENERAL EST LOGO 1.png" />
+    <Content Include="Images\green.png" />
+    <Content Include="Images\ic_sharp-logout.png" />
     <Content Include="Images\login.png" />
+    <Content Include="Images\red.png" />
+    <Content Include="Images\ri_settings-fill.png" />
+    <Content Include="Images\slic.jpg" />
+    <Content Include="Images\solar_eye-broken.png" />
     <Content Include="Images\spinner.png" />
+    <Content Include="Images\white-arrow-png-41949.png" />
+    <Content Include="Images\white-arrow-png-41954.png" />
+    <Content Include="Images\white-arrow-png-41963.png" />
+    <Content Include="Images\yellowblack.png" />
+    <Content Include="Images\Yellowwhite.png" />
     <Content Include="Inquiry\DetailView.aspx" />
     <Content Include="Inquiry\HospitalizeList.aspx" />
     <Content Include="Inquiry\inquiry1.aspx" />
@@ -221,6 +239,13 @@
     </Compile>
     <Compile Include="Claim_History\claimhist2.aspx.designer.cs">
       <DependentUpon>claimhist2.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Claim_History\claimhistory1_Redirect.aspx.cs">
+      <DependentUpon>claimhistory1_Redirect.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Claim_History\claimhistory1_Redirect.aspx.designer.cs">
+      <DependentUpon>claimhistory1_Redirect.aspx</DependentUpon>
     </Compile>
     <Compile Include="Code\DTO\NotificationDTO.cs" />
     <Compile Include="Code\EncryptDecrypt.cs" />

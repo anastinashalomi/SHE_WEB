@@ -69,7 +69,7 @@ namespace SHE
                             PatientName = reader["PNAME"].ToString(),
                             AdmittedType = reader["jobsts"].ToString(),
                             Hospital = reader["jobhos"].ToString(),
-                            ClaimRef1 = reader["claimref"].ToString(),
+                            //ClaimRef1 = reader["claimref"].ToString(),
 
                         };
 
