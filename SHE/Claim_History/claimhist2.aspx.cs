@@ -39,164 +39,168 @@ namespace SHE.Claim_History
         protected void Page_Load(object sender, EventArgs e)
         {
 
-            string epfno = Request.QueryString["EPF"];
-            string policy = Request.QueryString["POLICYNO"];
-
-
-
-            ///employeeDetails
-
-            SHEEmployeeDataStr empDetails = this.get_she_employee_details(dc.Decrypt(policy), dc.Decrypt(epfno));
-
-            if (empDetails != null)
+            if (!IsPostBack)
             {
 
-                label5.InnerText = dc.Decrypt(epfno);
-                label4.InnerText = dc.Decrypt(policy);
-                dob.InnerText = empDetails.DOB;
-                empCate.InnerText = empDetails.EMPLOYEECATEGORY;
-                //if (empDetails.Count > 0)
-                if (empDetails != null && empDetails.MEMBERNAME != null)
+                string epfno = Request.QueryString["EPF"];
+                string policy = Request.QueryString["POLICYNO"];
+
+
+
+                ///employeeDetails
+
+                SHEEmployeeDataStr empDetails = this.get_she_employee_details(dc.Decrypt(policy), dc.Decrypt(epfno));
+
+                if (empDetails != null)
                 {
-                    label6.InnerText = empDetails.MEMBERNAME;
-                }
 
-                //string ActiveStatus = getCompanyActiveStatus(dc.Decrypt(policy));
-                //label7.InnerText = ActiveStatus;
-
-
-                ///ActiveStatus
-                ///Policy Period and Type
-
-                IList<PolicyDetails> PolInfo = this.GetPolicyDetails(dc.Decrypt(policy));
-                DataSet PolDetails = new DataSet();
-                if (PolInfo.Count > 0)
-                {
-                    for (int i = 0; i < PolInfo.Count; i++)
+                    label5.InnerText = dc.Decrypt(epfno);
+                    label4.InnerText = dc.Decrypt(policy);
+                    dob.InnerText = empDetails.DOB;
+                    empCate.InnerText = empDetails.EMPLOYEECATEGORY;
+                    //if (empDetails.Count > 0)
+                    if (empDetails != null && empDetails.MEMBERNAME != null)
                     {
-
-                        label31.InnerText = PolInfo[i].PolicyPeriod.ToString();
-                        label32.InnerText = PolInfo[i].PolicyType.ToString();
-                        label7.InnerText = PolInfo[i].ClaimRemark.ToString();
-                        lblPoNo.InnerText = dc.Decrypt(policy);
-                        lblPeri.InnerText = PolInfo[i].PolicyPeriod.ToString();
+                        label6.InnerText = empDetails.MEMBERNAME;
                     }
 
-                }
-
-                ///Renewal Date and Company Name
-
-                List<SHEPolicyData> polDetailsList = this.get_she_policy_details(dc.Decrypt(policy));
-                foreach (SHEPolicyData polDetails in polDetailsList)
-                {
-                    // Assuming you have retrieved these values from the polDetails object
-
-                    DateTime renewalDate = polDetails.RENEWALDATE;
-                    DateTime endDate = polDetails.ENDDATE;
-                    string companyName = polDetails.Name;
-
-                    string jsonBeforeDeserialization = polDetails.Data;
-
-                    // Assign data to labels
-
-                    label2.InnerText = renewalDate.ToString("yyyy-MM-dd"); // Convert to string as per your format
-                    label1.InnerText = companyName;
-                    lblComNam.InnerText = companyName;
-                    lblReDate.InnerText = renewalDate.ToString();
-                    lblEffeDa.InnerText = endDate.ToString();
-
-                }
-
-                ///dependentDetails
+                    //string ActiveStatus = getCompanyActiveStatus(dc.Decrypt(policy));
+                    //label7.InnerText = ActiveStatus;
 
 
-                IList<SHEDependentDataStr> depDetails = this.get_she_dependant_details(dc.Decrypt(policy), dc.Decrypt(epfno));
-                DataSet dsDepDetails = new DataSet();
-                DataTable dtb1 = new DataTable();
-                dtb1.Columns.Add("DEPENDENTNAME", typeof(string));
-                dtb1.Columns.Add("DOB", typeof(string));
-                dtb1.Columns.Add("EFFDATE", typeof(string));
-                dtb1.Columns.Add("RELATIONSHIP", typeof(string));
-                dtb1.Columns.Add("AGE", typeof(string));
-                dsDepDetails.Tables.Add(dtb1);
-                if (depDetails.Count > 0)
-                {
-                    for (int i = 0; i < depDetails.Count; i++)
+                    ///ActiveStatus
+                    ///Policy Period and Type
+
+                    //IList<PolicyDetails> PolInfo = this.GetPolicyDetails(dc.Decrypt(policy));
+                    //DataSet PolDetails = new DataSet();
+                    //if (PolInfo.Count > 0)
+                    //{
+                    //    for (int i = 0; i < PolInfo.Count; i++)
+                    //    {
+
+                    //        label31.InnerText = PolInfo[i].PolicyPeriod.ToString();
+                    //        label32.InnerText = PolInfo[i].PolicyType.ToString();
+                    //        label7.InnerText = PolInfo[i].ClaimRemark.ToString();
+                    //        lblPoNo.InnerText = dc.Decrypt(policy);
+                    //        lblPeri.InnerText = PolInfo[i].PolicyPeriod.ToString();
+                    //    }
+
+                    //}
+
+                    ///Renewal Date and Company Name
+
+                    List<SHEPolicyData> polDetailsList = this.get_she_policy_details(dc.Decrypt(policy));
+                    foreach (SHEPolicyData polDetails in polDetailsList)
                     {
+                        // Assuming you have retrieved these values from the polDetails object
+
+                        DateTime renewalDate = polDetails.RENEWALDATE;
+                        DateTime endDate = polDetails.ENDDATE;
+                        string companyName = polDetails.Name;
+
+                        string jsonBeforeDeserialization = polDetails.Data;
+
+                        // Assign data to labels
+
+                        label2.InnerText = renewalDate.ToString("yyyy-MM-dd"); // Convert to string as per your format
+                        label1.InnerText = companyName;
+                        lblComNam.InnerText = companyName;
+                        lblReDate.InnerText = renewalDate.ToString();
+                        lblEffeDa.InnerText = endDate.ToString();
+
+                    }
+
+                    ///dependentDetails
 
 
-                        string inputDate2 = depDetails[i].DOB.ToString();
-                        DateTime today = DateTime.Now;
-                        DateTime birthdate = DateTime.ParseExact(inputDate2, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-                        int age = today.Year - birthdate.Year;
-
-                        ///*string dateOfBirth = parsedDate2.ToString("yyyy/MM/dd");*/ // Replace with the actual date of birth
-
-                        if (today.Month < birthdate.Month || (today.Month == birthdate.Month && today.Day < birthdate.Day))
+                    IList<SHEDependentDataStr> depDetails = this.get_she_dependant_details(dc.Decrypt(policy), dc.Decrypt(epfno));
+                    DataSet dsDepDetails = new DataSet();
+                    DataTable dtb1 = new DataTable();
+                    dtb1.Columns.Add("DEPENDENTNAME", typeof(string));
+                    dtb1.Columns.Add("DOB", typeof(string));
+                    dtb1.Columns.Add("EFFDATE", typeof(string));
+                    dtb1.Columns.Add("RELATIONSHIP", typeof(string));
+                    dtb1.Columns.Add("AGE", typeof(string));
+                    dsDepDetails.Tables.Add(dtb1);
+                    if (depDetails.Count > 0)
+                    {
+                        for (int i = 0; i < depDetails.Count; i++)
                         {
-                            age--;
+
+
+                            string inputDate2 = depDetails[i].DOB.ToString();
+                            DateTime today = DateTime.Now;
+                            DateTime birthdate = DateTime.ParseExact(inputDate2, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                            int age = today.Year - birthdate.Year;
+
+                            ///*string dateOfBirth = parsedDate2.ToString("yyyy/MM/dd");*/ // Replace with the actual date of birth
+
+                            if (today.Month < birthdate.Month || (today.Month == birthdate.Month && today.Day < birthdate.Day))
+                            {
+                                age--;
+                            }
+
+                            dsDepDetails.Tables[0].Rows.Add(depDetails[i].DEPENDENTNAME, depDetails[i].DOB, depDetails[i].EFFDATE, depDetails[i].RELATIONSHIP, age + " Years");
+
+
                         }
 
-                        dsDepDetails.Tables[0].Rows.Add(depDetails[i].DEPENDENTNAME, depDetails[i].DOB, depDetails[i].EFFDATE, depDetails[i].RELATIONSHIP, age + " Years");
+                        this.GridView2.DataSource = dsDepDetails.Tables[0];
+                        this.GridView2.DataBind();
 
 
                     }
 
-                    this.GridView2.DataSource = dsDepDetails.Tables[0];
-                    this.GridView2.DataBind();
+                    ///AgeLimit
 
+                    string SchemaName = this.GetSchemaName(dc.Decrypt(policy), dc.Decrypt(epfno));
+                    //string SchemaName = "S1";
+                    string trimmedSchemaName = SchemaName.Trim();
+                    Console.WriteLine(trimmedSchemaName);
+                    IList<AgeLimitDetails> AgeDetails = this.GetAgeLimitInfo(dc.Decrypt(policy), trimmedSchemaName);
 
-                }
-
-                ///AgeLimit
-
-                string SchemaName = this.GetSchemaName(dc.Decrypt(policy), dc.Decrypt(epfno));
-                string trimmedSchemaName = SchemaName.Trim();
-                Console.WriteLine(trimmedSchemaName);
-                IList<AgeLimitDetails> AgeDetails = this.GetAgeLimitInfo(dc.Decrypt(policy), trimmedSchemaName);
-
-                DataSet dsAgeDetails = new DataSet();
-                DataTable dtb2 = new DataTable();
-                dtb2.Columns.Add("MEMBERAGE", typeof(string));
-                dtb2.Columns.Add("SPOUSEAGE", typeof(string));
-                dtb2.Columns.Add("CHILDAGE", typeof(string));
-                dtb2.Columns.Add("PARENTAGE", typeof(string));
-                dsAgeDetails.Tables.Add(dtb2);
-                if (AgeDetails.Count > 0)
-                {
-                    for (int i = 0; i < AgeDetails.Count; i++)
+                    DataSet dsAgeDetails = new DataSet();
+                    DataTable dtb2 = new DataTable();
+                    dtb2.Columns.Add("MEMBERAGE", typeof(string));
+                    dtb2.Columns.Add("SPOUSEAGE", typeof(string));
+                    dtb2.Columns.Add("CHILDAGE", typeof(string));
+                    dtb2.Columns.Add("PARENTAGE", typeof(string));
+                    dsAgeDetails.Tables.Add(dtb2);
+                    if (AgeDetails.Count > 0)
                     {
-                        dsAgeDetails.Tables[0].Rows.Add(AgeDetails[i].MEMBERAGE + " Years", AgeDetails[i].SPOUSEAGE + " Years", AgeDetails[i].CHILDAGE + " Years", AgeDetails[i].PARENTAGE + " Years");
-
-                    }
-
-                    this.GridView3.DataSource = dsAgeDetails.Tables[0];
-                    this.GridView3.DataBind();
-
-
-                }
-
-                IList<LimitInfo> limitInfo = this.GetCompanyLimit(dc.Decrypt(policy), SchemaName);
-
-                if (limitInfo.Count > 0)
-                {
-                    for (int i = 0; i < limitInfo.Count; i++)
-                    {
+                        for (int i = 0; i < AgeDetails.Count; i++)
                         {
-                            Label35.InnerText = limitInfo[i].AnnualLimit.ToString();
-                            Label36.InnerText = limitInfo[i].EventLimit.ToString();
+                            dsAgeDetails.Tables[0].Rows.Add(AgeDetails[i].MEMBERAGE + " Years", AgeDetails[i].SPOUSEAGE + " Years", AgeDetails[i].CHILDAGE + " Years", AgeDetails[i].PARENTAGE + " Years");
 
+                        }
+
+                        this.GridView3.DataSource = dsAgeDetails.Tables[0];
+                        this.GridView3.DataBind();
+
+
+                    }
+
+                    IList<LimitInfo> limitInfo = this.GetCompanyLimit(dc.Decrypt(policy), SchemaName);
+
+                    if (limitInfo.Count > 0)
+                    {
+                        for (int i = 0; i < limitInfo.Count; i++)
+                        {
+                            {
+                                Label35.InnerText = limitInfo[i].AnnualLimit.ToString();
+                                Label36.InnerText = limitInfo[i].EventLimit.ToString();
+
+                            }
                         }
                     }
                 }
+                else
+                {
+
+                    Response.Redirect("~/Claim_History/claimhist1.aspx?alert=PolicyNo+and+employeeNo+dose+not+match");
+
+                }
             }
-            else
-            {
-
-                Response.Redirect("~/Claim_History/claimhist1.aspx?alert=PolicyNo+and+employeeNo+dose+not+match");
-
-            }
-
         }
 
         ///Get_The_Policy_Details///
@@ -849,8 +853,8 @@ namespace SHE.Claim_History
 
 
 
-            string SchemaName = this.GetSchemaName(dc.Decrypt(policy), dc.Decrypt(epfno));
-
+            //string SchemaName = this.GetSchemaName(dc.Decrypt(policy), dc.Decrypt(epfno));
+            string SchemaName = (string)Session["schemaname"];
             IList<LimitInfo> limitInfo = this.GetCompanyLimit(dc.Decrypt(policy), SchemaName);
 
             if (limitInfo.Count > 0)
@@ -1136,7 +1140,8 @@ namespace SHE.Claim_History
 
             }
 
-            Session["schemaname"] = null;
+            //commented by shalomi
+            //Session["schemaname"] = null;
             return sublimitInfoList;
         }
 
@@ -1173,7 +1178,8 @@ namespace SHE.Claim_History
 
             }
 
-            Session["schemaname"] = null;
+            //commented by shalomi
+            //Session["schemaname"] = null;
             return PaidInfoList;
         }
         ///Get Schema Name///
@@ -1518,7 +1524,8 @@ namespace SHE.Claim_History
 
             string epfno = Request.QueryString["EPF"];
             string policy = Request.QueryString["POLICYNO"];
-            string schema = GetSchemaName(dc.Decrypt(policy), dc.Decrypt(epfno));
+            // string schema = GetSchemaName(dc.Decrypt(policy), dc.Decrypt(epfno));
+            string schema = (string)Session["schemaname"] ;
             int yearLimit = this.GetYearLimit(dc.Decrypt(policy), schema.PadRight(10));
             //int.TryParse(yearLimitString, out int yearLimit);
             List<PaidAmountInfo> PaidAmountInfoList = GetPaidAmountInfoList();

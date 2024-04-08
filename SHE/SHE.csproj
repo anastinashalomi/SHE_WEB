@@ -112,6 +112,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="About.aspx" />
+    <Content Include="ClaimPayment\ClaimPaymentDetail.aspx" />
+    <Content Include="ClaimPayment\ClaimSearch.aspx" />
     <Content Include="Claim_History\claimhist1.aspx" />
     <Content Include="Claim_History\claimhist2.aspx" />
     <Content Include="Claim_History\claimhistory1_Redirect.aspx" />
@@ -226,6 +228,20 @@
     <Content Include="Site.Mobile.Master" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ClaimPayment\ClaimPaymentDetail.aspx.cs">
+      <DependentUpon>ClaimPaymentDetail.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ClaimPayment\ClaimPaymentDetail.aspx.designer.cs">
+      <DependentUpon>ClaimPaymentDetail.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ClaimPayment\ClaimSearch.aspx.cs">
+      <DependentUpon>ClaimSearch.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ClaimPayment\ClaimSearch.aspx.designer.cs">
+      <DependentUpon>ClaimSearch.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Claim_History\claimhist1.aspx.cs">
       <DependentUpon>claimhist1.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

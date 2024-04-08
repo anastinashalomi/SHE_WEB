@@ -43,7 +43,7 @@ namespace SHE
             }
 
             // SQL query to fetch data
-            string sql = @"SELECT m.PNAME, B.jobhos, B.jobsts, M.claimref FROM shedata.sheglxag S INNER JOIN SHEDATA.SHHOSINF00 m ON S.CSRNAME = M.ciperson INNER JOIN shedata.SHEBKLOG B ON m.claimref = B.jobref WHERE s.csrusrn = :userid ORDER BY M.ADDDATE DESC, M.DISDATE DESC ";
+            string sql = @"SELECT m.PNAME, m.claimref, c.job_status, c.job_type, g.hospital_name FROM shedata.cor_job_status c INNER JOIN SHEDATA.SHHOSINF00BKUP m ON c.claimref = m.claimref INNER JOIN GENERAL_CLAIM.CLAIM_HOSPITAL_DETAILS g ON m.hospital = g.hospital_id WHERE c.cordinator_userid = :userid ORDER BY c.adddate DESC, c.disdate DESC ";
 
             // Create a list to hold the notification data
             List<NotificationDTO> patientList = new List<NotificationDTO>();
@@ -64,15 +64,31 @@ namespace SHE
                     // Read each row and create NotificationDTO object
                     while (reader.Read())
                     {
+
                         NotificationDTO notification = new NotificationDTO
                         {
                             PatientName = reader["PNAME"].ToString(),
-                            AdmittedType = reader["jobsts"].ToString(),
-                            Hospital = reader["jobhos"].ToString(),
-                            //ClaimRef1 = reader["claimref"].ToString(),
+                            Jobtype = reader["job_type"].ToString(),
+                            AdmittedType = reader["job_status"].ToString(),
+                            Hospital = reader["hospital_name"].ToString(),
+                            ClaimRef1 = reader["claimref"].ToString(),
 
                         };
+                        // Use switch statement to set AdmittedType based on job_type
+                        string jobType = reader["job_type"].ToString();
+                        switch (jobType)
+                        {
+                            case "A":
+                                notification.Jobtype = "ADMITTED";
+                                break;
+                            case "D":
+                                notification.Jobtype = "DISCHARGED";
+                                break;
+                            default:
+                                notification.Jobtype = "UNKNOWN"; // Or handle other cases as needed
+                                break;
 
+                        }
                         // Add NotificationDTO object to the list
                         patientList.Add(notification);
                     }
@@ -97,25 +113,24 @@ namespace SHE
         }
 
 
-
         protected string GetAdmittedTypeCssClass(object admittedType)
         {
-            string type = admittedType.ToString().ToLower();
+            string type = admittedType.ToString().ToUpper();
             switch (type)
             {
-                case "accepted":
+                case "ACCEPTED":
                     return "accepted-color-class";
-                case "completed":
+                case "COMPLETED ":
                     return "completed-color-class";
-                case "not_updated":
+                case "NOT_UPDATED":
                     return "not-updated-color-class";
-                case "reassigned":
+                case "REASSIGNED":
                     return "reassigned-color-class";
                 default:
                     return string.Empty;
             }
         }
-        
+
         protected void NotificationGrid_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
@@ -124,32 +139,31 @@ namespace SHE
                 e.Row.Attributes["onclick"] = Page.ClientScript.GetPostBackClientHyperlink(NotificationGrid, "Select$" + e.Row.RowIndex);
                 e.Row.Style["cursor"] = "pointer";
 
-                // Get the NotificationDTO object from the DataItem property
-                NotificationDTO patient = e.Row.DataItem as NotificationDTO;
+                NotificationDTO notification = e.Row.DataItem as NotificationDTO;
 
-                // Check if the patient is not null
-                if (patient != null)
+                // Check if the notification is not null
+                if (notification != null)
                 {
                     // Set CSS class based on AdmittedType
-                    e.Row.CssClass = GetAdmittedTypeCssClass(patient.AdmittedType);
+                    e.Row.CssClass = GetAdmittedTypeCssClass(notification.AdmittedType);
 
                     // Find the Image control within the row
                     Image image = e.Row.FindControl("NotificationImage") as Image;
                     if (image != null)
                     {
                         // Set the image URL based on AdmittedType
-                        switch (patient.AdmittedType.Trim().ToLower())
+                        switch (notification.AdmittedType.Trim().ToUpper())
                         {
-                            case "accepted":
+                            case "ACCEPTED":
                                 image.ImageUrl = "~/images/Yellowwhite.png";
                                 break;
-                            case "completed":
+                            case "COMPLETED":
                                 image.ImageUrl = "~/images/green.png";
                                 break;
-                            case "not_updated":
+                            case "NOT_UPDATED":
                                 image.ImageUrl = "~/images/blue.png";
                                 break;
-                            case "reassigned":
+                            case "REASSIGNED":
                                 image.ImageUrl = "~/images/red.png";
                                 break;
                             default:
@@ -162,9 +176,40 @@ namespace SHE
         }
 
 
+        //protected void NotificationGrid_SelectedIndexChanged(object sender, EventArgs e)
+        //{
+
+        //    int selectedIndex = NotificationGrid.SelectedIndex;
+
+        //    if (selectedIndex >= 0 && selectedIndex < NotificationGrid.Rows.Count)
+        //    {
+        //        // Find the Label control within the selected row
+        //        Label label1 = (Label)NotificationGrid.Rows[selectedIndex].FindControl("Label1");
+
+        //        if (label1 != null)
+        //        {
+        //            // Get the value of ClaimRef1 from the Label control
+        //            string claimRef1 = label1.Text;
+
+
+
+        //            // Set the text of the label control in PanelTwo to the value of label1
+        //            // PanelTwoContentLabel.Text = claimRef1;
+
+        //            // Show PanelTwo
+        //            //PanelTwo.Visible = true;
+
+        //            PanelOne.Visible = false;
+        //            PanelTwo.Visible = true;
+        //            PanelThree.Visible = false;
+
+        //            FetchPanelTwoData(claimRef1);
+        //        }
+        //    }
+        //}
+
         protected void NotificationGrid_SelectedIndexChanged(object sender, EventArgs e)
         {
-
             int selectedIndex = NotificationGrid.SelectedIndex;
 
             if (selectedIndex >= 0 && selectedIndex < NotificationGrid.Rows.Count)
@@ -177,18 +222,12 @@ namespace SHE
                     // Get the value of ClaimRef1 from the Label control
                     string claimRef1 = label1.Text;
 
-
-
-                    // Set the text of the label control in PanelTwo to the value of label1
-                    // PanelTwoContentLabel.Text = claimRef1;
-
-                    // Show PanelTwo
-                    //PanelTwo.Visible = true;
-
+                    // Set the visibility of panels
                     PanelOne.Visible = false;
                     PanelTwo.Visible = true;
                     PanelThree.Visible = false;
 
+                    // Fetch data for PanelTwo
                     FetchPanelTwoData(claimRef1);
                 }
             }
@@ -197,7 +236,7 @@ namespace SHE
 
         protected void FetchPanelTwoData(string claimRef1)
         {
-            string sqlPanelTwo = @"SELECT M.claimref, M.pname, M.cname, M.cphone, b.jobhos, M.roomno, M.adddate, M.pidno, M.disdate, M.epf, M.policy, M.remark1, b.jobsts FROM shedata.sheglxag S INNER JOIN SHEDATA.SHHOSINF00 M ON S.CSRNAME = M.ciperson INNER JOIN shedata.SHEBKLOG b  ON m.claimref = B.jobref WHERE m.claimref = :claimRef ORDER BY M.ADDDATE DESC, M.DISDATE DESC ";
+            string sqlPanelTwo = @"SELECT m.claimref, m.pname, m.cname, m.cphone, g.hospital_name, m.roomno, m.adddate, m.pidno, m.disdate, m.epf, m.policy, m.remark1, c.job_status, c.JOB_TYPE from shedata.cor_job_status c INNER JOIN SHEDATA.SHHOSINF00BKUP m  ON m.claimref = c.claimref INNER JOIN GENERAL_CLAIM.CLAIM_HOSPITAL_DETAILS g ON m.hospital = g.hospital_id WHERE m.claimref = :claimRef  ";
 
             using (OracleConnection oconn = new OracleConnection(ConfigurationManager.AppSettings["OracleDB"]))
             using (OracleCommand cmd = new OracleCommand(sqlPanelTwo, oconn))
@@ -215,7 +254,7 @@ namespace SHE
                         PatientNameLabel.Text = reader["pname"].ToString();
                         CustomerNameLabel.Text = reader["cname"].ToString();
                         CustomerPhoneLabel.Text = reader["cphone"].ToString();
-                        JobHospitalLabel.Text = reader["jobhos"].ToString();
+                        JobHospitalLabel.Text = reader["hospital_name"].ToString();
                         RoomNumberLabel.Text = reader["roomno"].ToString();
                         AddDateLabel.Text = reader["adddate"].ToString();
                         PatientIDNumberLabel.Text = reader["pidno"].ToString();
@@ -223,7 +262,8 @@ namespace SHE
                         EPFLabel.Text = reader["epf"].ToString();
                         PolicyLabel.Text = reader["policy"].ToString();
                         RemarkLabel.Text = reader["remark1"].ToString();
-                        JobStatusLabel.Text = reader["jobsts"].ToString();
+                        JobStatusLabel.Text = reader["job_status"].ToString();
+                        Job_Typelabel.Text = reader["JOB_TYPE"].ToString();
                         // You can continue setting other labels here
 
                         if (JobStatusLabel.Text == "ACCEPTED")
@@ -243,7 +283,7 @@ namespace SHE
                             btnClaimPayment.Enabled = false;
                             btnBack.Enabled = true;
                         }
-                        else if (JobStatusLabel.Text == "COMPLETED")
+                        else if (JobStatusLabel.Text == "COMPLETED ")
                         {
                             btnAccept.Enabled = false;
                             btnReassign.Enabled = false;
@@ -284,8 +324,15 @@ namespace SHE
         protected void ClaimPayment_Click(object sender, EventArgs e)
         {
 
-            Response.Redirect("~/Claim_History/claimhistory1_Redirect.aspx");
+            EncryptDecrypt dc = new EncryptDecrypt();
+            var policy = dc.Encrypt(PolicyLabel.Text);
+            var epfno = dc.Encrypt(EPFLabel.Text);
+            var clamRef = dc.Encrypt(ClaimReferenceLabel.Text);
+            Response.Redirect("~/ClaimPayment/ClaimSearch.aspx?policy=" + policy + "&epf=" + epfno + "&claimRef=" + clamRef);
+
         }
+
+       
 
 
         protected void BackButton_Click(object sender, EventArgs e)
@@ -296,19 +343,6 @@ namespace SHE
 
 
         }
-
-
-        protected void SubmitButton_Click(object sender, EventArgs e)
-        {
-
-
-        }
-        protected void exitbutton_Click(object sender, EventArgs e)
-        {
-
-
-        }
-
         protected void btnReassign_Click(object sender, EventArgs e)
         {
             try
@@ -320,7 +354,7 @@ namespace SHE
                 // Show PanelThree
                 PanelThree.Visible = true;
 
-                List<MTODEtails> mtolist = new List<MTODEtails>();
+                List<MtoDetails> mtolist = new List<MtoDetails>();
 
                 // Assuming you have properly configured your Oracle connection string in the web.config file
                 string connectionString = ConfigurationManager.AppSettings["OracleDB"];
@@ -333,8 +367,8 @@ namespace SHE
                         oconn.Open();
                     }
 
-                    // SQL query to fetch CSRCDE and CLAIMINF from the database
-                    string sql = "SELECT CSRCDE, CLAIMINF, BRANCH FROM SHEDATA.shclaimhan m LEFT JOIN shedata.sheglxag s ON m.CSRCDE = s.csrcode ORDER BY CSRCDE ASC";
+                    // SQL query to fetch CSRNAME and CSRBRNC from the database
+                    string sql = @" SELECT s.CSRNAME, s.CSRBRNC,s.CSRUSRN,s.csrtpno FROM shedata.sheglxag s WHERE s.CSRSTAT = 'Y' AND s.CSRGTAB = 'Y' ORDER BY s.CSRNAME ASC";
 
                     using (OracleCommand cmd = new OracleCommand(sql, oconn))
                     {
@@ -342,59 +376,330 @@ namespace SHE
                         {
                             while (reader.Read())
                             {
-                                // Check if CLAIMINF is null, if so, skip adding this entry
-                                if (!reader.IsDBNull(reader.GetOrdinal("CLAIMINF")))
+                                MtoDetails details = new MtoDetails
                                 {
-                                    MTODEtails AgeInfo = new MTODEtails
-                                    {
-                                        CSRCDE1 = reader["CSRCDE"].ToString(),
-                                        CLAIMINF1 = reader["CLAIMINF"].ToString(),
-                                        BRANCH1 = reader["BRANCH"].ToString(),
-                                    };
+                                    CLAIMINF1 = reader["CSRNAME"].ToString(),
+                                    BRANCH1 = reader["CSRBRNC"].ToString(),
+                                    CSRUSRN1 = reader["CSRUSRN"].ToString(),
+                                    csrtpno1 = reader["csrtpno"].ToString(),
+                                };
 
-                                    mtolist.Add(AgeInfo);
-                                }
+                                mtolist.Add(details);
                             }
                         }
                     }
-                    // Bind data to GridView2
-                    GridView2.DataSource = mtolist;
-                    GridView2.DataBind();
+                }
+
+                // Bind data to GridView2
+                GridView2.DataSource = mtolist;
+                GridView2.DataBind();
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception appropriately.
+                // For example, log the error.
+            }
+        }
+
+        public class MtoDetails
+        {
+            public string CLAIMINF1 { get; set; }
+            public string BRANCH1 { get; set; }
+            public string CSRUSRN1 { get; set; }
+            public string csrtpno1 { get; set; }
+
+        }
+
+        //protected void RadioButton_CheckedChanged(object sender, EventArgs e)
+        //{
+        //    foreach (GridViewRow row in GridView2.Rows)
+        //    {
+        //        RadioButton rb = (RadioButton)row.FindControl("RadioButton1");
+        //        if (rb.Checked)
+        //        {
+        //            rb.Checked = false;
+        //        }
+        //    }
+        //    RadioButton selectedRadioButton = (RadioButton)sender;
+        //    selectedRadioButton.Checked = true;
+        //}
+
+        protected void RadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            RadioButton selectedRadioButton = (RadioButton)sender;
+            GridViewRow row = (GridViewRow)selectedRadioButton.NamingContainer;
+
+            // Get data from the selected row
+            string CSRUSRN = ((Label)row.FindControl("CSRUSRN")).Text;
+            string CLAIMINF1 = ((Label)row.FindControl("agentname")).Text;
+            string BRANCH1 = ((Label)row.FindControl("BRANCH_NAME")).Text;
+            string csrtpno1 = ((Label)row.FindControl("CSRTNO")).Text;
+
+            // Store the data in session variables
+            Session["CSRUSRN"] = CSRUSRN;
+            Session["CLAIMINF1"] = CLAIMINF1;
+            Session["BRANCH1"] = BRANCH1;
+            Session["csrtpno1"] = csrtpno1;
+
+            // Uncheck all other radio buttons in the GridView
+            foreach (GridViewRow gridViewRow in GridView2.Rows)
+            {
+                RadioButton rb = (RadioButton)gridViewRow.FindControl("RadioButton1");
+                if (rb != selectedRadioButton && rb.Checked)
+                {
+                    rb.Checked = false;
+                }
+            }
+        }
+
+
+        protected void Accepted_Click(object sender, EventArgs e)
+        {
+            int selectedIndex = NotificationGrid.SelectedIndex;
+
+            if (selectedIndex >= 0 && selectedIndex < NotificationGrid.Rows.Count)
+            {
+                Label label1 = (Label)NotificationGrid.Rows[selectedIndex].FindControl("Label1");
+
+                if (label1 != null)
+                {
+                    string claimRef1 = label1.Text;
+
+                    // Update the job status in the database from "NOT_UPDATED" to "ACCEPTED"
+                    string updateSql = "UPDATE shedata.cor_job_status SET job_status = 'ACCEPTED' WHERE claimref = :claimRef1";
+
+                    using (OracleConnection oconn = new OracleConnection(ConfigurationManager.AppSettings["OracleDB"]))
+                    using (OracleCommand cmd = new OracleCommand(updateSql, oconn))
+                    {
+                        cmd.Parameters.Add("claimRef1", OracleType.VarChar).Value = claimRef1;
+
+                        oconn.Open();
+                        int rowsAffected = cmd.ExecuteNonQuery();
+                        oconn.Close();
+
+                        if (rowsAffected > 0)
+                        {
+
+                            // Update the job status label on the page
+                            JobStatusLabel.Text = "ACCEPTED";
+                            ClientScript.RegisterStartupScript(this.GetType(), "displaySuccessMessage", "displayPopup('ACCEPTED');", true);
+                            UpdateButtonStates();
+
+                        }
+                        else
+                        {
+                            // Handle error if the update operation fails
+                            // Optionally, display a message or log the error
+                        }
+                    }
+                }
+            }
+        }
+
+
+
+        protected void btnSubmitButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string refn = ClaimReferenceLabel.Text;
+                string adddate = AddDateLabel.Text;
+                string disdate = DischargeDateLabel.Text;
+                string JobType = Job_Typelabel.Text;
+
+                // Get the CSRUSRN value from session or another source
+                string CSRUSRN = Session["CSRUSRN"] as string; // Example: Retrieving from session
+                string csrtpno1 = Session["csrtpno1"] as string;
+
+                int selectedIndex = NotificationGrid.SelectedIndex;
+
+                if (selectedIndex >= 0 && selectedIndex < NotificationGrid.Rows.Count)
+                {
+                    Label label1 = (Label)NotificationGrid.Rows[selectedIndex].FindControl("Label1");
+
+                    if (label1 != null)
+                    {
+                        string claimRef1 = label1.Text;
+
+                        // Update the job status in the database to "REASSIGNED"
+                        string updateSql = "UPDATE shedata.cor_job_status SET job_status = 'REASSIGNED' WHERE claimref = :claimRef1";
+
+                        using (OracleConnection oconn = new OracleConnection(ConfigurationManager.AppSettings["OracleDB"]))
+                        using (OracleCommand cmd = new OracleCommand(updateSql, oconn))
+                        {
+                            cmd.Parameters.Add("claimRef1", OracleType.VarChar).Value = claimRef1;
+
+                            oconn.Open();
+                            int rowsAffected = cmd.ExecuteNonQuery();
+
+                            if (rowsAffected > 0)
+                            {
+                                string insertSql = "INSERT INTO shedata.cor_job_status(CLAIMREF, ADDDATE ,CORDINATOR_USERID, JOB_TYPE, JOB_STATUS, DISDATE) " +
+                                                    "VALUES (:claimref, :adddate, :CSRUSRN, :JOB_TYPE, 'NOT_UPDATED', :disdate)";
+
+                                using (OracleCommand insertCmd = new OracleCommand(insertSql, oconn))
+                                {
+                                    insertCmd.Parameters.Add("claimref", OracleType.VarChar).Value = refn;
+                                    insertCmd.Parameters.Add("adddate", OracleType.VarChar).Value = adddate;
+                                    insertCmd.Parameters.Add("CSRUSRN", OracleType.VarChar).Value = CSRUSRN;
+                                    insertCmd.Parameters.Add("JOB_TYPE", OracleType.VarChar).Value = JobType;
+                                    insertCmd.Parameters.Add("disdate", OracleType.VarChar).Value = disdate;
+
+                                    // Execute the insert command
+                                    insertCmd.ExecuteNonQuery();
+                                }
+                                // Send message to MTO
+
+                                // Update the job status label on the page
+                                JobStatusLabel.Text = "REASSIGNED";
+                                ClientScript.RegisterStartupScript(this.GetType(), "displaySuccessMessage", "displayPopup('REASSIGNED');", true);
+                                UpdateButtonStates();
+
+                                SendMessageToMTO(csrtpno1);
+                            }
+                            else
+                            {
+                                // Handle case where no rows were updated
+                                // Display a message or take appropriate action
+                            }
+
+                        }
+                    }
                 }
             }
             catch (Exception ex)
             {
                 // Handle the exception appropriately.
-                // For example, display an error message or log the error.
-                // You can also rethrow the exception if needed.
-                // throw ex;
+                // For example, log the error.
+                // Response.Write("An error occurred while updating job status: " + ex.Message);
             }
         }
 
-        public class MTODEtails
+        protected void UpdateButtonStates()
         {
-            public string CSRCDE1 { get; set; }
-            public string CLAIMINF1 { get; set; }
-            public string BRANCH1 { get; set; }
+            switch (JobStatusLabel.Text)
+            {
+                case "ACCEPTED":
+                    btnAccept.Enabled = false;
+                    btnReassign.Enabled = true;
+                    btnClaimHistory.Enabled = true;
+                    btnClaimPayment.Enabled = true;
+                    btnBack.Enabled = true;
+                    break;
+                case "NOT_UPDATED":
+                    btnAccept.Enabled = true;
+                    btnReassign.Enabled = true;
+                    btnClaimHistory.Enabled = false;
+                    btnClaimPayment.Enabled = false;
+                    btnBack.Enabled = true;
+                    break;
+                case "COMPLETED":
+                    btnAccept.Enabled = false;
+                    btnReassign.Enabled = false;
+                    btnClaimHistory.Enabled = true;
+                    btnClaimPayment.Enabled = true;
+                    btnBack.Enabled = true;
+                    break;
+                case "REASSIGNED":
+                    btnAccept.Enabled = false;
+                    btnReassign.Enabled = false;
+                    btnClaimHistory.Enabled = false;
+                    btnClaimPayment.Enabled = false;
+                    btnBack.Enabled = true;
+                    break;
+                default:
+                    // Handle other cases as needed
+                    break;
+            }
         }
 
-
-        protected void RadioButton_CheckedChanged(object sender, EventArgs e)
+        // Method to send message to MTO
+        private void SendMessageToMTO(string csrtpno1)
         {
-            foreach (GridViewRow row in GridView2.Rows)
+            try
             {
-                RadioButton rb = (RadioButton)row.FindControl("RadioButton1");
-                if (rb.Checked)
+                string refn1 = ClaimReferenceLabel.Text;
+                string hospital = JobHospitalLabel.Text;
+                string roomNo = RoomNumberLabel.Text;
+
+                // Get the next RECORD_SEQUENCE
+                int nextRecordSequence = GetNextRecordSequence();
+
+                // Insert data into the specified table
+                string insertSql = "INSERT INTO SMS.SMS_GATEWAY(RECORD_SEQUENCE, APPLICATION_ID, JOB_CATEGORY, SMS_TYPE, MOBILE_NUMBER, TEXT_MESSAGE, SHORT_CODE, RECORD_STATUS, JOB_OTHER_INFO) " +
+                                    "VALUES (:recordSeq, :appId, :jobCategory, :smsType, :mobileNum, :textMsg, :shortCode, :recordStatus, :jobOtherInfo)";
+
+                using (OracleConnection oconn = new OracleConnection(ConfigurationManager.AppSettings["OracleDB"]))
+                using (OracleCommand insertCmd = new OracleCommand(insertSql, oconn))
                 {
-                    rb.Checked = false;
+                    // Set parameters for insertion                    
+                    insertCmd.Parameters.Add("recordSeq", OracleType.Number).Value = nextRecordSequence;
+                    insertCmd.Parameters.Add("appId", OracleType.VarChar).Value = "SHE_INT_HEALTH_CSR"; // Hardcoded value
+                    insertCmd.Parameters.Add("jobCategory", OracleType.VarChar).Value = "CAT231"; // Hardcoded value
+                    insertCmd.Parameters.Add("smsType", OracleType.VarChar).Value = "I"; // Hardcoded value
+                    insertCmd.Parameters.Add("mobileNum", OracleType.VarChar).Value = csrtpno1; // Using the mobile number passed as parameter
+                    insertCmd.Parameters.Add("textMsg", OracleType.VarChar).Value = "A new task has been assigned to you, please check your SHE system. Reference No: " + refn1 + " Hospital: " + hospital + " Room No: " + roomNo;
+                    insertCmd.Parameters.Add("shortCode", OracleType.VarChar).Value = "SLIC"; // Provide appropriate values
+                    insertCmd.Parameters.Add("recordStatus", OracleType.VarChar).Value = "N"; // Provide appropriate values
+                    insertCmd.Parameters.Add("jobOtherInfo", OracleType.VarChar).Value = refn1; // Provide appropriate values
+
+                    oconn.Open();
+                    // Execute the insert command
+                    insertCmd.ExecuteNonQuery();
                 }
             }
-            RadioButton selectedRadioButton = (RadioButton)sender;
-            selectedRadioButton.Checked = true;
+            catch (Exception ex)
+            {
+                // Handle the exception appropriately.
+                // For example, log the error.
+            }
+        }
+
+        // Method to get the next RECORD_SEQUENCE
+        private int GetNextRecordSequence()
+        {
+            int nextRecordSequence = 1; // Default value if no records exist
+
+            try
+            {
+                string selectMaxSql = "SELECT MAX(RECORD_SEQUENCE) FROM SMS.SMS_GATEWAY";
+
+                using (OracleConnection oconn = new OracleConnection(ConfigurationManager.AppSettings["OracleDB"]))
+                using (OracleCommand cmd = new OracleCommand(selectMaxSql, oconn))
+                {
+                    oconn.Open();
+                    object result = cmd.ExecuteScalar();
+                    if (result != DBNull.Value && result != null)
+                    {
+                        nextRecordSequence = Convert.ToInt32(result) + 1;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception appropriately.
+                // For example, log the error.
+                Console.WriteLine("An error occurred while getting the next record sequence: " + ex.Message);
+            }
+
+            return nextRecordSequence;
         }
 
 
+        protected void exitbutton_Click(object sender, EventArgs e)
+        {
+            {
+                Session.Clear(); // Clear all session variables
+                Session.Abandon(); // End the current session
+                Response.Redirect("~/login.aspx");
+            }
 
+
+        }
+        protected void displayPopup(object sender, EventArgs e)
+        {
+
+        }
         protected void reassignGrid_RowDataBound(object sender, EventArgs e)
         {
 

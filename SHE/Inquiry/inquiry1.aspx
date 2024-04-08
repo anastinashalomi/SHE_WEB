@@ -13,11 +13,17 @@
         }
 
         .btn-primary {
-            background-color: #4dc6d0;
+            background-color: #05ABB8;
             color: #fff;
-            border-color: #4dc6d0;
+            border-color: #05ABB8;
             margin-left: 8%;
         }
+
+        
+        .btn:hover {
+                color: gainsboro; /* Maintain the same color on hover */
+                background-color: #05ABB8; /* Maintain transparency on hover */
+            }
 
         .form-group {
             width: 300px;
@@ -28,7 +34,7 @@
         }
 
         .btn {
-            //background-color: #4dc6d0;
+            //background-color: #05ABB8;
         }
 
         #exitbutton {

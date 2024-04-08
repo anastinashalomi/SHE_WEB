@@ -28,111 +28,113 @@ namespace SHE.Inquiry
         EncryptDecrypt dc = new EncryptDecrypt();
         protected void Page_Load(object sender, EventArgs e)
         {
-            string referenceno = (string)Request.QueryString["reference"];
-            string fromdate = (string)Request.QueryString["fromdate"];
-            string todate = (string)Request.QueryString["todate"];
-            referenceno = dc.Decrypt(referenceno);
-            fromdate = dc.Decrypt(fromdate);
-            todate = dc.Decrypt(todate);
-
-            if (fromdate != "" && todate != "" && referenceno == "")
+            if (!IsPostBack)
             {
+                string referenceno = (string)Request.QueryString["reference"];
+                string fromdate = (string)Request.QueryString["fromdate"];
+                string todate = (string)Request.QueryString["todate"];
+                referenceno = dc.Decrypt(referenceno);
+                fromdate = dc.Decrypt(fromdate);
+                todate = dc.Decrypt(todate);
+
+                if (fromdate != "" && todate != "" && referenceno == "")
+                {
 
 
-                DateTime date = DateTime.Parse(fromdate);
-                string formatfromdate = date.ToString("yyyyMMdd");
+                    DateTime date = DateTime.Parse(fromdate);
+                    string formatfromdate = date.ToString("yyyyMMdd");
 
 
 
-                DateTime date2 = DateTime.Parse(todate);
-                string formattodate = date2.ToString("yyyyMMdd");
+                    DateTime date2 = DateTime.Parse(todate);
+                    string formattodate = date2.ToString("yyyyMMdd");
 
-                bool msg = this.LoadDataIntoGrid(formatfromdate, formattodate);
+                    bool msg = this.LoadDataIntoGrid(formatfromdate, formattodate);
 
-                gridview2update.Update();
-                datediv.Visible = true;
-                label1.InnerText = fromdate;
-                label2.InnerText = todate;
+                    gridview2update.Update();
+                    datediv.Visible = true;
+                    label1.InnerText = fromdate;
+                    label2.InnerText = todate;
+                }
+                else if (todate == "" && referenceno == "")
+                {
+
+
+                    DateTime date = DateTime.Parse(fromdate);
+                    string formatfromdate = date.ToString("yyyyMMdd");
+                    bool msg = this.LoadDataIntoGrid2(formatfromdate);
+
+                    gridview2update.Update();
+                    datediv.Visible = true;
+                    label1.InnerText = fromdate;
+                    label2.InnerText = "Present";
+                }
+                else if (fromdate != "" && todate != "" && referenceno != "")
+                {
+
+                    DateTime date = DateTime.Parse(fromdate);
+                    string formatfromdate = date.ToString("yyyyMMdd");
+
+
+                    DateTime date2 = DateTime.Parse(todate);
+                    string formattodate = date2.ToString("yyyyMMdd");
+
+
+                    int.TryParse(referenceno, out int formatclmno);
+                    bool msg = this.LoadDataIntoGrid3(formatfromdate, formattodate, formatclmno);
+
+                    gridview2update.Update();
+                    dateandref.Visible = true;
+                    label4.InnerText = fromdate;
+                    label5.InnerText = todate;
+                    label6.InnerText = referenceno;
+
+                }
+                else if (fromdate == "" && todate == "" && referenceno != "")
+                {
+                    int.TryParse(referenceno, out int formatclmno);
+                    bool msg = this.LoadDataIntoGrid4(formatclmno);
+
+                    gridview2update.Update();
+                    reference.Visible = true;
+                    label3.InnerText = referenceno;
+
+                }
+
+                else if (todate == "")
+                {
+                    DateTime date = DateTime.Parse(fromdate);
+                    string formatfromdate = date.ToString("yyyyMMdd");
+
+                    int.TryParse(referenceno, out int formatclmno);
+
+
+                    bool msg = this.LoadDataIntoGrid5(formatfromdate, formatclmno);
+
+                    gridview2update.Update();
+                    fromandref.Visible = true;
+                    label7.InnerText = fromdate;
+                    label8.InnerText = referenceno;
+
+                }
+
+                else
+                {
+                    DateTime date = DateTime.Parse(fromdate);
+                    string formatfromdate = date.ToString("yyyyMMdd");
+
+                    int.TryParse(referenceno, out int formatclmno);
+
+
+                    bool msg = this.LoadDataIntoGrid5(formatfromdate, formatclmno);
+
+                    gridview2update.Update();
+                    fromandref.Visible = true;
+                    label7.InnerText = fromdate;
+                    label8.InnerText = referenceno;
+
+                }
             }
-            else if (todate == "" && referenceno == "")
-            {
-
-
-                DateTime date = DateTime.Parse(fromdate);
-                string formatfromdate = date.ToString("yyyyMMdd");
-                bool msg = this.LoadDataIntoGrid2(formatfromdate);
-
-                gridview2update.Update();
-                datediv.Visible = true;
-                label1.InnerText = fromdate;
-                label2.InnerText = "Present";
-            }
-            else if (fromdate != "" && todate != "" && referenceno != "")
-            {
-
-                DateTime date = DateTime.Parse(fromdate);
-                string formatfromdate = date.ToString("yyyyMMdd");
-
-
-                DateTime date2 = DateTime.Parse(todate);
-                string formattodate = date2.ToString("yyyyMMdd");
-
-
-                int.TryParse(referenceno, out int formatclmno);
-                bool msg = this.LoadDataIntoGrid3(formatfromdate, formattodate, formatclmno);
-
-                gridview2update.Update();
-                dateandref.Visible = true;
-                label4.InnerText = fromdate;
-                label5.InnerText = todate;
-                label6.InnerText = referenceno;
-
-            }
-            else if (fromdate == "" && todate == "" && referenceno != "")
-            {
-                int.TryParse(referenceno, out int formatclmno);
-                bool msg = this.LoadDataIntoGrid4(formatclmno);
-
-                gridview2update.Update();
-                reference.Visible = true;
-                label3.InnerText = referenceno;
-
-            }
-
-            else if (todate == "")
-            {
-                DateTime date = DateTime.Parse(fromdate);
-                string formatfromdate = date.ToString("yyyyMMdd");
-
-                int.TryParse(referenceno, out int formatclmno);
-
-
-                bool msg = this.LoadDataIntoGrid5(formatfromdate, formatclmno);
-
-                gridview2update.Update();
-                fromandref.Visible = true;
-                label7.InnerText = fromdate;
-                label8.InnerText = referenceno;
-
-            }
-
-            else
-            {
-                DateTime date = DateTime.Parse(fromdate);
-                string formatfromdate = date.ToString("yyyyMMdd");
-
-                int.TryParse(referenceno, out int formatclmno);
-
-
-                bool msg = this.LoadDataIntoGrid5(formatfromdate, formatclmno);
-
-                gridview2update.Update();
-                fromandref.Visible = true;
-                label7.InnerText = fromdate;
-                label8.InnerText = referenceno;
-
-            }
-
         }
 
         public bool LoadDataIntoGrid(string fromdate, string todate)

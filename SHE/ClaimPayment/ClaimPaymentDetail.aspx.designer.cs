@@ -7,66 +7,30 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace SHE
+namespace SHE.ClaimPayment
 {
 
 
-    public partial class Notifications
+    public partial class ClaimPaymentDetail
     {
 
         /// <summary>
-        /// PanelOne control.
+        /// lblAlertMessage control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel PanelOne;
+        protected global::System.Web.UI.WebControls.Label lblAlertMessage;
 
         /// <summary>
-        /// NotificationGrid control.
+        /// panel1 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView NotificationGrid;
-
-        /// <summary>
-        /// PanelTwo control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel PanelTwo;
-
-        /// <summary>
-        /// btnAccept control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnAccept;
-
-        /// <summary>
-        /// btnReassign control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnReassign;
-
-        /// <summary>
-        /// PanelTwoContentLabel control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label PanelTwoContentLabel;
+        protected global::System.Web.UI.WebControls.Panel panel1;
 
         /// <summary>
         /// ClaimReferenceLabel control.
@@ -75,124 +39,88 @@ namespace SHE
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label ClaimReferenceLabel;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl ClaimReferenceLabel;
 
         /// <summary>
-        /// PatientNameLabel control.
+        /// ClaimNo control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label PatientNameLabel;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl ClaimNo;
 
         /// <summary>
-        /// CustomerNameLabel control.
+        /// hospital control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label CustomerNameLabel;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl hospital;
 
         /// <summary>
-        /// CustomerPhoneLabel control.
+        /// roomNo control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label CustomerPhoneLabel;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl roomNo;
 
         /// <summary>
-        /// JobHospitalLabel control.
+        /// admitedDate control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label JobHospitalLabel;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl admitedDate;
 
         /// <summary>
-        /// RoomNumberLabel control.
+        /// dischargeDate control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label RoomNumberLabel;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl dischargeDate;
 
         /// <summary>
-        /// AddDateLabel control.
+        /// patientName control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label AddDateLabel;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl patientName;
 
         /// <summary>
-        /// PatientIDNumberLabel control.
+        /// billAmount control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label PatientIDNumberLabel;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl billAmount;
 
         /// <summary>
-        /// DischargeDateLabel control.
+        /// paidAmount control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label DischargeDateLabel;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl paidAmount;
 
         /// <summary>
-        /// EPFLabel control.
+        /// claimStatus control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label EPFLabel;
-
-        /// <summary>
-        /// PolicyLabel control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label PolicyLabel;
-
-        /// <summary>
-        /// RemarkLabel control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label RemarkLabel;
-
-        /// <summary>
-        /// JobStatusLabel control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label JobStatusLabel;
-
-        /// <summary>
-        /// Job_Typelabel control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Job_Typelabel;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl claimStatus;
 
         /// <summary>
         /// btnBack control.
@@ -213,57 +141,192 @@ namespace SHE
         protected global::System.Web.UI.WebControls.Button btnClaimHistory;
 
         /// <summary>
-        /// btnClaimPayment control.
+        /// panel2 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnClaimPayment;
+        protected global::System.Web.UI.WebControls.Panel panel2;
 
         /// <summary>
-        /// PanelThree control.
+        /// Label1 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel PanelThree;
+        protected global::System.Web.UI.WebControls.Label Label1;
 
         /// <summary>
-        /// GridView2 control.
+        /// refNoo control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView GridView2;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl refNoo;
 
         /// <summary>
-        /// exitbutton control.
+        /// emplNo control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button exitbutton;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl emplNo;
 
         /// <summary>
-        /// BackButton control.
+        /// polNo control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button BackButton;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl polNo;
 
         /// <summary>
-        /// SubmitButton control.
+        /// hosp control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button SubmitButton;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl hosp;
+
+        /// <summary>
+        /// addDate control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl addDate;
+
+        /// <summary>
+        /// disDate control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl disDate;
+
+        /// <summary>
+        /// rNo control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl rNo;
+
+        /// <summary>
+        /// Label2 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label Label2;
+
+        /// <summary>
+        /// claNo control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputText claNo;
+
+        /// <summary>
+        /// alment control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputText alment;
+
+        /// <summary>
+        /// execuName control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputText execuName;
+
+        /// <summary>
+        /// totBill control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputText totBill;
+
+        /// <summary>
+        /// paidAmo control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputText paidAmo;
+
+        /// <summary>
+        /// R1 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputText R1;
+
+        /// <summary>
+        /// R2 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputText R2;
+
+        /// <summary>
+        /// claimSta control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputText claimSta;
+
+        /// <summary>
+        /// Button1 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button Button1;
+
+        /// <summary>
+        /// Button3 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button Button3;
+
+        /// <summary>
+        /// Button2 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button Button2;
     }
 }

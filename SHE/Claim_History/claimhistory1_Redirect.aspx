@@ -16,7 +16,10 @@
             border-color: #4dc6d0;
             margin-left: 8%;
         }
-
+         .btn:hover {
+                color: gainsboro; /* Maintain the same color on hover */
+                background-color: #4dc6d0; /* Maintain transparency on hover */
+            }
         .form-group {
             width: 300px;
         }
@@ -54,7 +57,7 @@
 
             <asp:Label ID="lblAlertMessage" runat="server" ClientIDMode="Static" Style="display: none;"></asp:Label>
 
-            <div class="col-md-12 panel-with-shadow" style="width: 425px; background-color: white; padding: 10px; border: 1px solid #c0c0c0;">
+            <div class="col-md-12 panel-with-shadow" style="max-width: 425px; background-color: white; padding: 10px; border: 1px solid #c0c0c0;">
                 <h4 style="text-align: center;">SHE Claim Payment History Details</h4>
                 <br />
                 <br />

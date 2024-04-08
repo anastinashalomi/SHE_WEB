@@ -12,8 +12,7 @@ namespace SHE.App_Code.DTO
         public string PatientName { get; set; }
         public string Hospital { get; set; }
         public string ClaimRef1 { get; set; }
-
-
+        public string Jobtype { get; set; }
 
     }
 }

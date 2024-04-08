@@ -4,12 +4,16 @@
     <style>
         
         .btn-primary {
-            background-color: #4dc6d0;
+            background-color: #05ABB8;
             color: #fff;
-            border-color: #4dc6d0;
+            border-color: #05ABB8;
             margin-left: 8%;
         }
 
+         .btn:hover {
+                color: gainsboro; /* Maintain the same color on hover */
+                background-color: #05ABB8; /* Maintain transparency on hover */
+            }
 
         label {
             font-style: oblique;
@@ -40,7 +44,7 @@
                         <div class="row justify-content-center mt-4">
                             <div class="col-md-8">
                                 <div class="form-group row">
-                                    <label for="lblreferenceNo" class="col-sm-3 col-form-label text-center">Reference No </label>
+                                    <label for="lblreferenceNo" class="col-sm-3 col-form-label text-center" >Reference No </label>
                                     <div class="col-sm-9">
                                         <input type="text" class="form-control" runat="server" readonly="readonly" id="referenceNo" placeholder="referenceNo" style="width: 70%;">
                                     </div>
