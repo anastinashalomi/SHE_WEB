@@ -71,21 +71,21 @@ namespace SHE.Claim_History
                     ///ActiveStatus
                     ///Policy Period and Type
 
-                    //IList<PolicyDetails> PolInfo = this.GetPolicyDetails(dc.Decrypt(policy));
-                    //DataSet PolDetails = new DataSet();
-                    //if (PolInfo.Count > 0)
-                    //{
-                    //    for (int i = 0; i < PolInfo.Count; i++)
-                    //    {
+                    IList<PolicyDetails> PolInfo = this.GetPolicyDetails(dc.Decrypt(policy));
+                    DataSet PolDetails = new DataSet();
+                    if (PolInfo.Count > 0)
+                    {
+                        for (int i = 0; i < PolInfo.Count; i++)
+                        {
 
-                    //        label31.InnerText = PolInfo[i].PolicyPeriod.ToString();
-                    //        label32.InnerText = PolInfo[i].PolicyType.ToString();
-                    //        label7.InnerText = PolInfo[i].ClaimRemark.ToString();
-                    //        lblPoNo.InnerText = dc.Decrypt(policy);
-                    //        lblPeri.InnerText = PolInfo[i].PolicyPeriod.ToString();
-                    //    }
+                            label31.InnerText = PolInfo[i].PolicyPeriod.ToString();
+                            label32.InnerText = PolInfo[i].PolicyType.ToString();
+                            label7.InnerText = PolInfo[i].ClaimRemark.ToString();
+                            lblPoNo.InnerText = dc.Decrypt(policy);
+                            lblPeri.InnerText = PolInfo[i].PolicyPeriod.ToString();
+                        }
 
-                    //}
+                    }
 
                     ///Renewal Date and Company Name
 
@@ -2145,7 +2145,26 @@ namespace SHE.Claim_History
             return YearLim;
         }
 
+        protected void GridView2_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            // Check if the current row is a data row
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                // Apply alternate row color based on row index
+                if (e.Row.RowIndex % 2 == 0)
+                {
+                    e.Row.CssClass = "row-color-even"; // Apply even row color
+                }
+                else
+                {
+                    e.Row.CssClass = "row-color-odd"; // Apply odd row color
+                }
+            }
+
+        }
+
     }
 
+   
 
 }
