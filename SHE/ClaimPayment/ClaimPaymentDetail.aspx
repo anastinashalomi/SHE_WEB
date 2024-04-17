@@ -233,7 +233,7 @@
                             <div class="form-group row">
                                 <label for="lblreferenceNo" class="col-sm-6 col-form-label ">Executive Name</label>
                                 <div class="col-sm-6">
-                                    <input type="text" class="form-control" runat="server"  id="execuName" placeholder="Executive Name" style="padding-bottom: 10px; margin-bottom: 10px;">
+                                    <input type="text" class="form-control" readonly="readonly" runat="server"  id="execuName" placeholder="Executive Name" style="padding-bottom: 10px; margin-bottom: 10px;">
                                 </div>
                             </div>
                             <div class="form-group row">

@@ -30,26 +30,25 @@ namespace SHE.ClaimPayment
         string domainAndPort = "172.24.90.100:8084/Slicgeneral/SHE2_Intimation";
 
         EncryptDecrypt dc = new EncryptDecrypt();
-        string policy, epfno, claimRefNo;
+        string policy, epfno, claimRefNo, userName;
         private List<ClaimData> claimDataList = new List<ClaimData>();
 
         private ClaimData claimDataset;
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            
+            userName = Session["LoggedUser"].ToString();
+            policy = Request.QueryString["POLICYNO"];
+            epfno = Request.QueryString["EPF"];
+            claimRefNo = Request.QueryString["CLAIMREF"];
+
+            policy = dc.Decrypt(policy);
+            epfno = dc.Decrypt(epfno);
+            claimRefNo = dc.Decrypt(claimRefNo);
 
             if (!IsPostBack)
             {
-                policy = Request.QueryString["POLICYNO"];
-                epfno = Request.QueryString["EPF"];
-                claimRefNo = Request.QueryString["CLAIMREF"];
-
-                policy = dc.Decrypt(policy);
-                epfno = dc.Decrypt(epfno);
-                claimRefNo = dc.Decrypt(claimRefNo);
-
-                
+               
 
                 if (oconn.State != ConnectionState.Open)
                 {
@@ -60,52 +59,106 @@ namespace SHE.ClaimPayment
 
                 try
                 {
-                    using (cmd)
+                    if (epfno == "" )
                     {
-                        string exe_Select_date = "SELECT m.claimref, m.pname, m.cname, m.cphone, g.hospital_name, m.roomno, m.adddate, m.pidno, m.disdate, m.epf, m.policy, m.remark1, c.job_status, m.totbil, m.pdamt" +
-                                                  " from shedata.cor_job_status c" +
-                                                  " INNER JOIN SHEDATA.SHHOSINF00BKUP m  ON m.claimref = c.claimref" +
-                                                  " INNER JOIN GENERAL_CLAIM.CLAIM_HOSPITAL_DETAILS g ON m.hospital = g.hospital_id" +
-                                                  " WHERE m.claimref = :pin_claimref and m.policy = :pin_policy and m.epf = :pin_epf";
-
-
-                        cmd.CommandText = exe_Select_date;
-
-                        cmd.Parameters.Add("pin_claimref", OracleType.VarChar).Value = claimRefNo;
-                        cmd.Parameters.Add("pin_policy", OracleType.VarChar).Value = policy;
-                        cmd.Parameters.Add("pin_epf", OracleType.VarChar).Value = epfno;
-
-                        OracleDataReader reader = cmd.ExecuteReader();
-
-                        if (reader.Read()) // Assuming only one row is expected
+                        using (cmd)
                         {
-                            claimDataset = new ClaimData
+                            string exe_Select_date = "SELECT m.claimref, m.pname, m.cname, m.cphone, g.hospital_name, m.roomno, m.adddate, m.pidno, m.disdate, m.epf, m.policy, m.remark1, c.job_status, m.totbil, m.pdamt" +
+                                                      " from shedata.cor_job_status c" +
+                                                      " INNER JOIN SHEDATA.SHHOSINF00BKUP m  ON m.claimref = c.claimref" +
+                                                      " INNER JOIN GENERAL_CLAIM.CLAIM_HOSPITAL_DETAILS g ON m.hospital = g.hospital_id" +
+                                                      " WHERE m.claimref = :pin_claimref and m.policy = :pin_policy ";
+
+
+                            cmd.CommandText = exe_Select_date;
+
+                            cmd.Parameters.Add("pin_claimref", OracleType.VarChar).Value = claimRefNo;
+                            cmd.Parameters.Add("pin_policy", OracleType.VarChar).Value = policy;
+
+
+                            OracleDataReader reader = cmd.ExecuteReader();
+
+                            if (reader.Read()) // Assuming only one row is expected
                             {
-                                ClaimRef = reader["CLAIMREF"].ToString(),
-                                PName = reader["pname"].ToString(),
-                                CName = reader["cname"].ToString(),
-                                CPhone = reader["cphone"].ToString(),
-                                HospitalName = reader["hospital_name"].ToString(),
-                                RoomNo = reader["roomno"].ToString(),
-                                AddDate = reader["adddate"].ToString(),
-                                PidNo = reader["pidno"].ToString(),
-                                DisDate = reader["disdate"].ToString(),
-                                Epf = reader["epf"].ToString(),
-                                Policy = reader["policy"].ToString(),
-                                Remark1 = reader["remark1"].ToString(),
-                                JobStatus = reader["job_status"].ToString(),
-                                TotBil = reader["totbil"].ToString(),
-                                PDamt = reader["pdamt"].ToString()
-                            };
+                                claimDataset = new ClaimData
+                                {
+                                    ClaimRef = reader["CLAIMREF"].ToString(),
+                                    PName = reader["pname"].ToString(),
+                                    CName = reader["cname"].ToString(),
+                                    CPhone = reader["cphone"].ToString(),
+                                    HospitalName = reader["hospital_name"].ToString(),
+                                    RoomNo = reader["roomno"].ToString(),
+                                    AddDate = reader["adddate"].ToString(),
+                                    PidNo = reader["pidno"].ToString(),
+                                    DisDate = reader["disdate"].ToString(),
+                                    Epf = reader["epf"].ToString(),
+                                    Policy = reader["policy"].ToString(),
+                                    Remark1 = reader["remark1"].ToString(),
+                                    JobStatus = reader["job_status"].ToString(),
+                                    TotBil = reader["totbil"].ToString(),
+                                    PDamt = reader["pdamt"].ToString()
+                                };
 
-                            Session["ClaimData"] = claimDataset;
-                        }
-                        else
-                        {
-                            lblAlertMessage.Visible = true;
-                            lblAlertMessage.Text = "No data available";
+                                Session["ClaimData"] = claimDataset;
+                            }
+                            else
+                            {
+                                lblAlertMessage.Visible = true;
+                                lblAlertMessage.Text = "No data available";
+                            }
                         }
                     }
+                    else
+                    {
+                        using (cmd)
+                        {
+                            string exe_Select_date = "SELECT m.claimref, m.pname, m.cname, m.cphone, g.hospital_name, m.roomno, m.adddate, m.pidno, m.disdate, m.epf, m.policy, m.remark1, c.job_status, m.totbil, m.pdamt" +
+                                                      " from shedata.cor_job_status c" +
+                                                      " INNER JOIN SHEDATA.SHHOSINF00BKUP m  ON m.claimref = c.claimref" +
+                                                      " INNER JOIN GENERAL_CLAIM.CLAIM_HOSPITAL_DETAILS g ON m.hospital = g.hospital_id" +
+                                                      " WHERE m.claimref = :pin_claimref and m.policy = :pin_policy and m.epf = :pin_epf";
+
+
+                            cmd.CommandText = exe_Select_date;
+
+                            cmd.Parameters.Add("pin_claimref", OracleType.VarChar).Value = claimRefNo;
+                            cmd.Parameters.Add("pin_policy", OracleType.VarChar).Value = policy;
+                            cmd.Parameters.Add("pin_epf", OracleType.VarChar).Value = epfno;
+
+                            OracleDataReader reader = cmd.ExecuteReader();
+
+                            if (reader.Read()) // Assuming only one row is expected
+                            {
+                                claimDataset = new ClaimData
+                                {
+                                    ClaimRef = reader["CLAIMREF"].ToString(),
+                                    PName = reader["pname"].ToString(),
+                                    CName = reader["cname"].ToString(),
+                                    CPhone = reader["cphone"].ToString(),
+                                    HospitalName = reader["hospital_name"].ToString(),
+                                    RoomNo = reader["roomno"].ToString(),
+                                    AddDate = reader["adddate"].ToString(),
+                                    PidNo = reader["pidno"].ToString(),
+                                    DisDate = reader["disdate"].ToString(),
+                                    Epf = reader["epf"].ToString(),
+                                    Policy = reader["policy"].ToString(),
+                                    Remark1 = reader["remark1"].ToString(),
+                                    JobStatus = reader["job_status"].ToString(),
+                                    TotBil = reader["totbil"].ToString(),
+                                    PDamt = reader["pdamt"].ToString()
+                                };
+
+                                Session["ClaimData"] = claimDataset;
+                            }
+                            else
+                            {
+                                lblAlertMessage.Visible = true;
+                                lblAlertMessage.Text = "No data available";
+                            }
+                        }
+                        
+                    }
+                    
                 }
                 catch (Exception ex)
                 {
@@ -161,6 +214,7 @@ namespace SHE.ClaimPayment
 
                 claNo.Value = claimData.ClaimRef;
                 claimSta.Value = claimData.JobStatus;
+                execuName.Value = Session["LoggedUser"].ToString();
             }
 
 
@@ -168,7 +222,15 @@ namespace SHE.ClaimPayment
 
         protected void back_click(object sender, EventArgs e)
         {
-            Response.Redirect("~/Notifications.aspx");
+            if(epfno == "" || epfno==null)
+            {
+                Response.Redirect("~/Default.aspx");
+            }
+            else
+            {
+                Response.Redirect("~/Notifications.aspx");
+            }
+            
         }
 
         protected void back_click2(object sender, EventArgs e)
@@ -179,7 +241,14 @@ namespace SHE.ClaimPayment
 
         protected void back_main(object sender, EventArgs e)
         {
-            Response.Redirect("~/Notifications.aspx");
+            if (epfno == "" || epfno == null)
+            {
+                Response.Redirect("~/Default.aspx");
+            }
+            else
+            {
+                Response.Redirect("~/Notifications.aspx");
+            }
         }
 
         protected void claim_payment_update(object sender, EventArgs e)
@@ -193,8 +262,7 @@ namespace SHE.ClaimPayment
             double paidAmount = Convert.ToDouble(paidAmo.Value);
             string remark1 = R1.Value;
             string remark2 = R2.Value;
-            string jobStatus = "COMPLETED";
-            string userName = Session["LoggedUser"].ToString();
+            string jobStatus = "COMPLETED";          
             string bhtNo = "";
             string refNo ="";
             string billNo ="";

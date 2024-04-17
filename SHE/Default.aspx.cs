@@ -35,5 +35,10 @@ namespace SHE
         {
             Response.Redirect("~/Inquiry/inquiry1.aspx");
         }
+
+        protected void Button2_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("~/ClaimPayment/ClaimSearch.aspx");
+        }
     }
 }

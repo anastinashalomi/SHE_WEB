@@ -30,7 +30,7 @@ namespace SHE.Inquiry
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl referenceNo;
+        protected global::System.Web.UI.HtmlControls.HtmlInputText referenceNo;
 
         /// <summary>
         /// name control.
@@ -39,7 +39,7 @@ namespace SHE.Inquiry
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl name;
+        protected global::System.Web.UI.HtmlControls.HtmlInputText name;
 
         /// <summary>
         /// hospitalName control.
@@ -48,7 +48,7 @@ namespace SHE.Inquiry
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl hospitalName;
+        protected global::System.Web.UI.HtmlControls.HtmlInputText hospitalName;
 
         /// <summary>
         /// roomNo control.
@@ -57,7 +57,7 @@ namespace SHE.Inquiry
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl roomNo;
+        protected global::System.Web.UI.HtmlControls.HtmlInputText roomNo;
 
         /// <summary>
         /// admittedDate control.
@@ -66,7 +66,7 @@ namespace SHE.Inquiry
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl admittedDate;
+        protected global::System.Web.UI.HtmlControls.HtmlInputText admittedDate;
 
         /// <summary>
         /// contactNo control.
@@ -75,7 +75,7 @@ namespace SHE.Inquiry
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl contactNo;
+        protected global::System.Web.UI.HtmlControls.HtmlInputText contactNo;
 
         /// <summary>
         /// dischargeDate control.
@@ -84,7 +84,7 @@ namespace SHE.Inquiry
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl dischargeDate;
+        protected global::System.Web.UI.HtmlControls.HtmlInputText dischargeDate;
 
         /// <summary>
         /// employeeNo control.
@@ -93,7 +93,7 @@ namespace SHE.Inquiry
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl employeeNo;
+        protected global::System.Web.UI.HtmlControls.HtmlInputText employeeNo;
 
         /// <summary>
         /// policyNo control.
@@ -102,7 +102,7 @@ namespace SHE.Inquiry
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl policyNo;
+        protected global::System.Web.UI.HtmlControls.HtmlInputText policyNo;
 
         /// <summary>
         /// back control.

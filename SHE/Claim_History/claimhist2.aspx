@@ -14,40 +14,6 @@
         }
     </script>
 
-    <style>
-        .sticky-header {
-            position: sticky;
-            top: -1%;
-            background-color: #D8D8D8;
-            z-index: 1;
-            border: none; /* Add the desired border style */
-        }
-        .gridViewHeaderColor {
-            background-color: #61d4de; /* Light gray background color for headers */
-        }
-
-        .gridViewItemColor {
-            background-color: #70cbd1; /* White background color for items */
-        }
-
-        /* Additional styling for specific cells if needed */
-        .highlightedCell {
-            background-color: #70cbd1; /* Yellow background color for highlighted cells */
-        }
-
-        /* .table-hover tbody tr:hover {
-            background-color: #a2f9f1;
-        }
-*/
-        .row-color-odd {
-            background-color: #FFFFFF; /* Light gray background color for odd rows */
-        }
-
-        .row-color-even {
-            background-color: #CFEFF2; /* White background color for even rows */
-        }
-    </style>
-
 
     <%--<label runat="server" id="label1"></label> <br />--%>
     <asp:Panel runat="server" Visible="true" ID="mainpanel1">
@@ -71,8 +37,7 @@
         <br />
         <asp:Label ID="lblAlertMessage" runat="server" ClientIDMode="Static" Style="display: none;"></asp:Label>
         <br />
-
-        <div class="container col-md-12 panel-with-shadow" style="width: 700px; background-color: #CFEFF2; padding: 10px; border: 1px solid #c0c0c0; border-radius: 10px; padding: 20px;">
+        <div class="container" style="background-color: #D3D3D3; border-radius: 10px; padding: 20px;">
             <div class="row">
                 <div class="col-12 ">
                     <table runat="server" class="table" style="border-color: #c0c0c0;">
@@ -172,16 +137,16 @@
             </div>
         </div>
         <%--grid2--%>
-        <div class="container" style="width: 700px;">
+        <div class="container">
             <div class="row">
                 <div class="col-12">
                     <div class="table-striped table-responsive">
 
                         <asp:GridView ID="GridView2" runat="server" DataKeyNames="DEPENDENTNAME" class="w-100" CellPadding="3" CellSpacing="1"
                             CssClass="table table-striped table-hover  border-0 fw-normal table-bordered "
-                            GridLines="None" AutoGenerateColumns="False" Style="overflow: scroll;" OnRowDataBound="GridView2_RowDataBound">
-                            <HeaderStyle CssClass="sticky-header gridViewHeaderColor" />
+                            GridLines="None" AutoGenerateColumns="False">
                             <Columns>
+
                                 <asp:BoundField DataField="DEPENDENTNAME" HeaderText="Member Name"
                                     HeaderStyle-CssClass="testClassHeader" ItemStyle-CssClass="testClass">
                                     <HeaderStyle CssClass="testClassHeader"></HeaderStyle>
@@ -240,15 +205,14 @@
         </div>
 
         <%--grid3--%>
-        <div class="container" style="width: 700px;">
+        <div class="container">
             <div class="row">
                 <div class="col-12">
                     <div class="table-striped table-responsive">
 
                         <asp:GridView ID="GridView3" runat="server" DataKeyNames="MEMBERAGE" class="w-100" CellPadding="3" CellSpacing="1"
                             CssClass="table table-striped table-hover  border-0 fw-normal table-bordered "
-                            GridLines="None" AutoGenerateColumns="False" style="overflow: scroll;" OnRowDataBound="GridView2_RowDataBound">
-                             <HeaderStyle CssClass="sticky-header gridViewHeaderColor" />
+                            GridLines="None" AutoGenerateColumns="False">
                             <Columns>
 
                                 <asp:BoundField DataField="MEMBERAGE" HeaderText="Member"
@@ -292,7 +256,7 @@
 
         <div class="container">
             <div class="row justify-content-center">
-                <div class="col-md-12 panel-with-shadow" style="width: 700px; background-color: #CFEFF2; padding: 10px; border: 1px solid #c0c0c0; border-radius: 10px; padding: 20px;">
+                <div class="col-md-12 panel-with-shadow" style="width: 700px; background-color: rgb(211 211 211 / 0.65); padding: 10px; border: 1px solid #c0c0c0; border-radius: 10px; padding: 20px;">
                     <br />
                     <div class="container">
                         <div class="row justify-content-center mt-4">
@@ -561,9 +525,9 @@
         </div>
 
         <br />
-        <div class="container" >
-            <div class="row justify-content-center">
-                <div class="col-md-12 panel-with-shadow" style="width: 700px; background-color: #CFEFF2; padding: 10px; border: 1px solid #c0c0c0; border-radius: 10px; padding: 20px;">
+        <div class="container" style="background-color: #D3D3D3;">
+            <div class="row">
+                <div class="col-12 ">
                     <table runat="server" class="table" style="border-color: #c0c0c0;">
                         <tr>
                             <td class="px-5"><b>Year Limit: </b>
@@ -657,7 +621,7 @@
 
         <%--grid3--%>
 
-        <div class="container" style="width: 700px;">
+        <div class="container">
             <div class="row">
                 <div class="col-12">
                     <div class="table-striped table-responsive">
@@ -666,8 +630,8 @@
                         <%--<asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="False">--%>
                         <asp:GridView ID="GridView1" runat="server" DataKeyNames="AnnualLimit" class="w-80" CellPadding="3" CellSpacing="1"
                             CssClass="table table-striped  border-0 fw-normal table-bordered "
-                            GridLines="Both" AutoGenerateColumns="False" style="overflow: scroll;" OnRowDataBound="GridView2_RowDataBound">
-                            <HeaderStyle CssClass="sticky-header gridViewHeaderColor" />
+                            GridLines="Both" AutoGenerateColumns="False">
+
                             <Columns>
 
                                 <asp:TemplateField HeaderText="Sublimit Name" ControlStyle-Height="35px">
@@ -756,9 +720,9 @@
         </div>
         <br />
 
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-md-12 panel-with-shadow" style="width: 700px; background-color: #CFEFF2; padding: 10px; border: 1px solid #c0c0c0; border-radius: 10px; padding: 20px;">
+        <div class="container background-color: #ffffff ; ">
+            <div class="row">
+                <div class="col-12 ">
                     <table runat="server" class="table table-responsive border-color: #ffffff;">
                         <tr>
                             <td style="width: 55%;"><b>CIC Status: </b>
@@ -891,9 +855,9 @@
         </div>
 
         <br />
-        <div class="container" >
-            <div class="row justify-content-center">
-                <div class="col-md-12 panel-with-shadow" style="width: 700px; background-color: #CFEFF2; padding: 10px; border: 1px solid #c0c0c0; border-radius: 10px; padding: 20px;">
+        <div class="container" style="background-color: #D3D3D3; padding-top: 8px;">
+            <div class="row">
+                <div class="col-12 ">
                     <table runat="server" class="table table-responsive" style="border-color: #c0c0c0;">
                         <tr>
                             <td class="px-5"><b>Available Balance: </b>
@@ -914,15 +878,14 @@
 
         <br />
 
-        <div class="container" >
-             <div class="row justify-content-center">
-                <div class="col-md-12" style="width: 800px;">
+        <div class="container" style="padding-top: 18px; padding-bottom: 18px;">
+            <div class="row">
+                <div class="col-12">
                     <div class="table-striped table-responsive">
 
                         <asp:GridView ID="GridView4" runat="server" DataKeyNames="CLAIMNO" class="w-100" CellPadding="3" CellSpacing="1"
                             CssClass="table table-striped table-hover  border-0 fw-normal table-bordered "
-                            GridLines="None" AutoGenerateColumns="False" style="overflow: scroll;" OnRowDataBound="GridView2_RowDataBound">
-                             <HeaderStyle CssClass="sticky-header gridViewHeaderColor" />
+                            GridLines="None" AutoGenerateColumns="False">
                             <Columns>
 
                                 <asp:BoundField DataField="CLAIMNO" HeaderText="Reference"
@@ -1019,15 +982,14 @@
             </div>
         </div>--%>
 
-        <div class="container" >
-            <div class="row justify-content-center">
-                <div class="col-md-12" style="width: 800px;">
+        <div class="container" style="padding-top: 18px; padding-bottom: 18px;">
+            <div class="row">
+                <div class="col-12">
                     <div class="table-striped table-responsive">
 
                         <asp:GridView ID="GridView5" runat="server" DataKeyNames="PATIENTNAME" class="w-100" CellPadding="3" CellSpacing="1"
                             CssClass="table table-striped table-hover  border-0 fw-normal table-bordered "
-                            GridLines="None" AutoGenerateColumns="False" style="overflow: scroll;" OnRowDataBound="GridView2_RowDataBound">
-                            <HeaderStyle CssClass="sticky-header gridViewHeaderColor" />
+                            GridLines="None" AutoGenerateColumns="False">
                             <Columns>
 
                                 <asp:BoundField DataField="PATIENTNAME" HeaderText="Patient Name"

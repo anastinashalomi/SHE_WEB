@@ -16,17 +16,26 @@ namespace SHE.ClaimPayment
         {
             if (!IsPostBack)
             {
-                string policy = Request.QueryString["policy"];
-                string epfno = Request.QueryString["epf"];
-                string claimRefNo = Request.QueryString["claimRef"];
+                if (!string.IsNullOrEmpty(Request.QueryString["policy"]) && !string.IsNullOrEmpty(Request.QueryString["epf"]) && !string.IsNullOrEmpty(Request.QueryString["claimRef"]))
+                {
+                    string policy = Request.QueryString["policy"];
+                    string epfno = Request.QueryString["epf"];
+                    string claimRefNo = Request.QueryString["claimRef"];
 
-                policy = dc.Decrypt(policy);
-                epfno = dc.Decrypt(epfno);
-                claimRefNo = dc.Decrypt(claimRefNo);
+                    policy = dc.Decrypt(policy);
+                    epfno = dc.Decrypt(epfno);
+                    claimRefNo = dc.Decrypt(claimRefNo);
 
-                policyno.Value = policy;
-                epf.Value = epfno;
-                claimRef.Value = claimRefNo;
+                    policyno.Value = policy;
+                    epf.Value = epfno;
+                    claimRef.Value = claimRefNo;
+                }
+                else
+                {
+                    epflbl.Visible = false;
+                    epf.Visible = false;
+                }
+                
 
                 if (!string.IsNullOrEmpty(Request.QueryString["alert"]))
                 {
@@ -60,7 +69,15 @@ namespace SHE.ClaimPayment
 
         protected void back_Click(object sender, EventArgs e)
         {
-            Response.Redirect("~/Notifications.aspx");
+            if (!string.IsNullOrEmpty(Request.QueryString["policy"]) && !string.IsNullOrEmpty(Request.QueryString["epf"]) && !string.IsNullOrEmpty(Request.QueryString["claimRef"]))
+            {
+                Response.Redirect("~/Notifications.aspx");
+            }
+            else
+            {
+                Response.Redirect("~/default.aspx");
+            }
+               
         }
 
         

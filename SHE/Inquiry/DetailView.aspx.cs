@@ -64,15 +64,15 @@ namespace SHE.Inquiry
                         while (reader.Read())
                         {
                             int clmref = int.Parse(reader["CLAIMREF"].ToString());
-                            referenceNo.InnerText = (reader["CLAIMREF"].ToString());
-                            name.InnerText = reader["PNAME"].ToString();
-                            hospitalName.InnerText = reader["HOSPITAL_NAME"].ToString();
-                            roomNo.InnerText = reader["ROOMNO"].ToString();
-                            admittedDate.InnerText = reader["ADDDATE"].ToString();
-                            contactNo.InnerText = reader["CPHONE"].ToString();
-                            dischargeDate.InnerText = reader["SHADDDAT"].ToString();
-                            employeeNo.InnerText = reader["EPF"].ToString();
-                            policyNo.InnerText = reader["POLICY"].ToString();
+                            referenceNo.Value = (reader["CLAIMREF"].ToString());
+                            name.Value = reader["PNAME"].ToString();
+                            hospitalName.Value = reader["HOSPITAL_NAME"].ToString();
+                            roomNo.Value = reader["ROOMNO"].ToString();
+                            admittedDate.Value = reader["ADDDATE"].ToString();
+                            contactNo.Value = reader["CPHONE"].ToString();
+                            dischargeDate.Value = reader["SHADDDAT"].ToString();
+                            employeeNo.Value = reader["EPF"].ToString();
+                            policyNo.Value = reader["POLICY"].ToString();
 
                         }
                     }
@@ -125,8 +125,8 @@ namespace SHE.Inquiry
 
         protected void history_Click(object sender, EventArgs e)
         {
-            string policy = dc.Encrypt(policyNo.InnerText.ToString());
-            string epfno = dc.Encrypt(employeeNo.InnerText.ToString());
+            string policy = dc.Encrypt(policyNo.Value.ToString());
+            string epfno = dc.Encrypt(employeeNo.Value.ToString());
             Response.Redirect("~/Claim_History/claimhistory1_Redirect.aspx?policy=" + policy + "&epf=" + epfno);
             
         }
