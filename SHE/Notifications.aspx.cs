@@ -236,12 +236,14 @@ namespace SHE
 
         protected void FetchPanelTwoData(string claimRef1)
         {
-            string sqlPanelTwo = @"SELECT m.claimref, m.pname, m.cname, m.cphone, g.hospital_name, m.roomno, m.adddate, m.pidno, m.disdate, m.epf, m.policy, m.remark1, c.job_status, c.JOB_TYPE from shedata.cor_job_status c INNER JOIN SHEDATA.SHHOSINF00BKUP m  ON m.claimref = c.claimref INNER JOIN GENERAL_CLAIM.CLAIM_HOSPITAL_DETAILS g ON m.hospital = g.hospital_id WHERE m.claimref = :claimRef  ";
+            string userid = (string)Session["LoggedUser"];
+            string sqlPanelTwo = @"SELECT m.claimref, m.pname, m.cname, m.cphone, g.hospital_name, m.roomno, m.adddate, m.pidno, m.disdate, m.epf, m.policy, m.remark1, c.job_status, c.JOB_TYPE from shedata.cor_job_status c INNER JOIN SHEDATA.SHHOSINF00BKUP m  ON m.claimref = c.claimref INNER JOIN GENERAL_CLAIM.CLAIM_HOSPITAL_DETAILS g ON m.hospital = g.hospital_id WHERE m.claimref = :claimRef and c.CORDINATOR_USERID = :cordiId ";
 
             using (OracleConnection oconn = new OracleConnection(ConfigurationManager.AppSettings["OracleDB"]))
             using (OracleCommand cmd = new OracleCommand(sqlPanelTwo, oconn))
             {
                 cmd.Parameters.Add("claimRef", OracleType.VarChar).Value = claimRef1;
+                cmd.Parameters.Add("cordiId", OracleType.VarChar).Value = userid;
 
                 oconn.Open();
 
@@ -455,6 +457,7 @@ namespace SHE
 
         protected void Accepted_Click(object sender, EventArgs e)
         {
+            string userid = (string)Session["LoggedUser"];
             int selectedIndex = NotificationGrid.SelectedIndex;
 
             if (selectedIndex >= 0 && selectedIndex < NotificationGrid.Rows.Count)
@@ -466,12 +469,13 @@ namespace SHE
                     string claimRef1 = label1.Text;
 
                     // Update the job status in the database from "NOT_UPDATED" to "ACCEPTED"
-                    string updateSql = "UPDATE shedata.cor_job_status SET job_status = 'ACCEPTED' WHERE claimref = :claimRef1";
+                    string updateSql = "UPDATE shedata.cor_job_status SET job_status = 'ACCEPTED' WHERE claimref = :claimRef1 and CORDINATOR_USERID = :cordiId";
 
                     using (OracleConnection oconn = new OracleConnection(ConfigurationManager.AppSettings["OracleDB"]))
                     using (OracleCommand cmd = new OracleCommand(updateSql, oconn))
                     {
                         cmd.Parameters.Add("claimRef1", OracleType.VarChar).Value = claimRef1;
+                        cmd.Parameters.Add("cordiId", OracleType.VarChar).Value = userid;
 
                         oconn.Open();
                         int rowsAffected = cmd.ExecuteNonQuery();
@@ -511,6 +515,8 @@ namespace SHE
                 string CSRUSRN = Session["CSRUSRN"] as string; // Example: Retrieving from session
                 string csrtpno1 = Session["csrtpno1"] as string;
 
+                string userid = (string)Session["LoggedUser"];
+
                 int selectedIndex = NotificationGrid.SelectedIndex;
 
                 if (selectedIndex >= 0 && selectedIndex < NotificationGrid.Rows.Count)
@@ -522,12 +528,13 @@ namespace SHE
                         string claimRef1 = label1.Text;
 
                         // Update the job status in the database to "REASSIGNED"
-                        string updateSql = "UPDATE shedata.cor_job_status SET job_status = 'REASSIGNED' WHERE claimref = :claimRef1";
+                        string updateSql = "UPDATE shedata.cor_job_status SET job_status = 'REASSIGNED' WHERE claimref = :claimRef1 and CORDINATOR_USERID = :cordId";
 
                         using (OracleConnection oconn = new OracleConnection(ConfigurationManager.AppSettings["OracleDB"]))
                         using (OracleCommand cmd = new OracleCommand(updateSql, oconn))
                         {
                             cmd.Parameters.Add("claimRef1", OracleType.VarChar).Value = claimRef1;
+                            cmd.Parameters.Add("cordId", OracleType.VarChar).Value = userid;
 
                             oconn.Open();
                             int rowsAffected = cmd.ExecuteNonQuery();
@@ -600,7 +607,7 @@ namespace SHE
                     btnClaimPayment.Enabled = true;
                     btnBack.Enabled = true;
                     break;
-                case "REASSIGNED":
+                case "REASSIGNED":                   
                     btnAccept.Enabled = false;
                     btnReassign.Enabled = false;
                     btnClaimHistory.Enabled = false;

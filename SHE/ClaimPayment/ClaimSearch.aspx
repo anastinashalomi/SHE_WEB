@@ -76,7 +76,7 @@
 
                     <div class="row mx-auto">
                         <div class="form-group col-sm-12 col-md-8 col-lg-6">
-                            <label for="epf" class="mr-2" id="epflbl" visible="false" runat="server"><b>Employee Number:</b></label>
+                            <label for="epf" class="mr-2" id="epflbl" visible="true" runat="server"><b>Employee Number:</b></label>
                             <input runat="server" type="text" class="form-control" visible="true" id="epf" />
                         </div>
                     </div>

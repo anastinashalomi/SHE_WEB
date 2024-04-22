@@ -59,22 +59,23 @@ namespace SHE.ClaimPayment
 
                 try
                 {
+                    //use SHEDATA.SHHOSINF00BKUP or SHEDATA.SHHOSINF00 as your need
                     if (epfno == "" )
                     {
                         using (cmd)
                         {
                             string exe_Select_date = "SELECT m.claimref, m.pname, m.cname, m.cphone, g.hospital_name, m.roomno, m.adddate, m.pidno, m.disdate, m.epf, m.policy, m.remark1, c.job_status, m.totbil, m.pdamt" +
                                                       " from shedata.cor_job_status c" +
-                                                      " INNER JOIN SHEDATA.SHHOSINF00BKUP m  ON m.claimref = c.claimref" +
+                                                      " INNER JOIN SHEDATA.SHHOSINF00 m  ON m.claimref = c.claimref" +
                                                       " INNER JOIN GENERAL_CLAIM.CLAIM_HOSPITAL_DETAILS g ON m.hospital = g.hospital_id" +
-                                                      " WHERE m.claimref = :pin_claimref and m.policy = :pin_policy ";
+                                                      " WHERE m.claimref = :pin_claimref and m.policy = :pin_policy and c.cordinator_userid=:pin_log_user ";
 
 
                             cmd.CommandText = exe_Select_date;
 
                             cmd.Parameters.Add("pin_claimref", OracleType.VarChar).Value = claimRefNo;
                             cmd.Parameters.Add("pin_policy", OracleType.VarChar).Value = policy;
-
+                            cmd.Parameters.Add("pin_log_user", OracleType.VarChar).Value = userName;
 
                             OracleDataReader reader = cmd.ExecuteReader();
 
@@ -112,11 +113,11 @@ namespace SHE.ClaimPayment
                     {
                         using (cmd)
                         {
-                            string exe_Select_date = "SELECT m.claimref, m.pname, m.cname, m.cphone, g.hospital_name, m.roomno, m.adddate, m.pidno, m.disdate, m.epf, m.policy, m.remark1, c.job_status, m.totbil, m.pdamt" +
+                            string exe_Select_date = "SELECT m.claimref, m.pname, m.cname, m.cphone, g.hospital_name, m.roomno, m.adddate, m.pidno, m.disdate, m.epf, m.policy, m.claimno, m.remark1, c.job_status, m.totbil, m.pdamt" +
                                                       " from shedata.cor_job_status c" +
-                                                      " INNER JOIN SHEDATA.SHHOSINF00BKUP m  ON m.claimref = c.claimref" +
+                                                      " INNER JOIN SHEDATA.SHHOSINF00 m  ON m.claimref = c.claimref" +
                                                       " INNER JOIN GENERAL_CLAIM.CLAIM_HOSPITAL_DETAILS g ON m.hospital = g.hospital_id" +
-                                                      " WHERE m.claimref = :pin_claimref and m.policy = :pin_policy and m.epf = :pin_epf";
+                                                      " WHERE m.claimref = :pin_claimref and m.policy = :pin_policy and m.epf = :pin_epf and c.cordinator_userid=:pin_log_user";
 
 
                             cmd.CommandText = exe_Select_date;
@@ -124,6 +125,7 @@ namespace SHE.ClaimPayment
                             cmd.Parameters.Add("pin_claimref", OracleType.VarChar).Value = claimRefNo;
                             cmd.Parameters.Add("pin_policy", OracleType.VarChar).Value = policy;
                             cmd.Parameters.Add("pin_epf", OracleType.VarChar).Value = epfno;
+                            cmd.Parameters.Add("pin_log_user", OracleType.VarChar).Value = userName;
 
                             OracleDataReader reader = cmd.ExecuteReader();
 
@@ -142,6 +144,7 @@ namespace SHE.ClaimPayment
                                     DisDate = reader["disdate"].ToString(),
                                     Epf = reader["epf"].ToString(),
                                     Policy = reader["policy"].ToString(),
+                                    clamNo = reader["claimno"].ToString(),
                                     Remark1 = reader["remark1"].ToString(),
                                     JobStatus = reader["job_status"].ToString(),
                                     TotBil = reader["totbil"].ToString(),
@@ -255,217 +258,220 @@ namespace SHE.ClaimPayment
         {
            
 
-            int claimRef = Int32.Parse(claNo.Value);
+            int claimRef = Int32.Parse(refNoo.InnerHtml);
             string aliment = alment.Value;
             string execName = execuName.Value;
             double totalBillAm =Convert.ToDouble(totBill.Value);
             double paidAmount = Convert.ToDouble(paidAmo.Value);
             string remark1 = R1.Value;
             string remark2 = R2.Value;
-            string jobStatus = "COMPLETED";          
+            string jobStatus = "COMPLETED";
+            string jobStatus2 = "PD";
             string bhtNo = "";
-            string refNo ="";
+            int refNo = Int32.Parse(refNoo.InnerHtml);
             string billNo ="";
 
             //use API for update claim payment details
-            //            using (WebClient webClient = new System.Net.WebClient())
-            //            {
-            //                try
-            //                {
-            //                    WebClient n = new WebClient();
+            using (WebClient webClient = new System.Net.WebClient())
+            {
+                try
+                {
+                    WebClient n = new WebClient();
 
-            //                    var json = n.DownloadString(host_ip + "/SHE_Tab_API/GIService.svc/ClaimPayment?claimNo="+ claimRef + "&aliment=" + aliment + "&exName=" + execName + "&totalBill=" + totalBillAm + "&paidAmount=" + paidAmount +"&remark1=" + remark1 +"&remark2="+ remark2 +
-            //                    "&claimStatus="+ jobStatus + "&userName="+ userName+"&bhtNo="+ bhtNo+"&billNo="+ billNo+"&refNo="+ refNo);
-            //;
+                    var json = n.DownloadString(host_ip + "/SHE_Tab_API/GIService.svc/ClaimPayment?claimNo=" + claimRef + "&aliment=" + aliment + "&exName=" + execName + "&totalBill=" + totalBillAm + "&paidAmount=" + paidAmount + "&remark1=" + remark1 + "&remark2=" + remark2 +
+                    "&claimStatus=" + jobStatus2 + "&userName=" + userName + "&bhtNo=" + bhtNo + "&billNo=" + billNo + "&refNo=" + refNo);
+                    ;
 
-            //                    JavaScriptSerializer serializer = new JavaScriptSerializer();
-            //                    var result = serializer.Deserialize<dynamic>(json);
+                    JavaScriptSerializer serializer = new JavaScriptSerializer();
+                    var result = serializer.Deserialize<dynamic>(json);
 
-            //                    string dataT = result["Data"];
-            //                    int idT = result["ID"];
-            //                    int execution = 0;
-
-
-
-            //                    if (idT == 200)
-            //                    {
-            //                        //update job status table
-            //                        string exe_Update = "update shedata.cor_job_status set JOB_STATUS =:pin_jobSta WHERE CLAIMREF = :pin_cliRef";
-
-            //                        OracleTransaction transaction = null;
-            //                        oconn.Open();
-            //                        try
-            //                        {
-            //                            transaction = oconn.BeginTransaction();
-
-            //                            OracleCommand cmd_backup = oconn.CreateCommand();
-            //                            cmd_backup.CommandType = CommandType.Text;
-            //                            cmd_backup.CommandText = exe_Update;
-
-            //                            cmd_backup.Parameters.Add(":pin_jobSta", OracleType.VarChar).Value = jobStatus;
-            //                            cmd_backup.Parameters.Add(":pin_cliRef", OracleType.VarChar).Value = claimRef;
-
-            //                            cmd_backup.Transaction = transaction;
-            //                            execution = cmd_backup.ExecuteNonQuery();
-
-            //                            transaction.Commit();
-            //                        }
-
-            //                        catch (OracleException ex)
-            //                        {
-            //                            result = false;
-            //                            transaction.Rollback();
-            //                        }
-
-            //                        finally
-            //                        {
-            //                            oconn.Close();
-            //                            oconn.Dispose();
-            //                        }
-
-            //                        if(execution > 0)
-            //                        {
-            //                            lblAlertMessage.Text = "Claim payment detail was updated";
-            //                            lblAlertMessage.Attributes.Add("data-alert-title", "Success");
-            //                            lblAlertMessage.Attributes.Add("data-alert-message", lblAlertMessage.Text);
-            //                            lblAlertMessage.Visible = true;
-            //                        }
+                    string dataT = result["Data"];
+                    int idT = result["ID"];
+                    int execution = 0;
 
 
 
-            //                    }
-            //                    else
-            //                    {
-            //                        lblAlertMessage.Text = "Claim payment detail not updated";
-            //                        lblAlertMessage.Attributes.Add("data-alert-title", "Alert");
-            //                        lblAlertMessage.Attributes.Add("data-alert-message", lblAlertMessage.Text);
-            //                        lblAlertMessage.Visible = true;
-            //                    }
-            //                }
-            //                catch (Exception ex)
-            //                {
-            //                    throw ex;
-            //                    //this.lblErrorMsg.Text = "No data found for this policy no";
-            //                }
+                    if (idT == 200)
+                    {
+                        //update job status table
+                        string exe_Update = "update shedata.cor_job_status set JOB_STATUS =:pin_jobSta WHERE CLAIMREF = :pin_cliRef and CORDINATOR_USERID = :cordId";
 
-            //            }
+                        OracleTransaction transaction = null;
+                        oconn.Open();
+                        try
+                        {
+                            transaction = oconn.BeginTransaction();
+
+                            OracleCommand cmd_backup = oconn.CreateCommand();
+                            cmd_backup.CommandType = CommandType.Text;
+                            cmd_backup.CommandText = exe_Update;
+
+                            cmd_backup.Parameters.Add(":pin_jobSta", OracleType.VarChar).Value = jobStatus;
+                            cmd_backup.Parameters.Add(":pin_cliRef", OracleType.VarChar).Value = claimRef;
+                            cmd_backup.Parameters.Add(":cordId", OracleType.VarChar).Value = userName;
+
+                            cmd_backup.Transaction = transaction;
+                            execution = cmd_backup.ExecuteNonQuery();
+
+                            transaction.Commit();
+                        }
+
+                        catch (OracleException ex)
+                        {
+                            result = false;
+                            transaction.Rollback();
+                        }
+
+                        finally
+                        {
+                            oconn.Close();
+                            oconn.Dispose();
+                        }
+
+                        if (execution > 0)
+                        {
+                            lblAlertMessage.Text = "Claim payment detail was updated";
+                            lblAlertMessage.Attributes.Add("data-alert-title", "Success");
+                            lblAlertMessage.Attributes.Add("data-alert-message", lblAlertMessage.Text);
+                            lblAlertMessage.Visible = true;
+                        }
+
+
+
+                    }
+                    else
+                    {
+                        lblAlertMessage.Text = "Claim payment detail not updated";
+                        lblAlertMessage.Attributes.Add("data-alert-title", "Alert");
+                        lblAlertMessage.Attributes.Add("data-alert-message", lblAlertMessage.Text);
+                        lblAlertMessage.Visible = true;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                    //this.lblErrorMsg.Text = "No data found for this policy no";
+                }
+
+            }
             //end of update claim payment using API
 
             //update claimpayment by sql query
-            int exe = 0, execution =0;
-            string exe_Update2 = "update shedata.shhosinf00bkup set ALIMENT=:pin_aliment , EXNAME=:pin_execNam, TOTBIL=:pin_totBil, PDAMT=:pin_paiAmou, REMARK1=:pin_r1, REMARK2=:pin_r2, CLAIMNO=:pin_refNo, " +
-                                "BHTNO =:pin_bhtno, BILLNO = :pin_bilno where claimref =:pin_climrefno";
+            //int exe = 0, execution =0;
+            //string exe_Update2 = "update shedata.shhosinf00 set ALIMENT=:pin_aliment , EXNAME=:pin_execNam, TOTBIL=:pin_totBil, PDAMT=:pin_paiAmou, REMARK1=:pin_r1, REMARK2=:pin_r2, CLAIMNO=:pin_refNo, " +
+            //                    "BHTNO =:pin_bhtno, BILLNO = :pin_bilno where claimref =:pin_climrefno";
 
-            OracleTransaction transaction2 = null;
-            oconn.Open();
-            try
-            {
-                transaction2 = oconn.BeginTransaction();
+            //OracleTransaction transaction2 = null;
+            //oconn.Open();
+            //try
+            //{
+            //    transaction2 = oconn.BeginTransaction();
 
-                OracleCommand cmd_backup = oconn.CreateCommand();
-                cmd_backup.CommandType = CommandType.Text;
-                cmd_backup.CommandText = exe_Update2;
+            //    OracleCommand cmd_backup = oconn.CreateCommand();
+            //    cmd_backup.CommandType = CommandType.Text;
+            //    cmd_backup.CommandText = exe_Update2;
 
-                //cmd_backup.Parameters.Add(":pin_jobSta", OracleType.VarChar).Value = jobStatus;
-                cmd_backup.Parameters.Add(":pin_climrefno", OracleType.Int32).Value = claimRef;
-                cmd_backup.Parameters.Add(":pin_aliment", OracleType.VarChar).Value = aliment;
-                cmd_backup.Parameters.Add(":pin_execNam", OracleType.VarChar).Value = execName;
-                cmd_backup.Parameters.Add(":pin_totBil", OracleType.Double).Value = totalBillAm;
-                cmd_backup.Parameters.Add(":pin_paiAmou", OracleType.Double).Value = paidAmount;
-                cmd_backup.Parameters.Add(":pin_r1", OracleType.VarChar).Value = remark1;
-                cmd_backup.Parameters.Add(":pin_r2", OracleType.VarChar).Value = remark2;
-                cmd_backup.Parameters.Add(":pin_refNo", OracleType.VarChar).Value = refNo;
-                cmd_backup.Parameters.Add(":pin_bhtno", OracleType.VarChar).Value = bhtNo;
-                cmd_backup.Parameters.Add(":pin_bilno", OracleType.VarChar).Value = billNo;
+            //    //cmd_backup.Parameters.Add(":pin_jobSta", OracleType.VarChar).Value = jobStatus;
+            //    cmd_backup.Parameters.Add(":pin_climrefno", OracleType.Int32).Value = claimRef;
+            //    cmd_backup.Parameters.Add(":pin_aliment", OracleType.VarChar).Value = aliment;
+            //    cmd_backup.Parameters.Add(":pin_execNam", OracleType.VarChar).Value = execName;
+            //    cmd_backup.Parameters.Add(":pin_totBil", OracleType.Double).Value = totalBillAm;
+            //    cmd_backup.Parameters.Add(":pin_paiAmou", OracleType.Double).Value = paidAmount;
+            //    cmd_backup.Parameters.Add(":pin_r1", OracleType.VarChar).Value = remark1;
+            //    cmd_backup.Parameters.Add(":pin_r2", OracleType.VarChar).Value = remark2;
+            //    cmd_backup.Parameters.Add(":pin_refNo", OracleType.VarChar).Value = refNo;
+            //    cmd_backup.Parameters.Add(":pin_bhtno", OracleType.VarChar).Value = bhtNo;
+            //    cmd_backup.Parameters.Add(":pin_bilno", OracleType.VarChar).Value = billNo;
 
-                cmd_backup.Transaction = transaction2;
-                exe = cmd_backup.ExecuteNonQuery();
+            //    cmd_backup.Transaction = transaction2;
+            //    exe = cmd_backup.ExecuteNonQuery();
 
-                transaction2.Commit();
-            }
+            //    transaction2.Commit();
+            //}
 
-            catch (OracleException ex)
-            {
-                //result = false;
-                transaction2.Rollback();
-                lblAlertMessage.Text = "Some thing went to wrong";
-                lblAlertMessage.Attributes.Add("data-alert-title", "Success");
-                lblAlertMessage.Attributes.Add("data-alert-message", lblAlertMessage.Text);
-                lblAlertMessage.Visible = true;
-            }
+            //catch (OracleException ex)
+            //{
+            //    //result = false;
+            //    transaction2.Rollback();
+            //    lblAlertMessage.Text = "Some thing went to wrong";
+            //    lblAlertMessage.Attributes.Add("data-alert-title", "Success");
+            //    lblAlertMessage.Attributes.Add("data-alert-message", lblAlertMessage.Text);
+            //    lblAlertMessage.Visible = true;
+            //}
 
-            finally
-            {
-                oconn.Close();
-                oconn.Dispose();
-            }
+            //finally
+            //{
+            //    oconn.Close();
+            //    oconn.Dispose();
+            //}
 
-            if (exe > 0)
-            {
-                //update job status table
-                string exe_Update = "update shedata.cor_job_status set JOB_STATUS =:pin_jobSta WHERE CLAIMREF = :pin_cliRef";
+            //if (exe > 0)
+            //{
+            //    //update job status table
+            //    string exe_Update = "update shedata.cor_job_status set JOB_STATUS =:pin_jobSta WHERE CLAIMREF = :pin_cliRef and CORDINATOR_USERID = :cordId";
 
-                OracleTransaction transaction = null;
-                OracleConnection oconn2 = new OracleConnection(ConfigurationManager.AppSettings["OracleDB"]);
+            //    OracleTransaction transaction = null;
+            //    OracleConnection oconn2 = new OracleConnection(ConfigurationManager.AppSettings["OracleDB"]);
 
-                if (oconn2.State != ConnectionState.Open)
-                {
-                   
-                    oconn2.Open();
-                }
+            //    if (oconn2.State != ConnectionState.Open)
+            //    {
 
-                //OracleCommand cmd = oconn.CreateCommand();
-                //oconn.Open();
-                try
-                {
-                    transaction = oconn2.BeginTransaction();
+            //        oconn2.Open();
+            //    }
 
-                    OracleCommand cmd_backup = oconn2.CreateCommand();
-                    cmd_backup.CommandType = CommandType.Text;
-                    cmd_backup.CommandText = exe_Update;
+            //    //OracleCommand cmd = oconn.CreateCommand();
+            //    //oconn.Open();
+            //    try
+            //    {
+            //        transaction = oconn2.BeginTransaction();
 
-                    cmd_backup.Parameters.Add(":pin_jobSta", OracleType.VarChar).Value = jobStatus;
-                    cmd_backup.Parameters.Add(":pin_cliRef", OracleType.VarChar).Value = claimRef;
+            //        OracleCommand cmd_backup = oconn2.CreateCommand();
+            //        cmd_backup.CommandType = CommandType.Text;
+            //        cmd_backup.CommandText = exe_Update;
 
-                    cmd_backup.Transaction = transaction;
-                    execution = cmd_backup.ExecuteNonQuery();
+            //        cmd_backup.Parameters.Add(":pin_jobSta", OracleType.VarChar).Value = jobStatus;
+            //        cmd_backup.Parameters.Add(":pin_cliRef", OracleType.VarChar).Value = claimRef;
+            //        cmd_backup.Parameters.Add(":cordId", OracleType.VarChar).Value = userName;
 
-                    transaction.Commit();
-                }
+            //        cmd_backup.Transaction = transaction;
+            //        execution = cmd_backup.ExecuteNonQuery();
 
-                catch (OracleException ex)
-                {
-                    //result = false;
-                    transaction.Rollback();
-                    lblAlertMessage.Text = "Some thing went to wrong";
-                    lblAlertMessage.Attributes.Add("data-alert-title", "Success");
-                    lblAlertMessage.Attributes.Add("data-alert-message", lblAlertMessage.Text);
-                    lblAlertMessage.Visible = true;
-                }
+            //        transaction.Commit();
+            //    }
 
-                finally
-                {
-                    oconn2.Close();
-                    oconn2.Dispose();
-                }
+            //    catch (OracleException ex)
+            //    {
+            //        //result = false;
+            //        transaction.Rollback();
+            //        lblAlertMessage.Text = "Some thing went to wrong";
+            //        lblAlertMessage.Attributes.Add("data-alert-title", "Success");
+            //        lblAlertMessage.Attributes.Add("data-alert-message", lblAlertMessage.Text);
+            //        lblAlertMessage.Visible = true;
+            //    }
 
-                if (execution > 0)
-                {
-                    lblAlertMessage.Text = "Claim payment detail was updated";
-                    lblAlertMessage.Attributes.Add("data-alert-title", "Success");
-                    lblAlertMessage.Attributes.Add("data-alert-message", lblAlertMessage.Text);
-                    lblAlertMessage.Visible = true;
-                }
+            //    finally
+            //    {
+            //        oconn2.Close();
+            //        oconn2.Dispose();
+            //    }
+
+            //    if (execution > 0)
+            //    {
+            //        lblAlertMessage.Text = "Claim payment detail was updated";
+            //        lblAlertMessage.Attributes.Add("data-alert-title", "Success");
+            //        lblAlertMessage.Attributes.Add("data-alert-message", lblAlertMessage.Text);
+            //        lblAlertMessage.Visible = true;
+            //    }
 
 
-            }
-            else
-            {
-                lblAlertMessage.Text = "Claim payment detail not updated";
-                lblAlertMessage.Attributes.Add("data-alert-title", "Alert");
-                lblAlertMessage.Attributes.Add("data-alert-message", lblAlertMessage.Text);
-                lblAlertMessage.Visible = true;
-            }
+            //}
+            //else
+            //{
+            //    lblAlertMessage.Text = "Claim payment detail not updated";
+            //    lblAlertMessage.Attributes.Add("data-alert-title", "Alert");
+            //    lblAlertMessage.Attributes.Add("data-alert-message", lblAlertMessage.Text);
+            //    lblAlertMessage.Visible = true;
+            //}
 
             //end of sql update
 
