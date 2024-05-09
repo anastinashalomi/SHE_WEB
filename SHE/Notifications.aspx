@@ -175,7 +175,11 @@
                                                             </div>
                                                             <div class="d-flex flex-column" style="margin-left: 20px;">
                                                                 <asp:Label runat="server" Text='<%# Eval("AdmittedType") %>' ID="AdmitType" Visible="false" CssClass="smallFont"></asp:Label>
-                                                                <asp:Label runat="server" Text='<%# Eval("Jobtype") %>' ID="Jobtype" CssClass="smallFont"></asp:Label>
+                                                                <div style="display: inline;">
+                                                                    <asp:Label runat="server" Text='<%# Eval("Jobtype") %>' ID="Jobtype" CssClass="smallFont"></asp:Label>
+                                                                    -
+                                                                    <asp:Label runat="server" Text='<%# Eval("ClaimRef1") %>' ID="Label2" Visible="True" CssClass="smallFont"></asp:Label>
+                                                                </div>
                                                                 <asp:Label runat="server" Text='<%# Eval("PatientName") %>' ID="PatientName" CssClass="smallFont" Style="font-weight: bold;"></asp:Label>
                                                                 <asp:Label runat="server" Text='<%# Eval("Hospital") %>' ID="Hospital" CssClass="smallFont"></asp:Label>
                                                                 <asp:Label runat="server" Text='<%# Eval("ClaimRef1") %>' ID="Label1" Visible="false" CssClass="smallFont"></asp:Label>

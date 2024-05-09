@@ -110,6 +110,41 @@ namespace SHE.Claim_History
 
                     }
 
+
+                    //added by shalomi 2024/05/08 for find unique policies ex: kirula
+
+                    List<UniquePolicyData> uniPolDetails = this.get_unique_pol_det(dc.Decrypt(policy));
+
+                    if (uniPolDetails.Count > 0)
+                    {
+                        foreach (UniquePolicyData polDetails in uniPolDetails)
+                        {
+                            if (polDetails.POLICYTAG == "KIRULA")
+                            {
+                                List<kirulaPolicyData> kirulaPolDetails = this.get_kirula_pol_det(dc.Decrypt(policy), dc.Decrypt(epfno));
+
+                                foreach (kirulaPolicyData kirulaDetail in kirulaPolDetails)
+                                {
+                                    if (kirulaDetail != null)
+                                    {
+                                        totPre.InnerHtml = kirulaDetail.MON_PREMIUM;
+                                    }
+                                }
+
+
+                            }
+                            else
+                            {
+
+                            }
+
+                        }
+                    }
+
+                    //end of get unique policies  using API by shalomi 2024/05/08
+
+
+
                     ///dependentDetails
 
 
@@ -222,6 +257,40 @@ namespace SHE.Claim_History
             public string Data { get; set; }
         }
 
+        //added by shalomi for kirula policies 2024/05/09
+        public class UniquePolicyData
+        {
+            public string POLICYNO { get; set; }
+
+            public string POLICYTYPE { get; set; }
+            public string POLICYTAG { get; set; }
+
+        }
+
+        public class BV_resp_UniquePolicyData
+        {
+            public int ID { get; set; }
+            public string Data { get; set; }
+        }
+
+        public class kirulaPolicyData
+        {
+            public string POLICY_ID { get; set; }
+
+            public string YEARMON { get; set; }
+            public string EPF { get; set; }
+            public string MON_PREMIUM { get; set; }
+
+        }
+
+        public class BV_resp_kirulaPolicyData
+        {
+            public int ID { get; set; }
+            public string Data { get; set; }
+        }
+
+        //added by shalomi for kirula policies 2024/05/09
+
 
         public List<SHEPolicyData> get_she_policy_details(string policyNo)
         {
@@ -262,6 +331,85 @@ namespace SHE.Claim_History
 
             return polDetailsList;
         }
+
+
+        //added by shalomi for kirula policies 2024/05/09
+        public List<UniquePolicyData> get_unique_pol_det(string policyNo)
+        {
+            List<UniquePolicyData> uniPolDetList = new List<UniquePolicyData>();
+
+            BV_resp_UniquePolicyData polDetails = null;
+            using (WebClient webClient = new System.Net.WebClient())
+            {
+                try
+                {
+                    WebClient n = new WebClient();
+                    var json = n.DownloadString(host_ip + "/SHE_Tab_API/Service.svc/GetUniquePolicyDetails?policyNo=" + policyNo);
+                    polDetails = JsonConvert.DeserializeObject<BV_resp_UniquePolicyData>(json);
+
+                    if (polDetails.ID == 200)
+                    {
+                        string data = polDetails.Data.Replace("\\", "");
+                        uniPolDetList = JsonConvert.DeserializeObject<List<UniquePolicyData>>(polDetails.Data);
+                    }
+                    else
+                    {
+                        //lblErrorMsg.InnerText = "No data found for this policy no";
+                    }
+                }
+                catch (Exception ex)
+                {
+                    string msgs = "ERROR:" + ex.Message;
+
+                }
+
+            }
+
+
+            return uniPolDetList;
+        }
+
+        //end of added by shalomi for kirula policies 2024/05/09
+
+        //added by shalomi for get kirula policies 2024/05/09
+        public List<kirulaPolicyData> get_kirula_pol_det(string policyNo, string empNo)
+        {
+            List<kirulaPolicyData> kirulaPolDetList = new List<kirulaPolicyData>();
+
+            BV_resp_kirulaPolicyData kirulaDetails = null;
+            using (WebClient webClient = new System.Net.WebClient())
+            {
+                try
+                {
+                    WebClient n = new WebClient();
+                    var json = n.DownloadString(host_ip + "/SHE_Tab_API/Service.svc/GetKirulaClubMemPremium?policyNo=" + policyNo + "&memberNo=" + empNo);
+                    kirulaDetails = JsonConvert.DeserializeObject<BV_resp_kirulaPolicyData>(json);
+
+                    if (kirulaDetails.ID == 200)
+                    {
+                        string data = kirulaDetails.Data.Replace("\\", "");
+                        kirulaPolDetList = JsonConvert.DeserializeObject<List<kirulaPolicyData>>(kirulaDetails.Data);
+
+
+                    }
+                    else
+                    {
+                        //lblErrorMsg.InnerText = "No data found for this policy no";
+                    }
+                }
+                catch (Exception ex)
+                {
+                    string msgs = "ERROR:" + ex.Message;
+
+                }
+
+            }
+
+
+            return kirulaPolDetList;
+        }
+
+        //end of added by shalomi for kirula policies 2024/05/09
 
 
 
@@ -1837,10 +1985,26 @@ namespace SHE.Claim_History
                     a = a.AddMilliseconds(long.Parse(this.GetNumbers(item.ADMISSION_DATE))).ToLocalTime();
                     i.ADMISSION_DATE = a.Day.ToString().PadLeft(2, '0') + "/" + a.Month.ToString().PadLeft(2, '0') + "/" + a.Year.ToString();
 
+                    //added by shalomi 2024/05/08 for fix null exception error
+                    if (item.DISCHARGE_DATE != null)
+                    {
+                        //i.DISCHARGE_DATE = item.DISCHARGE_DATE;
+                        System.DateTime b = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
+                        b = b.AddMilliseconds(long.Parse(this.GetNumbers(item.DISCHARGE_DATE))).ToLocalTime();
+                        i.DISCHARGE_DATE = b.Day.ToString().PadLeft(2, '0') + "/" + b.Month.ToString().PadLeft(2, '0') + "/" + b.Year.ToString();
+                    }
+                    else
+                    {
+
+                    }
+
+                    //comented by shalomi for above fixinh
                     //i.DISCHARGE_DATE = item.DISCHARGE_DATE;
-                    System.DateTime b = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
-                    b = b.AddMilliseconds(long.Parse(this.GetNumbers(item.DISCHARGE_DATE))).ToLocalTime();
-                    i.DISCHARGE_DATE = b.Day.ToString().PadLeft(2, '0') + "/" + b.Month.ToString().PadLeft(2, '0') + "/" + b.Year.ToString();
+                    //System.DateTime b = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
+                    //b = b.AddMilliseconds(long.Parse(this.GetNumbers(item.DISCHARGE_DATE))).ToLocalTime();
+                    //i.DISCHARGE_DATE = b.Day.ToString().PadLeft(2, '0') + "/" + b.Month.ToString().PadLeft(2, '0') + "/" + b.Year.ToString();
+
+                    //end of change by shalomi 2024/05/08
 
                     i.ROOMNUMBER = item.ROOMNUMBER;
                     i.STATUS_TYPE_NAME = item.STATUS_TYPE_NAME;
