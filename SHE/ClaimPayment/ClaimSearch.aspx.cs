@@ -32,8 +32,8 @@ namespace SHE.ClaimPayment
                 }
                 else
                 {
-                    epflbl.Visible = false;
-                    epf.Visible = false;
+                    //epflbl.Visible = false;
+                    //epf.Visible = false;
                 }
                 
 

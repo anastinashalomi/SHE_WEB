@@ -1145,7 +1145,7 @@
                 swal({
                     title: title,
                     text: message,
-                    icon: "info",
+                    icon: "success",
                     button: false,
                     closeOnClickOutside: false,
                 });

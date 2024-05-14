@@ -63,6 +63,8 @@
         }
 
         function clientFunctionValidation() {
+
+            
             //validate executve name
             var execName = $('#<%=execuName.ClientID %>').val();
 
@@ -70,10 +72,11 @@
                 custom_alert2('Please enter Executive Name.', 'Alert');
                 return false;
             }
-
+           
             //validate total bill amount
             var totalBill = $('#<%=totBill.ClientID %>').val();
-
+            totalBill = totalBill.replace(/,/g, '');
+            
             if (totalBill == "") {
                 custom_alert2('Please enter total bill amount.', 'Alert');
                 return false;
@@ -81,9 +84,18 @@
 
             //validate total paid amount
             var paidAmount = $('#<%=paidAmo.ClientID %>').val();
-
+            paidAmount = paidAmount.replace(/,/g, '');
+            
             if (paidAmount == "") {
                 custom_alert2('Please enter total bill amount.', 'Alert');
+                return false;
+            }
+
+            var totalBillValue = parseFloat(totalBill);
+            var totalPaidValue = parseFloat(paidAmount);
+            
+            if (totalPaidValue > totalBillValue) {
+                custom_alert2('Total bill amount cant less than paid amount.', 'Alert');
                 return false;
             }
 
@@ -141,6 +153,10 @@
                             <div class="row">
                                 <div class="col-sm-4 ">Claim Status</div>
                                 <div class="col-sm-8 " runat="server" id="claimStatus"></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 ">Job Type</div>
+                                <div class="col-sm-8 " runat="server" id="jobType"></div>
                             </div>
                             <br />
                             <div class="card-footer d-flex justify-content-evenly">
@@ -341,17 +357,20 @@
                     icon: "warning",
                     button: true,
                     closeOnClickOutside: false,
+                }).then(function () {
+                    // Redirect to index page
+                    window.location.href = "/Default.aspx";
                 });
             } else if (title === 'Success') {
                 swal({
                     title: title,
-                    text: message,
+                    text: message, 
                     icon: "success",                    
                     button: "OK",
                     closeOnClickOutside: false,
-                }).then(function () {
+                });then(function () {
                     // Redirect to index page
-                    window.location.href = "/Notifications.aspx";
+                    window.location.href = "/Default.aspx";
                 });
             } else if (title === 'Info') {
                 swal({
@@ -373,7 +392,7 @@
 
         //$(document).ready(function () {
         //    $('#claimPay_submit').click(function () {
-               
+
         //    });
         //});
 

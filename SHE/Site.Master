@@ -46,7 +46,7 @@
             <div class="container-fluid">
                 <div class="d-flex align-items-center gap-2">
                     
-                    <a runat="server" class="navbar-brand" href="~/Default.aspx" style="color: white;" >SLIC MEDI</a>
+                    <a runat="server" class="navbar-brand" href="~/Default.aspx" style="color: white;" >SLIC MEDI - <%= logUser %></a>
 
                 </div>
                 <asp:ImageButton runat="server" ImageUrl="~/images/ri_settings-fill.png" Style="width: 30px;" OnClick="Logout_Click" />

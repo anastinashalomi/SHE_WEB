@@ -151,6 +151,20 @@
             return false;
         }
     </script>
+    <script type="text/javascript">
+        function maintainScrollPosition() {
+            var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+            document.documentElement.scrollTop = document.body.scrollTop = scrollTop;
+        }
+
+        function scrollToElement(elementID) {
+            var element = document.getElementById(elementID);
+            if (element) {
+                var yOffset = element.getBoundingClientRect().top + window.pageYOffset;
+                window.scrollTo(0, yOffset);
+            }
+        }
+    </script>
 
     <main>
         <div class="container">
@@ -178,11 +192,10 @@
                                                                 <div style="display: inline;">
                                                                     <asp:Label runat="server" Text='<%# Eval("Jobtype") %>' ID="Jobtype" CssClass="smallFont"></asp:Label>
                                                                     -
-                                                                    <asp:Label runat="server" Text='<%# Eval("ClaimRef1") %>' ID="Label2" Visible="True" CssClass="smallFont"></asp:Label>
+                                                                    <asp:Label runat="server" Text='<%# Eval("ClaimRef1") %>' ID="Label1" Visible="True" CssClass="smallFont"></asp:Label>
                                                                 </div>
                                                                 <asp:Label runat="server" Text='<%# Eval("PatientName") %>' ID="PatientName" CssClass="smallFont" Style="font-weight: bold;"></asp:Label>
-                                                                <asp:Label runat="server" Text='<%# Eval("Hospital") %>' ID="Hospital" CssClass="smallFont"></asp:Label>
-                                                                <asp:Label runat="server" Text='<%# Eval("ClaimRef1") %>' ID="Label1" Visible="false" CssClass="smallFont"></asp:Label>
+                                                                <asp:Label runat="server" Text='<%# Eval("Hospital") %>' ID="Hospital" CssClass="smallFont"></asp:Label>                                                              
                                                                 <div class="d-flex justify-content-center">
                                                                 </div>
                                                             </div>
