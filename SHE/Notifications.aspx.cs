@@ -9,6 +9,7 @@ using System.Data;
 using System.Data.OracleClient;
 using System.Data.SqlClient;
 using System.Web.UI.WebControls;
+using System.Web.UI;
 
 namespace SHE
 {
@@ -43,7 +44,7 @@ namespace SHE
             }
 
             // SQL query to fetch data
-            string sql = @"SELECT m.PNAME, m.claimref, c.job_status, c.job_type, g.hospital_name FROM shedata.cor_job_status c INNER JOIN SHEDATA.SHHOSINF00BKUP m ON c.claimref = m.claimref INNER JOIN GENERAL_CLAIM.CLAIM_HOSPITAL_DETAILS g ON m.hospital = g.hospital_id WHERE c.cordinator_userid = :userid ORDER BY c.adddate DESC, c.disdate DESC ";
+            string sql = @"SELECT m.PNAME, m.claimref, c.job_status, c.job_type, g.hospital_name FROM shedata.cor_job_status c INNER JOIN SHEDATA.SHHOSINF00 m ON c.claimref = m.claimref INNER JOIN GENERAL_CLAIM.CLAIM_HOSPITAL_DETAILS g ON m.hospital = g.hospital_id WHERE c.cordinator_userid = :userid ORDER BY c.adddate DESC, c.disdate DESC ";
 
             // Create a list to hold the notification data
             List<NotificationDTO> patientList = new List<NotificationDTO>();
@@ -89,6 +90,8 @@ namespace SHE
                                 break;
 
                         }
+                        string jobType1 = notification.Jobtype; // Assuming Jobtype1 is your variable
+                        cmd.Parameters.Add("job_type", OracleType.VarChar).Value = jobType1;
                         // Add NotificationDTO object to the list
                         patientList.Add(notification);
                     }
@@ -176,37 +179,7 @@ namespace SHE
         }
 
 
-        //protected void NotificationGrid_SelectedIndexChanged(object sender, EventArgs e)
-        //{
 
-        //    int selectedIndex = NotificationGrid.SelectedIndex;
-
-        //    if (selectedIndex >= 0 && selectedIndex < NotificationGrid.Rows.Count)
-        //    {
-        //        // Find the Label control within the selected row
-        //        Label label1 = (Label)NotificationGrid.Rows[selectedIndex].FindControl("Label1");
-
-        //        if (label1 != null)
-        //        {
-        //            // Get the value of ClaimRef1 from the Label control
-        //            string claimRef1 = label1.Text;
-
-
-
-        //            // Set the text of the label control in PanelTwo to the value of label1
-        //            // PanelTwoContentLabel.Text = claimRef1;
-
-        //            // Show PanelTwo
-        //            //PanelTwo.Visible = true;
-
-        //            PanelOne.Visible = false;
-        //            PanelTwo.Visible = true;
-        //            PanelThree.Visible = false;
-
-        //            FetchPanelTwoData(claimRef1);
-        //        }
-        //    }
-        //}
 
         protected void NotificationGrid_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -217,10 +190,18 @@ namespace SHE
                 // Find the Label control within the selected row
                 Label label1 = (Label)NotificationGrid.Rows[selectedIndex].FindControl("Label1");
 
-                if (label1 != null)
+                Label AdmitType = (Label)NotificationGrid.Rows[selectedIndex].FindControl("AdmitType");
+                Label Jobtype = (Label)NotificationGrid.Rows[selectedIndex].FindControl("Jobtype");
+
+
+                if (label1 != null && AdmitType != null)
                 {
                     // Get the value of ClaimRef1 from the Label control
                     string claimRef1 = label1.Text;
+
+                    string AdmitType1 = AdmitType.Text;
+
+                    string Jobtype1 = Jobtype.Text;
 
                     // Set the visibility of panels
                     PanelOne.Visible = false;
@@ -228,22 +209,39 @@ namespace SHE
                     PanelThree.Visible = false;
 
                     // Fetch data for PanelTwo
-                    FetchPanelTwoData(claimRef1);
+                    FetchPanelTwoData(claimRef1, AdmitType1, Jobtype1);
                 }
             }
         }
 
 
-        protected void FetchPanelTwoData(string claimRef1)
+        protected void FetchPanelTwoData(string claimRef1, string AdmitType1, string Jobtype1)
         {
             string userid = (string)Session["LoggedUser"];
-            string sqlPanelTwo = @"SELECT m.claimref, m.pname, m.cname, m.cphone, g.hospital_name, m.roomno, m.adddate, m.pidno, m.disdate, m.epf, m.policy, m.remark1, c.job_status, c.JOB_TYPE from shedata.cor_job_status c INNER JOIN SHEDATA.SHHOSINF00BKUP m  ON m.claimref = c.claimref INNER JOIN GENERAL_CLAIM.CLAIM_HOSPITAL_DETAILS g ON m.hospital = g.hospital_id WHERE m.claimref = :claimRef and c.CORDINATOR_USERID = :cordiId ";
+            string sqlPanelTwo = @"SELECT m.claimref, m.pname, m.cname, m.cphone, g.hospital_name, m.roomno, m.adddate, m.pidno, m.disdate, m.epf, m.policy, m.remark1, c.job_status, c.JOB_TYPE from shedata.cor_job_status c INNER JOIN SHEDATA.SHHOSINF00 m  ON m.claimref = c.claimref INNER JOIN GENERAL_CLAIM.CLAIM_HOSPITAL_DETAILS g ON m.hospital = g.hospital_id WHERE m.claimref = :claimRef and c.CORDINATOR_USERID = :cordiId and c.job_status=:job_status and c.job_type = :job_type";
 
             using (OracleConnection oconn = new OracleConnection(ConfigurationManager.AppSettings["OracleDB"]))
             using (OracleCommand cmd = new OracleCommand(sqlPanelTwo, oconn))
             {
+                String joType;
+                if (Jobtype1 == "ADMITTED")
+                {
+                    joType = "A";
+                }
+                else if (Jobtype1 == "DISCHARGED")
+                {
+                    joType = "D";
+                }
+                else
+                {
+                    joType = "";
+                }
+
+
                 cmd.Parameters.Add("claimRef", OracleType.VarChar).Value = claimRef1;
                 cmd.Parameters.Add("cordiId", OracleType.VarChar).Value = userid;
+                cmd.Parameters.Add("job_status", OracleType.VarChar).Value = AdmitType1;
+                cmd.Parameters.Add("job_type", OracleType.VarChar).Value = joType;
 
                 oconn.Open();
 
@@ -268,40 +266,42 @@ namespace SHE
                         Job_Typelabel.Text = reader["JOB_TYPE"].ToString();
                         // You can continue setting other labels here
 
-                        if (JobStatusLabel.Text == "ACCEPTED")
+                        switch (JobStatusLabel.Text.Trim())
                         {
-                            btnAccept.Enabled = false;
-                            btnReassign.Enabled = true;
-                            btnClaimHistory.Enabled = true;
-                            btnClaimPayment.Enabled = true;
-                            btnBack.Enabled = true;
+                            case "ACCEPTED":
+                                btnAccept.Enabled = false;
+                                btnReassign.Enabled = true;
+                                btnClaimHistory.Enabled = true;
+                                btnBack.Enabled = true;
 
+                                // Enable btnClaimPayment if Job_Typelabel is "D"
+                                btnClaimPayment.Enabled = (Job_Typelabel.Text.Trim() == "D");
+                                break;
+                            case "NOT_UPDATED":
+                                btnAccept.Enabled = true;
+                                btnReassign.Enabled = true;
+                                btnClaimHistory.Enabled = true;
+                                btnClaimPayment.Enabled = false;
+                                btnBack.Enabled = true;
+                                break;
+                            case "COMPLETED":
+                                btnAccept.Enabled = false;
+                                btnReassign.Enabled = false;
+                                btnClaimHistory.Enabled = true;
+                                btnClaimPayment.Enabled = true;
+                                btnBack.Enabled = true;
+                                break;
+                            case "REASSIGNED":
+                                btnAccept.Enabled = false;
+                                btnReassign.Enabled = false;
+                                btnClaimHistory.Enabled = false;
+                                btnClaimPayment.Enabled = false;
+                                btnBack.Enabled = true;
+                                break;
+                            default:
+                                // Handle other cases as needed
+                                break;
                         }
-                        else if (JobStatusLabel.Text == "NOT_UPDATED")
-                        {
-                            btnAccept.Enabled = true;
-                            btnReassign.Enabled = true;
-                            btnClaimHistory.Enabled = false;
-                            btnClaimPayment.Enabled = false;
-                            btnBack.Enabled = true;
-                        }
-                        else if (JobStatusLabel.Text == "COMPLETED ")
-                        {
-                            btnAccept.Enabled = false;
-                            btnReassign.Enabled = false;
-                            btnClaimHistory.Enabled = true;
-                            btnClaimPayment.Enabled = true;
-                            btnBack.Enabled = true;
-                        }
-                        else if (JobStatusLabel.Text == "REASSIGNED")
-                        {
-                            btnAccept.Enabled = false;
-                            btnReassign.Enabled = false;
-                            btnClaimHistory.Enabled = false;
-                            btnClaimPayment.Enabled = false;
-                            btnBack.Enabled = true;
-                        }
-
                     }
                 }
             }
@@ -334,7 +334,6 @@ namespace SHE
 
         }
 
-       
 
 
         protected void BackButton_Click(object sender, EventArgs e)
@@ -343,8 +342,18 @@ namespace SHE
             PanelTwo.Visible = false;
             PanelThree.Visible = false;
 
-
+            Response.Redirect("~/Notifications.aspx");
         }
+
+
+        //protected void BackButton_Click(object sender, EventArgs e)
+        //{
+        //    PanelOne.Visible = true;
+        //    PanelTwo.Visible = false;
+        //    PanelThree.Visible = false;
+
+
+        //}
         protected void btnReassign_Click(object sender, EventArgs e)
         {
             try
@@ -452,30 +461,48 @@ namespace SHE
                     rb.Checked = false;
                 }
             }
+
+            // Scroll to the selected radio button
+            ScriptManager.RegisterStartupScript(this, GetType(), "scrollToSelectedRadioButton", "scrollToElement('" + selectedRadioButton.ClientID + "');", true);
+
         }
 
 
         protected void Accepted_Click(object sender, EventArgs e)
         {
             string userid = (string)Session["LoggedUser"];
+
             int selectedIndex = NotificationGrid.SelectedIndex;
 
             if (selectedIndex >= 0 && selectedIndex < NotificationGrid.Rows.Count)
             {
                 Label label1 = (Label)NotificationGrid.Rows[selectedIndex].FindControl("Label1");
 
+                Label AdmitType = (Label)NotificationGrid.Rows[selectedIndex].FindControl("AdmitType");
+
                 if (label1 != null)
                 {
                     string claimRef1 = label1.Text;
 
+                    string AdmitType1 = AdmitType.Text;
+
+                    String joType = Job_Typelabel.Text;
+
                     // Update the job status in the database from "NOT_UPDATED" to "ACCEPTED"
-                    string updateSql = "UPDATE shedata.cor_job_status SET job_status = 'ACCEPTED' WHERE claimref = :claimRef1 and CORDINATOR_USERID = :cordiId";
+                    string updateSql = "UPDATE shedata.cor_job_status SET job_status = 'ACCEPTED', STATUS_CHANGE_DATE = SYSDATE WHERE claimref = :claimRef1 and CORDINATOR_USERID = :cordiId and job_status=:job_status and job_type = :job_type";
 
                     using (OracleConnection oconn = new OracleConnection(ConfigurationManager.AppSettings["OracleDB"]))
                     using (OracleCommand cmd = new OracleCommand(updateSql, oconn))
                     {
+
+
                         cmd.Parameters.Add("claimRef1", OracleType.VarChar).Value = claimRef1;
                         cmd.Parameters.Add("cordiId", OracleType.VarChar).Value = userid;
+                        cmd.Parameters.Add("job_status", OracleType.VarChar).Value = AdmitType1;
+                        cmd.Parameters.Add("job_type", OracleType.VarChar).Value = joType;
+
+
+
 
                         oconn.Open();
                         int rowsAffected = cmd.ExecuteNonQuery();
@@ -523,26 +550,35 @@ namespace SHE
                 {
                     Label label1 = (Label)NotificationGrid.Rows[selectedIndex].FindControl("Label1");
 
+                    Label AdmitType = (Label)NotificationGrid.Rows[selectedIndex].FindControl("AdmitType");
+
                     if (label1 != null)
                     {
                         string claimRef1 = label1.Text;
+                        string AdmitType1 = AdmitType.Text;
+                        String joType = Job_Typelabel.Text;
 
                         // Update the job status in the database to "REASSIGNED"
-                        string updateSql = "UPDATE shedata.cor_job_status SET job_status = 'REASSIGNED' WHERE claimref = :claimRef1 and CORDINATOR_USERID = :cordId";
+                        string updateSql = "UPDATE shedata.cor_job_status SET job_status = 'REASSIGNED', STATUS_CHANGE_DATE = SYSDATE WHERE claimref = :claimRef1 and CORDINATOR_USERID = :cordId and job_status=:job_status and job_type = :job_type ";
 
                         using (OracleConnection oconn = new OracleConnection(ConfigurationManager.AppSettings["OracleDB"]))
                         using (OracleCommand cmd = new OracleCommand(updateSql, oconn))
                         {
+
+
                             cmd.Parameters.Add("claimRef1", OracleType.VarChar).Value = claimRef1;
                             cmd.Parameters.Add("cordId", OracleType.VarChar).Value = userid;
+                            cmd.Parameters.Add("job_status", OracleType.VarChar).Value = AdmitType1;
+                            cmd.Parameters.Add("job_type", OracleType.VarChar).Value = joType;
+
 
                             oconn.Open();
                             int rowsAffected = cmd.ExecuteNonQuery();
 
                             if (rowsAffected > 0)
                             {
-                                string insertSql = "INSERT INTO shedata.cor_job_status(CLAIMREF, ADDDATE ,CORDINATOR_USERID, JOB_TYPE, JOB_STATUS, DISDATE) " +
-                                                    "VALUES (:claimref, :adddate, :CSRUSRN, :JOB_TYPE, 'NOT_UPDATED', :disdate)";
+                                string insertSql = "INSERT INTO shedata.cor_job_status(CLAIMREF, ADDDATE ,CORDINATOR_USERID, JOB_TYPE, JOB_STATUS, DISDATE,STATUS_CHANGE_DATE) " +
+                                                    "VALUES (:claimref, :adddate, :CSRUSRN, :JOB_TYPE, 'NOT_UPDATED', :disdate, SYSDATE)";
 
                                 using (OracleCommand insertCmd = new OracleCommand(insertSql, oconn))
                                 {
@@ -563,6 +599,8 @@ namespace SHE
                                 UpdateButtonStates();
 
                                 SendMessageToMTO(csrtpno1);
+
+                                SubmitButton.Enabled = false;
                             }
                             else
                             {
@@ -584,14 +622,16 @@ namespace SHE
 
         protected void UpdateButtonStates()
         {
-            switch (JobStatusLabel.Text)
+            switch (JobStatusLabel.Text.Trim())
             {
                 case "ACCEPTED":
                     btnAccept.Enabled = false;
                     btnReassign.Enabled = true;
                     btnClaimHistory.Enabled = true;
-                    btnClaimPayment.Enabled = true;
                     btnBack.Enabled = true;
+
+                    // Enable btnClaimPayment if Job_Typelabel is "D"
+                    btnClaimPayment.Enabled = (Job_Typelabel.Text.Trim() == "D");
                     break;
                 case "NOT_UPDATED":
                     btnAccept.Enabled = true;
@@ -607,7 +647,7 @@ namespace SHE
                     btnClaimPayment.Enabled = true;
                     btnBack.Enabled = true;
                     break;
-                case "REASSIGNED":                   
+                case "REASSIGNED":
                     btnAccept.Enabled = false;
                     btnReassign.Enabled = false;
                     btnClaimHistory.Enabled = false;
@@ -707,9 +747,18 @@ namespace SHE
         {
 
         }
-        protected void reassignGrid_RowDataBound(object sender, EventArgs e)
+        protected void reassignGrid_RowDataBound(object sender, GridViewRowEventArgs e)
         {
-
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                // Check if the current row corresponds to the logged-in user
+                string loggedInUserID = (string)Session["LoggedUser"];
+                Label CSRUSRN = (Label)e.Row.FindControl("CSRUSRN");
+                if (CSRUSRN != null && CSRUSRN.Text == loggedInUserID)
+                {
+                    e.Row.Visible = false; // Hide the row if it corresponds to the logged-in user
+                }
+            }
         }
 
         protected void reassignGrid_SelectedIndexChanged(object sender, EventArgs e)
@@ -719,29 +768,7 @@ namespace SHE
 
 
 
-        //protected void ReasignClick(object sender, EventArgs e)
-        //{
 
-        //    string refno = ClaimReferenceLabel.Text;
-
-
-
-
-        //    //var json = n.DownloadString(host_ip + "/SHE_Tab_API/GIService.svc/GetPolicy?policyNo=" + policyNo);
-        //    //polDetails = JsonConvert.DeserializeObject<BV_resp_SHEPolicyData>(json);
-        //    //if (polDetails != null)
-        //    //{
-        //    //    //string data = polDetails.Data.Replace("\\", "");
-        //    //    polDetailsList = JsonConvert.DeserializeObject<List<SHEPolicyData>>(polDetails.Data);
-
-
-        //    //}
-        //    //else
-        //    //{
-        //    //    //lblErrorMsg.InnerText = "No data found for this policy no";
-        //    //}
-
-        //}
 
     }
 }
