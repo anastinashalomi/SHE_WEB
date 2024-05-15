@@ -88,8 +88,8 @@
                     <asp:Label runat="server" ID="error2" Style="color: red; padding: 4px;" Visible="false">** Insert Date and Reference Number  **</asp:Label>
 
                     <div class="d-flex justify-content-center">
-                        <asp:Button ID="claimhist_submit" runat="server" Text="Submit" CssClass="btn btn-primary mx-4" OnClick="claimhist_submit_Click" OnClientClick="return clientFunctionValidationFinished()" />
                         <asp:Button ID="exitbutton" runat="server" Text="Exit" CssClass="btn btn-primary mx-4" OnClick="exitbutton_Click" />
+                        <asp:Button ID="claimhist_submit" runat="server" Text="Submit" CssClass="btn btn-primary mx-4" OnClick="claimhist_submit_Click" OnClientClick="return clientFunctionValidationFinished()" />    
                     </div>
 
                 </asp:Panel>

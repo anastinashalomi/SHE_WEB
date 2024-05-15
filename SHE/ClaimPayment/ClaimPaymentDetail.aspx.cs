@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using iTextSharp.text;
+using iTextSharp.text.pdf;
+using Newtonsoft.Json;
 using SHE.Code;
 using System;
 using System.Collections.Generic;
@@ -6,8 +8,10 @@ using System.Configuration;
 using System.Data;
 using System.Data.Odbc;
 using System.Data.OracleClient;
+using System.IO;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Script.Serialization;
 using System.Web.UI;
@@ -64,7 +68,7 @@ namespace SHE.ClaimPayment
                     {
                         using (cmd)
                         {
-                            string exe_Select_date = "SELECT m.claimref, m.pname, m.cname, m.cphone, g.hospital_name, m.roomno, m.adddate, m.pidno, m.disdate, m.epf, m.policy, m.remark1, c.job_status, m.totbil, m.pdamt, c.job_type" +
+                            string exe_Select_date = "SELECT m.claimref, m.pname, m.cname, m.cphone, g.hospital_name, m.roomno, m.adddate, m.pidno, m.disdate, m.epf, m.policy, m.remark1, c.job_status, m.totbil, m.pdamt, c.job_type, m.bhtno, m.billNo" +
                                                       " from shedata.cor_job_status c" +
                                                       " INNER JOIN SHEDATA.SHHOSINF00 m  ON m.claimref = c.claimref" +
                                                       " INNER JOIN GENERAL_CLAIM.CLAIM_HOSPITAL_DETAILS g ON m.hospital = g.hospital_id" +
@@ -98,7 +102,9 @@ namespace SHE.ClaimPayment
                                     JobStatus = reader["job_status"].ToString(),
                                     TotBil = reader["totbil"].ToString(),
                                     PDamt = reader["pdamt"].ToString(),
-                                    JobType = reader["job_type"].ToString()
+                                    JobType = reader["job_type"].ToString(),
+                                    bilNo = reader["billNo"].ToString(),
+                                    bthNo = reader["bhtno"].ToString()
                                 };
 
                                 Session["ClaimData"] = claimDataset;
@@ -116,7 +122,7 @@ namespace SHE.ClaimPayment
                     {
                         using (cmd)
                         {
-                            string exe_Select_date = "SELECT m.claimref, m.pname, m.cname, m.cphone, g.hospital_name, m.roomno, m.adddate, m.pidno, m.disdate, m.epf, m.policy, m.claimno, m.remark1, c.job_status, m.totbil, m.pdamt, c.job_type" +
+                            string exe_Select_date = "SELECT m.claimref, m.pname, m.cname, m.cphone, g.hospital_name, m.roomno, m.adddate, m.pidno, m.disdate, m.epf, m.policy, m.claimno, m.remark1, c.job_status, m.totbil, m.pdamt, c.job_type, m.bhtno, m.billNo" +
                                                       " from shedata.cor_job_status c" +
                                                       " INNER JOIN SHEDATA.SHHOSINF00 m  ON m.claimref = c.claimref" +
                                                       " INNER JOIN GENERAL_CLAIM.CLAIM_HOSPITAL_DETAILS g ON m.hospital = g.hospital_id" +
@@ -152,7 +158,9 @@ namespace SHE.ClaimPayment
                                     JobStatus = reader["job_status"].ToString(),
                                     TotBil = reader["totbil"].ToString(),
                                     PDamt = reader["pdamt"].ToString(),
-                                    JobType = reader["job_type"].ToString()
+                                    JobType = reader["job_type"].ToString(),
+                                    bilNo = reader["billNo"].ToString(),
+                                    bthNo = reader["bhtno"].ToString()
                                 };
 
                                 Session["ClaimData"] = claimDataset;
@@ -247,6 +255,8 @@ namespace SHE.ClaimPayment
                 paidAmo.Value = paidAmount.InnerText;
             }
 
+            //clear alert messages if exist
+            ClientScript.RegisterStartupScript(this.GetType(), "clearAlert", "clearAlert();", true);
 
         }
 
@@ -269,6 +279,8 @@ namespace SHE.ClaimPayment
         {
             panel1.Visible = true;
             panel2.Visible = false;
+            panel3.Visible = false;
+            ClientScript.RegisterStartupScript(this.GetType(), "clearAlert", "clearAlert();", true);
         }
 
         protected void back_main(object sender, EventArgs e)
@@ -390,6 +402,25 @@ namespace SHE.ClaimPayment
                                 lblAlertMessage.Attributes.Add("data-alert-message", lblAlertMessage.Text);
                                 lblAlertMessage.Visible = true;
 
+                                Button4.Visible = true;
+                                panel3.Visible = true;
+                                panel2.Visible = false;
+
+                                ClaimData claimData = Session["ClaimData"] as ClaimData;
+                                polNo2.InnerHtml = claimData.Policy;
+                                nameInsu.InnerHtml = claimData.CName;
+                                refNo1.InnerHtml = claimData.ClaimRef;
+                                bhtNo2.InnerHtml = claimData.bthNo;
+                                billNo2.InnerHtml = claimData.bilNo;
+
+                                string totalbillamo = totBill.Value;
+                                double totalBillAmount = Convert.ToDouble(totalbillamo);
+                                totStAm.InnerHtml = totalBillAmount.ToString("0.00");
+
+                                string totPayAmount = paidAmo.Value;
+                                double totPayAmount2 = Convert.ToDouble(totPayAmount);
+                                totStaePayAm.InnerHtml = totPayAmount2.ToString("0.00");
+
                             }
                             else
                             {
@@ -397,6 +428,8 @@ namespace SHE.ClaimPayment
                                 lblAlertMessage.Attributes.Add("data-alert-title", "Alert");
                                 lblAlertMessage.Attributes.Add("data-alert-message", lblAlertMessage.Text);
                                 lblAlertMessage.Visible = true;
+
+                                
                             }
 
 
@@ -548,6 +581,284 @@ namespace SHE.ClaimPayment
 
         }
 
+        //medical statement button click
+
+        protected async void down_recei_pdf(object sender, EventArgs e)
+        {
+            byte[] pdfBytes = await GenerateCovernote();
+            Response.Clear();
+            Response.ContentType = "application/pdf";
+            Response.AddHeader("content-disposition", "attachment;filename=Covernote.pdf");
+            Response.Cache.SetCacheability(HttpCacheability.NoCache);
+            Response.BinaryWrite(pdfBytes);
+            Response.Flush(); // Send the response to the client
+            HttpContext.Current.ApplicationInstance.CompleteRequest(); // Terminate the request without throwing ThreadAbortException
+
+        }
+
+        private async Task<byte[]> GenerateCovernote()
+        {
+
+
+            try
+            {
+                ClaimData claimData = Session["ClaimData"] as ClaimData;
+
+                
+
+                string policyNo = claimData.Policy;
+                string nameOfInsure = claimData.CName;
+                string referenceNo = claimData.ClaimRef;
+                string bhtNo = claimData.bthNo;
+                string billNo = claimData.bilNo;
+
+                string totalbillamo = totBill.Value;
+                double totalBillAmount = Convert.ToDouble(totalbillamo);
+                string formattedTotalBillAmount = totalBillAmount.ToString("0.00");
+
+                string totPayAmount = paidAmo.Value;
+                double totPayAmount2 = Convert.ToDouble(totPayAmount);
+                string ftotPayAmount2 = totPayAmount2.ToString("0.00");
+
+
+                int RECEIPTNUMBER = 111;
+                using (MemoryStream memoryStream = new MemoryStream())
+                {
+                    Document document = new Document();
+                    PdfWriter writer = PdfWriter.GetInstance(document, memoryStream);
+
+                    document.Open();
+
+
+                    var content = writer.DirectContent;
+                    var pageBorderRect = new Rectangle(document.PageSize);
+
+                    pageBorderRect.Left += document.LeftMargin;
+                    pageBorderRect.Right -= document.RightMargin;
+                    pageBorderRect.Top -= document.TopMargin;
+                    pageBorderRect.Bottom += document.BottomMargin;
+
+
+                    content.Rectangle(pageBorderRect.Left, pageBorderRect.Bottom, pageBorderRect.Width, pageBorderRect.Height);
+                    content.Stroke();
+
+                    Font fontBold = FontFactory.GetFont(FontFactory.HELVETICA, 10);
+                    fontBold.SetStyle(Font.BOLD);
+
+                    Font normalFont = FontFactory.GetFont(FontFactory.HELVETICA, 10);
+                    Font normalFont2 = FontFactory.GetFont(FontFactory.HELVETICA, 11);
+
+
+
+                    string imagePath = Server.MapPath("~/images/slic.jpg");
+                    iTextSharp.text.Image image1 = iTextSharp.text.Image.GetInstance(imagePath);
+                    image1.ScaleAbsolute(100f, 50f);
+                    // Calculate the X coordinate to center the image horizontally
+                    float x = (PageSize.A4.Width - image1.ScaledWidth) / 2;
+                    // Set the position of the image
+                    image1.SetAbsolutePosition(x, document.PageSize.Height - 100f); // Adjust the Y coordinate as needed
+                    image1.SpacingBefore = 20f;
+                    // Add the image to the document
+                    document.Add(image1);
+
+                    Font font = new Font();
+                    font.SetStyle(Font.BOLD);
+                    font.SetStyle(Font.UNDERLINE);
+                    Paragraph paragraph1 = new Paragraph("Health Plus Medicare Hospital Statement", font);
+
+                    paragraph1.Alignment = Element.ALIGN_CENTER;
+                    paragraph1.IndentationLeft = 20f; // Set left margin
+                    paragraph1.SpacingBefore = 70f;
+                    document.Add(paragraph1);
+
+                    Paragraph paragraph2 = new Paragraph("_____________________", fontBold);
+                    paragraph2.IndentationLeft = 10f; // Set left margin
+                    paragraph2.SpacingBefore = 10f;
+                    document.Add(paragraph2);
+
+                    Paragraph paragraph3 = new Paragraph("_____________________", fontBold);
+                    paragraph3.IndentationLeft = 10f; // Set left margin
+                    paragraph3.SpacingBefore = 10f;
+                    document.Add(paragraph3);
+
+
+                    //table for statement details start
+
+                    PdfPTable table4 = new PdfPTable(2);
+                    table4.SpacingBefore = 10f;
+                    table4.WidthPercentage = 80; // Set the table width to 80% of the page width
+                    table4.DefaultCell.Border = PdfPCell.NO_BORDER; // Remove borders for all cells
+                    table4.SpacingBefore = 20f;
+                    // Set the border color for all cells
+                    table4.DefaultCell.BorderColor = new BaseColor(0, 0, 255);
+                    table4.DefaultCell.BorderWidth = 1;
+
+                    PdfPCell cell1 = new PdfPCell(new Phrase("Reference No :", normalFont));
+                    PdfPCell cell2 = new PdfPCell(new Phrase(referenceNo, normalFont));
+                    PdfPCell cell3 = new PdfPCell(new Phrase("Name of the Insured :", normalFont));
+                    PdfPCell cell4 = new PdfPCell(new Phrase(nameOfInsure.ToUpper(), normalFont));
+                    PdfPCell cell5 = new PdfPCell(new Phrase("Policy No :", normalFont));
+                    PdfPCell cell6 = new PdfPCell(new Phrase(policyNo, normalFont));
+                    PdfPCell cell7 = new PdfPCell(new Phrase("B.H.T. No :", normalFont));
+                    PdfPCell cell8 = new PdfPCell(new Phrase(bhtNo.ToUpper(), normalFont));
+                    PdfPCell cell9 = new PdfPCell(new Phrase("Bill No :", normalFont));
+                    PdfPCell cell10 = new PdfPCell(new Phrase(billNo.ToUpper(), normalFont));
+                    PdfPCell cell11 = new PdfPCell(new Phrase("Total Bill Amount(Rs.) :", normalFont));
+                    PdfPCell cell12 = new PdfPCell(new Phrase(formattedTotalBillAmount, normalFont));
+                    PdfPCell cell13 = new PdfPCell(new Phrase("Amount Payable by Insurance(Rs.) :", normalFont));
+                    PdfPCell cell14 = new PdfPCell(new Phrase(ftotPayAmount2, normalFont));
+                   
+
+
+                    cell1.Padding = 3f;
+                    cell2.Padding = 3f;
+                    cell3.Padding = 3f;
+                    cell4.Padding = 3f;
+                    cell5.Padding = 3f;
+                    cell6.Padding = 3f;
+                    cell7.Padding = 3f;
+                    cell8.Padding = 3f;
+                    cell9.Padding = 3f;
+                    cell10.Padding = 3f;
+                    cell11.Padding = 3f;
+                    cell12.Padding = 3f;
+                    cell13.Padding = 3f;
+                    cell14.Padding = 3f;
+                    
+
+                    //cell1.Border = PdfPCell.NO_BORDER;
+                    //cell2.Border = PdfPCell.NO_BORDER;
+                    //cell3.Border = PdfPCell.NO_BORDER;
+                    //cell4.Border = PdfPCell.NO_BORDER;
+                    //cell5.Border = PdfPCell.NO_BORDER;
+                    //cell6.Border = PdfPCell.NO_BORDER;
+                    //cell7.Border = PdfPCell.NO_BORDER;
+                    //cell8.Border = PdfPCell.NO_BORDER;
+                    //cell9.Border = PdfPCell.NO_BORDER;
+                    //cell10.Border = PdfPCell.NO_BORDER;
+                    //cell11.Border = PdfPCell.NO_BORDER;
+                    //cell12.Border = PdfPCell.NO_BORDER;
+                    //cell13.Border = PdfPCell.NO_BORDER;
+                    //cell14.Border = PdfPCell.NO_BORDER;
+                    
+
+                    table4.AddCell(cell1);
+                    table4.AddCell(cell2);
+                    table4.AddCell(cell3);
+                    table4.AddCell(cell4);
+                    table4.AddCell(cell5);
+                    table4.AddCell(cell6);
+                    table4.AddCell(cell7);
+                    table4.AddCell(cell8);
+                    table4.AddCell(cell9);
+                    table4.AddCell(cell10);
+                    table4.AddCell(cell11);
+                    table4.AddCell(cell12);
+                    table4.AddCell(cell13);
+                    table4.AddCell(cell14);
+                    
+                  
+                    document.Add(table4);
+
+                    //end of statement details
+
+                    Paragraph paragraph4 = new Paragraph("I hereby agree to the above 'Amount payable by insurance' as the full and final settlement, with regard to the above claim/bill.", normalFont);
+                    paragraph4.IndentationLeft = 10f; // Set left margin
+                    paragraph4.SpacingBefore = 10f;
+                    document.Add(paragraph4);
+
+
+                    //signature table
+                    PdfPTable table5 = new PdfPTable(3);
+                    table5.SpacingBefore = 10f;
+                    table5.WidthPercentage = 80; // Set the table width to 80% of the page width
+                    table5.DefaultCell.Border = PdfPCell.BOX; // Remove borders for all cells
+                    table5.SpacingBefore = 20f;
+
+                    PdfPCell cell51 = new PdfPCell(new Phrase("______________________", normalFont));
+                    PdfPCell cell52 = new PdfPCell(new Phrase("______________________", normalFont));
+                    PdfPCell cell53 = new PdfPCell(new Phrase("______________________", normalFont));
+                    PdfPCell cell54 = new PdfPCell(new Phrase("Authorized Signature ", normalFont));
+                    cell54.HorizontalAlignment = Element.ALIGN_CENTER;
+                    PdfPCell cell55 = new PdfPCell(new Phrase("I Agree For Above Settlement(Hospital)", normalFont));
+                    cell55.HorizontalAlignment = Element.ALIGN_CENTER;
+                    PdfPCell cell56 = new PdfPCell(new Phrase("Date", normalFont));
+                    cell56.HorizontalAlignment = Element.ALIGN_CENTER;
+
+                    cell51.Padding = 3f;
+                    cell52.Padding = 3f;
+                    cell53.Padding = 3f;
+                    cell54.Padding = 3f;
+                    cell55.Padding = 3f;
+                    cell56.Padding = 3f;
+                    
+                    cell51.Border = PdfPCell.NO_BORDER;
+                    cell52.Border = PdfPCell.NO_BORDER;
+                    cell53.Border = PdfPCell.NO_BORDER;
+                    cell54.Border = PdfPCell.NO_BORDER;
+                    cell55.Border = PdfPCell.NO_BORDER;
+                    cell56.Border = PdfPCell.NO_BORDER;
+
+                    table5.AddCell(cell51);
+                    table5.AddCell(cell52);
+                    table5.AddCell(cell53);
+                    table5.AddCell(cell54);
+                    table5.AddCell(cell55);
+                    table5.AddCell(cell56);                    
+
+                    document.Add(table5);
+
+                    //end of signature table
+
+                    // Define a PdfPTable for the company name
+                    PdfPTable companyTable = new PdfPTable(1);
+                    companyTable.TotalWidth = document.PageSize.Width;
+                    companyTable.DefaultCell.Border = PdfPCell.NO_BORDER;
+
+                    PdfPCell cell61 = new PdfPCell(new Phrase("21, Vauxhall Street, Colombo - 2, Sri Lanka.", normalFont));
+                    cell61.Border = PdfPCell.NO_BORDER;
+                    cell61.HorizontalAlignment = Element.ALIGN_CENTER;
+                    cell61.Phrase.Font.Size = 8;
+                    companyTable.AddCell(cell61);
+
+                    PdfPCell cell62 = new PdfPCell(new Phrase("Tel : General (94-11)2357457, Fax (94-11)2447742", normalFont));
+                    cell62.Border = PdfPCell.NO_BORDER;
+                    cell62.HorizontalAlignment = Element.ALIGN_CENTER;
+                    cell62.Phrase.Font.Size = 8;
+                    companyTable.AddCell(cell62);
+
+                    // Calculate the position to add the company name (at the bottom of the page)
+                    float bottomMargin = document.BottomMargin;
+                    float footerHeight = companyTable.TotalHeight;
+                    float yPosition = bottomMargin + footerHeight;
+
+                    // Add the company name table to the page
+                    companyTable.WriteSelectedRows(0, -1, 0, yPosition, writer.DirectContent);
+
+                    // end of PdfPTable for the company name
+
+
+
+                    document.Close();
+
+                    return memoryStream.ToArray();
+                }
+
+
+
+            }
+            catch (Exception ex)
+            {
+                //Logger logger = new Logger();
+                //logger.write_log("GenerateCovernote function exception" + ex.Message);
+            }
+
+
+            return null;
+
+
+        }
+
         public class ClaimData
         {
             public string ClaimRef { get; set; }
@@ -567,6 +878,8 @@ namespace SHE.ClaimPayment
             public string TotBil { get; set; }
             public string PDamt { get; set; }
             public string clamNo { get; set; }
+            public string bthNo { get; set; }
+            public string bilNo { get; set; }
         }
 
     }

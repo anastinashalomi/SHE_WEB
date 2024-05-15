@@ -123,7 +123,7 @@ namespace SHE
             {
                 case "ACCEPTED":
                     return "accepted-color-class";
-                case "COMPLETED ":
+                case "COMPLETED":
                     return "completed-color-class";
                 case "NOT_UPDATED":
                     return "not-updated-color-class";
@@ -466,6 +466,7 @@ namespace SHE
             ScriptManager.RegisterStartupScript(this, GetType(), "scrollToSelectedRadioButton", "scrollToElement('" + selectedRadioButton.ClientID + "');", true);
 
         }
+
 
 
         protected void Accepted_Click(object sender, EventArgs e)

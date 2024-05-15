@@ -737,6 +737,7 @@ D:\Shalomi\Projects\SHE Tab\Git\20240509\SHE_WEB\SHE\obj\Debug\SHE.csproj.CoreCo
 D:\Shalomi\Projects\SHE Tab\Git\20240509\SHE_WEB\SHE\obj\Debug\SHE.csproj.CopyComplete
 D:\Shalomi\Projects\SHE Tab\Git\20240509\SHE_WEB\SHE\obj\Debug\SHE.dll
 D:\Shalomi\Projects\SHE Tab\Git\20240509\SHE_WEB\SHE\obj\Debug\SHE.pdb
+D:\Shalomi\Projects\SHE Tab\Git\2024014 new\SHE_WEB\SHE\obj\Debug\SHE.csproj.CoreCompileInputs.cache
 D:\Shalomi\Projects\SHE Tab\Git\2024014 new\SHE_WEB\SHE\bin\SHE.dll.config
 D:\Shalomi\Projects\SHE Tab\Git\2024014 new\SHE_WEB\SHE\bin\SHE.dll
 D:\Shalomi\Projects\SHE Tab\Git\2024014 new\SHE_WEB\SHE\bin\SHE.pdb
@@ -791,6 +792,8 @@ D:\Shalomi\Projects\SHE Tab\Git\2024014 new\SHE_WEB\SHE\bin\roslyn\VBCSCompiler.
 D:\Shalomi\Projects\SHE Tab\Git\2024014 new\SHE_WEB\SHE\bin\roslyn\VBCSCompiler.exe.config
 D:\Shalomi\Projects\SHE Tab\Git\2024014 new\SHE_WEB\SHE\bin\Antlr3.Runtime.dll
 D:\Shalomi\Projects\SHE Tab\Git\2024014 new\SHE_WEB\SHE\bin\AspNet.ScriptManager.jQuery.dll
+D:\Shalomi\Projects\SHE Tab\Git\2024014 new\SHE_WEB\SHE\bin\BouncyCastle.Crypto.dll
+D:\Shalomi\Projects\SHE Tab\Git\2024014 new\SHE_WEB\SHE\bin\itextsharp.dll
 D:\Shalomi\Projects\SHE Tab\Git\2024014 new\SHE_WEB\SHE\bin\Microsoft.AspNet.FriendlyUrls.dll
 D:\Shalomi\Projects\SHE Tab\Git\2024014 new\SHE_WEB\SHE\bin\Microsoft.AspNet.Web.Optimization.WebForms.dll
 D:\Shalomi\Projects\SHE Tab\Git\2024014 new\SHE_WEB\SHE\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
@@ -801,13 +804,13 @@ D:\Shalomi\Projects\SHE Tab\Git\2024014 new\SHE_WEB\SHE\bin\Newtonsoft.Json.dll
 D:\Shalomi\Projects\SHE Tab\Git\2024014 new\SHE_WEB\SHE\bin\System.Data.Common.dll
 D:\Shalomi\Projects\SHE Tab\Git\2024014 new\SHE_WEB\SHE\bin\System.Web.Optimization.dll
 D:\Shalomi\Projects\SHE Tab\Git\2024014 new\SHE_WEB\SHE\bin\WebGrease.dll
+D:\Shalomi\Projects\SHE Tab\Git\2024014 new\SHE_WEB\SHE\bin\itextsharp.xml
 D:\Shalomi\Projects\SHE Tab\Git\2024014 new\SHE_WEB\SHE\bin\System.Web.Optimization.xml
 D:\Shalomi\Projects\SHE Tab\Git\2024014 new\SHE_WEB\SHE\bin\Newtonsoft.Json.xml
 D:\Shalomi\Projects\SHE Tab\Git\2024014 new\SHE_WEB\SHE\bin\Antlr3.Runtime.pdb
 D:\Shalomi\Projects\SHE Tab\Git\2024014 new\SHE_WEB\SHE\bin\Microsoft.AspNet.FriendlyUrls.xml
 D:\Shalomi\Projects\SHE Tab\Git\2024014 new\SHE_WEB\SHE\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
 D:\Shalomi\Projects\SHE Tab\Git\2024014 new\SHE_WEB\SHE\obj\Debug\SHE.csproj.AssemblyReference.cache
-D:\Shalomi\Projects\SHE Tab\Git\2024014 new\SHE_WEB\SHE\obj\Debug\SHE.csproj.CoreCompileInputs.cache
 D:\Shalomi\Projects\SHE Tab\Git\2024014 new\SHE_WEB\SHE\obj\Debug\SHE.csproj.CopyComplete
 D:\Shalomi\Projects\SHE Tab\Git\2024014 new\SHE_WEB\SHE\obj\Debug\SHE.dll
 D:\Shalomi\Projects\SHE Tab\Git\2024014 new\SHE_WEB\SHE\obj\Debug\SHE.pdb

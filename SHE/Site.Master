@@ -44,16 +44,24 @@
         </asp:ScriptManager>
         <nav class="navbar navbar-expand-sm bg-she">
             <div class="container-fluid">
-                <div class="d-flex align-items-center gap-2">
+                <div class="d-flex align-items-center gap-6">
                     
-                    <a runat="server" class="navbar-brand" href="~/Default.aspx" style="color: white;" >SLIC MEDI - <%= logUser %></a>
+                    <a runat="server" class="navbar-brand" href="~/Default.aspx" style="color: white;" >SLIC MEDI </a>
+
+                    
 
                 </div>
-                <asp:ImageButton runat="server" ImageUrl="~/images/ri_settings-fill.png" Style="width: 30px;" OnClick="Logout_Click" />
+                <asp:ImageButton runat="server" ImageUrl="~/images/ri_settings-fill.png" Style="width: 25px; margin-top: -15px;" OnClick="Logout_Click" />
             </div>
             <div>
-                <asp:ImageButton runat="server" ImageUrl="~/images/ic_sharp-logout.png" Style="width: 30px;" OnClick="Logout_Click" />
+                <asp:ImageButton runat="server" ImageUrl="~/images/ic_sharp-logout.png" Style="width: 25px; margin-top: -15px;" OnClick="Logout_Click" />
             </div>
+           <div style="color: white; text-align: center; margin-top: 5px; font-size: 12px;"> <!-- Corrected syntax: font-size: 8px; -->
+                <asp:ImageButton runat="server" ImageUrl="~/images/user (1).png" Style="width: 20px;" />
+                <!-- Adding a line break to separate the image and logUser -->
+                <%= logUser %>
+            </div>
+
         </nav>
 
 

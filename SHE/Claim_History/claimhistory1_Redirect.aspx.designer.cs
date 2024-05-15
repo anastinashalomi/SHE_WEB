@@ -60,15 +60,6 @@ namespace SHE.Claim_History
         protected global::System.Web.UI.WebControls.Label error2;
 
         /// <summary>
-        /// claimhist_submit control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button claimhist_submit;
-
-        /// <summary>
         /// exitbutton control.
         /// </summary>
         /// <remarks>
@@ -76,5 +67,14 @@ namespace SHE.Claim_History
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button exitbutton;
+
+        /// <summary>
+        /// claimhist_submit control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button claimhist_submit;
     }
 }

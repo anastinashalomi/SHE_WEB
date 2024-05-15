@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="ClaimPaymentDetail.aspx.cs" Inherits="SHE.ClaimPayment.ClaimPaymentDetail" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="ClaimPaymentDetail.aspx.cs" Inherits="SHE.ClaimPayment.ClaimPaymentDetail" Async="true" %>
 
 <%@ Import Namespace="SHE.Code" %>
 
@@ -6,7 +6,7 @@
 
     <style>
         .btn {
-            color: gainsboro;           
+            color: gainsboro;
             border: 2px solid #05ABB8;
             padding: 2px 5px;
             border-radius: 5px;
@@ -64,7 +64,7 @@
 
         function clientFunctionValidation() {
 
-            
+
             //validate executve name
             var execName = $('#<%=execuName.ClientID %>').val();
 
@@ -72,11 +72,11 @@
                 custom_alert2('Please enter Executive Name.', 'Alert');
                 return false;
             }
-           
+
             //validate total bill amount
             var totalBill = $('#<%=totBill.ClientID %>').val();
             totalBill = totalBill.replace(/,/g, '');
-            
+
             if (totalBill == "") {
                 custom_alert2('Please enter total bill amount.', 'Alert');
                 return false;
@@ -85,7 +85,7 @@
             //validate total paid amount
             var paidAmount = $('#<%=paidAmo.ClientID %>').val();
             paidAmount = paidAmount.replace(/,/g, '');
-            
+
             if (paidAmount == "") {
                 custom_alert2('Please enter total bill amount.', 'Alert');
                 return false;
@@ -93,7 +93,7 @@
 
             var totalBillValue = parseFloat(totalBill);
             var totalPaidValue = parseFloat(paidAmount);
-            
+
             if (totalPaidValue > totalBillValue) {
                 custom_alert2('Total bill amount cant less than paid amount.', 'Alert');
                 return false;
@@ -109,7 +109,7 @@
                 <div class="col-md-12 panel-with-shadow" style="max-width: 700px; background-color: #CFEFF2; padding: 10px; border: 1px solid #c0c0c0; border-radius: 10px; padding: 20px;">
                     <h4 style="text-align: center;">SHE Claim Details</h4>
                     <br />
-                    
+
                     <%--DefaultButton="claimhist_submit"--%>
 
                     <div class="container" style="width: 80%;">
@@ -249,19 +249,19 @@
                             <div class="form-group row">
                                 <label for="lblreferenceNo" class="col-sm-6 col-form-label ">Executive Name</label>
                                 <div class="col-sm-6">
-                                    <input type="text" class="form-control" readonly="readonly" runat="server"  id="execuName" placeholder="Executive Name" style="padding-bottom: 10px; margin-bottom: 10px;">
+                                    <input type="text" class="form-control" readonly="readonly" runat="server" id="execuName" placeholder="Executive Name" style="padding-bottom: 10px; margin-bottom: 10px;">
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label for="lblreferenceNo" class="col-sm-6 col-form-label">Total Bill</label>
                                 <div class="col-sm-6">
-                                    <input type="text" class="form-control"  onkeypress="return isNumberKey(event)" onkeyup="javascript:this.value=Comma(this.value);"  runat="server" id="totBill" placeholder="Total Bill" style="padding-bottom: 10px; margin-bottom: 10px;">
+                                    <input type="text" class="form-control" onkeypress="return isNumberKey(event)" onkeyup="javascript:this.value=Comma(this.value);" runat="server" id="totBill" placeholder="Total Bill" style="padding-bottom: 10px; margin-bottom: 10px;">
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label for="lblreferenceNo" class="col-sm-6 col-form-label ">Paid Amount</label>
                                 <div class="col-sm-6">
-                                    <input type="text" class="form-control" onkeypress="return isNumberKey(event)" onkeyup="javascript:this.value=Comma(this.value);"  runat="server" id="paidAmo" placeholder="Paid Amount" style="padding-bottom: 10px; margin-bottom: 10px;">
+                                    <input type="text" class="form-control" onkeypress="return isNumberKey(event)" onkeyup="javascript:this.value=Comma(this.value);" runat="server" id="paidAmo" placeholder="Paid Amount" style="padding-bottom: 10px; margin-bottom: 10px;">
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -287,7 +287,8 @@
                             <div class="card-footer d-flex justify-content-evenly">
                                 <asp:Button runat="server" ID="Button1" Text="Back" CssClass="btn btn-claimPaymet" OnClick="back_click2" />
                                 <asp:Button runat="server" ID="Button3" Text="Main Menu" CssClass="btn btn-claimPaymet" OnClick="back_main" />
-                                <asp:Button runat="server" ID="Button2" Text="Submit" CssClass="btn btn-claimPaymet" OnClick="claim_payment_update"  OnClientClick="return clientFunctionValidation()" />
+                                <asp:Button runat="server" ID="Button2" Text="Submit" CssClass="btn btn-claimPaymet" OnClick="claim_payment_update" OnClientClick="return clientFunctionValidation()" />
+
                             </div>
 
                         </div>
@@ -297,11 +298,66 @@
         </div>
 
         <br />
-
-
     </asp:Panel>
 
-     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <%-- medicare statement panel --%>
+    <asp:Panel ID="panel3" runat="server" Visible="false">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-12 panel-with-shadow" style="max-width: 700px; background-color: #CFEFF2; padding: 10px; border: 1px solid #c0c0c0; border-radius: 10px; padding: 20px;">
+                    <div style="text-align: center;">
+                        <!-- Centering the image -->
+                        <asp:ImageButton runat="server" ImageUrl="~/images/slic.jpg" Style="width: 100px; height: 50px;" />
+                    </div>
+                    <h4 style="text-align: center;">Health Plus Medicare Hospital Statement</h4>
+                    <br />
+
+                    <%--DefaultButton="claimhist_submit"--%>
+
+                    <div class="container" style="width: 80%;">
+                        <div class="mx-auto">
+                            <div class="row">
+                                <div class="col-sm-4 ">Reference No</div>
+                                <div class="col-sm-8 " runat="server" id="refNo1"></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 ">Name of the Insured </div>
+                                <div class="col-sm-8 " runat="server" id="nameInsu"></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 ">Policy No :</div>
+                                <div class="col-sm-8 " runat="server" id="polNo2"></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 ">B.H.T. No </div>
+                                <div class="col-sm-8 " runat="server" id="bhtNo2"></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">Bill No </div>
+                                <div class="col-sm-8 " runat="server" id="billNo2"></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 ">Total Bill Amount(Rs.) </div>
+                                <div class="col-sm-8 " runat="server" id="totStAm"></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-4">Amount Payable by Insurance(Rs.) :</div>
+                                <div class="col-8 " runat="server" id="totStaePayAm"></div>
+                            </div>
+
+                            <div class="card-footer d-flex justify-content-evenly">
+                                <asp:Button runat="server" ID="Button5" Text="Back" CssClass="btn btn-claimPaymet" OnClick="back_click" />
+                                <asp:Button runat="server" ID="Button4" Text="Download Medi Receipt" CssClass="btn btn-claimPaymet" Width= "200px" OnClick="down_recei_pdf" Visible="false" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </asp:Panel>
+    <%-- end of statement --%>
+
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script type="text/javascript">
 
         function custom_alert2(message, title) {
@@ -310,7 +366,7 @@
 
             if (!message)
                 message = 'No Message to Display.';
-
+            
 
             if (title == 'Alert') {
 
@@ -349,6 +405,7 @@
 
             //if (!message)
             //    message = 'No Message to Display.';
+            
 
             if (title === 'Alert') {
                 swal({
@@ -362,24 +419,31 @@
                     window.location.href = "/Default.aspx";
                 });
             } else if (title === 'Success') {
-                swal({
+                 swal({
                     title: title,
-                    text: message, 
-                    icon: "success",                    
+                    text: message,
+                    icon: "success",
                     button: "OK",
                     closeOnClickOutside: false,
-                });then(function () {
+                }); then(function () {
                     // Redirect to index page
                     window.location.href = "/Default.aspx";
                 });
             } else if (title === 'Info') {
-                swal({
+                 swal({
                     title: title,
                     text: message,
                     icon: "info",
                     button: false,
                     closeOnClickOutside: false,
                 });
+            }
+        }
+
+        function clearAlert() {
+            document.getElementById('lblAlertMessage').innerText = ''; // Replace 'alertMessage' with the ID of your alert message element
+            if (typeof swal !== 'undefined' && swal.isVisible()) {
+                swal.close(); // Close any active sweet alert popups
             }
         }
 
