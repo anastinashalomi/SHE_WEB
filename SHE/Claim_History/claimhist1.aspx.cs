@@ -37,7 +37,7 @@ namespace SHE.Claim_History
             }
             else
             {
-                Response.Redirect("~/Claim_History/claimhist2.aspx?POLICYNO=" + dc.Encrypt(policy) + "&EPF=" + dc.Encrypt(epfno));
+                Response.Redirect("~/Claim_History/claimhist2.aspx?POLICYNO=" + dc.Encrypt(policy) + "&EPF=" + dc.Encrypt(epfno)+ "&backBtnToDefault=true");
                 //error2.Visible = false;
             }
            

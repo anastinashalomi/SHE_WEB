@@ -72,7 +72,7 @@ namespace SHE.ClaimPayment
                                                       " from shedata.cor_job_status c" +
                                                       " INNER JOIN SHEDATA.SHHOSINF00 m  ON m.claimref = c.claimref" +
                                                       " INNER JOIN GENERAL_CLAIM.CLAIM_HOSPITAL_DETAILS g ON m.hospital = g.hospital_id" +
-                                                      " WHERE m.claimref = :pin_claimref and m.policy = :pin_policy and c.cordinator_userid=:pin_log_user and c.job_type='D' and (c.job_status='ACCEPTED' or c.job_status='COMPLETED')";
+                                                      " WHERE m.claimref = :pin_claimref and m.policy = :pin_policy and c.cordinator_userid=:pin_log_user and c.job_type='D' and c.job_status='ACCEPTED'";
 
 
                             cmd.CommandText = exe_Select_date;
@@ -126,7 +126,7 @@ namespace SHE.ClaimPayment
                                                       " from shedata.cor_job_status c" +
                                                       " INNER JOIN SHEDATA.SHHOSINF00 m  ON m.claimref = c.claimref" +
                                                       " INNER JOIN GENERAL_CLAIM.CLAIM_HOSPITAL_DETAILS g ON m.hospital = g.hospital_id" +
-                                                      " WHERE m.claimref = :pin_claimref and m.policy = :pin_policy and m.epf = :pin_epf and c.cordinator_userid=:pin_log_user and c.job_type='D' and (c.job_status='ACCEPTED' or c.job_status='COMPLETED')";
+                                                      " WHERE m.claimref = :pin_claimref and m.policy = :pin_policy and m.epf = :pin_epf and c.cordinator_userid=:pin_log_user and c.job_type='D' and c.job_status='ACCEPTED'";
 
 
                             cmd.CommandText = exe_Select_date;
@@ -262,16 +262,19 @@ namespace SHE.ClaimPayment
 
         protected void back_click(object sender, EventArgs e)
         {
-            //if (epfno == "" || epfno == null)
-            //{
-            //    Response.Redirect("~/Default.aspx");
-            //}
-            //else
-            //{
-            //    Response.Redirect("~/Notifications.aspx");
-            //}
+            string fronNotificationPanel = Request.QueryString["fromNotifi"];
 
-            Response.Redirect("~/Default.aspx");
+            if (fronNotificationPanel == "true")
+            {
+                Response.Redirect("~/Notifications.aspx");
+            }
+            else
+            {
+                Response.Redirect("~/ClaimPayment/ClaimSearch.aspx");
+                
+            }
+
+            //Response.Redirect("~/Default.aspx");
 
         }
 
@@ -650,9 +653,9 @@ namespace SHE.ClaimPayment
 
 
 
-                    string imagePath = Server.MapPath("~/images/slic.jpg");
+                    string imagePath = Server.MapPath("~/images/New_Slic_Logo.png");
                     iTextSharp.text.Image image1 = iTextSharp.text.Image.GetInstance(imagePath);
-                    image1.ScaleAbsolute(100f, 50f);
+                    image1.ScaleAbsolute(80f, 50f);
                     // Calculate the X coordinate to center the image horizontally
                     float x = (PageSize.A4.Width - image1.ScaledWidth) / 2;
                     // Set the position of the image

@@ -44,6 +44,7 @@ namespace SHE.Claim_History
 
                 string epfno = Request.QueryString["EPF"];
                 string policy = Request.QueryString["POLICYNO"];
+                string backReBtn = Request.QueryString["backBtnVisible"];
 
 
 
@@ -105,8 +106,8 @@ namespace SHE.Claim_History
                         label2.InnerText = renewalDate.ToString("yyyy-MM-dd"); // Convert to string as per your format
                         label1.InnerText = companyName;
                         lblComNam.InnerText = companyName;
-                        lblReDate.InnerText = renewalDate.ToString();
-                        lblEffeDa.InnerText = endDate.ToString();
+                        lblReDate.InnerText = renewalDate.ToString("dd/MM/yyyy");
+                        lblEffeDa.InnerText = endDate.ToString("dd/MM/yyyy");
 
                     }
 
@@ -128,6 +129,7 @@ namespace SHE.Claim_History
                                     if (kirulaDetail != null)
                                     {
                                         totPre.InnerHtml = kirulaDetail.MON_PREMIUM;
+                                        lblPoNo.InnerHtml = dc.Decrypt(policy);
                                     }
                                 }
 
@@ -2065,7 +2067,8 @@ namespace SHE.Claim_History
                             .AddMilliseconds(timestamp);
 
                         // Format the DateTime as "dd-MMM-yy"
-                        formattedDate = dateTime.ToString("dd-MMM-yy");
+                        //formattedDate = dateTime.ToString("dd-MMM-yy");
+                        formattedDate = dateTime.ToString("dd/MM/yyyy");
 
 
                     }
@@ -2323,6 +2326,33 @@ namespace SHE.Claim_History
                 {
                     e.Row.CssClass = "row-color-odd"; // Apply odd row color
                 }
+            }
+
+        }
+
+        //back btn click
+        protected void backClick(object sender, EventArgs e)
+        {
+            string backBtnVisi = Request.QueryString["backBtnVisible"];
+            string backBtnToDefaultVi = Request.QueryString["backBtnToDefault"];
+
+            
+            if (backBtnVisi == "true")
+            {
+                //string param1 = "";
+                //string param2 = "";
+                //string param3 = "";
+                //Response.Redirect("~/Notifications.aspx?action=FetchPanelTwoData&param1="+param1+"&param2="+param2+"&param3="+param3);
+
+                Response.Redirect("~/Notifications.aspx");
+            }
+            else if (backBtnToDefaultVi == "true")
+            {
+                Response.Redirect("~/Claim_History/claimhist1.aspx");
+            }
+            else
+            {
+
             }
 
         }

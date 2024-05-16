@@ -29,7 +29,7 @@ namespace SHE.Claim_History
         {
             string policy = policyno.Value;
             string epfno = epf.Value;
-            Response.Redirect("~/Claim_History/claimhist2.aspx?POLICYNO=" + dc.Encrypt(policy) + "&EPF=" + dc.Encrypt(epfno));
+            Response.Redirect("~/Claim_History/claimhist2.aspx?POLICYNO=" + dc.Encrypt(policy) + "&EPF=" + dc.Encrypt(epfno)+"&backBtnVisible=true");
         }
 
         protected void exitbutton_Click(object sender, EventArgs e)

@@ -406,6 +406,9 @@
                                         <div class="col-md-4">
                                             <asp:Label runat="server" Text='<%# Eval("csrtpno1") %>' ID="CSRTNO" CssClass="smallFont hideLabel"></asp:Label>
                                         </div>
+                                         <div class="col-md-4">
+                                            <asp:Label runat="server" Text='<%# Eval("CSRGXNO1") %>' ID="CSRGXNO" CssClass="smallFont hideLabel"></asp:Label>
+                                        </div>
                                     </div>
                                 </div>
                             </ItemTemplate>

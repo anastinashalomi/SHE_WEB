@@ -154,6 +154,7 @@
     <Content Include="Images\green.png" />
     <Content Include="Images\ic_sharp-logout.png" />
     <Content Include="Images\login.png" />
+    <Content Include="Images\New_Slic_Logo.png" />
     <Content Include="Images\red.png" />
     <Content Include="Images\ri_settings-fill.png" />
     <Content Include="Images\SHELogo.png" />

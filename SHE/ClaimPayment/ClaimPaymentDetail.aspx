@@ -307,7 +307,7 @@
                 <div class="col-md-12 panel-with-shadow" style="max-width: 700px; background-color: #CFEFF2; padding: 10px; border: 1px solid #c0c0c0; border-radius: 10px; padding: 20px;">
                     <div style="text-align: center;">
                         <!-- Centering the image -->
-                        <asp:ImageButton runat="server" ImageUrl="~/images/slic.jpg" Style="width: 100px; height: 50px;" />
+                        <asp:ImageButton runat="server" ImageUrl="~/images/New_Slic_Logo.png" Style="width: 80px; height: 50px;" />
                     </div>
                     <h4 style="text-align: center;">Health Plus Medicare Hospital Statement</h4>
                     <br />
@@ -433,7 +433,7 @@
                  swal({
                     title: title,
                     text: message,
-                    icon: "info",
+                     icon: "success",
                     button: false,
                     closeOnClickOutside: false,
                 });

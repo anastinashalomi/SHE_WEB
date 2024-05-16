@@ -288,7 +288,7 @@ namespace SHE
                                 btnAccept.Enabled = false;
                                 btnReassign.Enabled = false;
                                 btnClaimHistory.Enabled = true;
-                                btnClaimPayment.Enabled = true;
+                                btnClaimPayment.Enabled = false;
                                 btnBack.Enabled = true;
                                 break;
                             case "REASSIGNED":
@@ -330,7 +330,7 @@ namespace SHE
             var policy = dc.Encrypt(PolicyLabel.Text);
             var epfno = dc.Encrypt(EPFLabel.Text);
             var clamRef = dc.Encrypt(ClaimReferenceLabel.Text);
-            Response.Redirect("~/ClaimPayment/ClaimSearch.aspx?policy=" + policy + "&epf=" + epfno + "&claimRef=" + clamRef);
+            Response.Redirect("~/ClaimPayment/ClaimSearch.aspx?policy=" + policy + "&epf=" + epfno + "&claimRef=" + clamRef + "&fromNotifi=true");
 
         }
 
@@ -379,7 +379,7 @@ namespace SHE
                     }
 
                     // SQL query to fetch CSRNAME and CSRBRNC from the database
-                    string sql = @" SELECT s.CSRNAME, s.CSRBRNC,s.CSRUSRN,s.csrtpno FROM shedata.sheglxag s WHERE s.CSRSTAT = 'Y' AND s.CSRGTAB = 'Y' ORDER BY s.CSRNAME ASC";
+                    string sql = @" SELECT s.CSRNAME, s.CSRBRNC,s.CSRUSRN,s.csrtpno, s.CSRGXNO FROM shedata.sheglxag s WHERE s.CSRSTAT = 'Y' AND s.CSRGTAB = 'Y' ORDER BY s.CSRNAME ASC";
 
                     using (OracleCommand cmd = new OracleCommand(sql, oconn))
                     {
@@ -393,6 +393,7 @@ namespace SHE
                                     BRANCH1 = reader["CSRBRNC"].ToString(),
                                     CSRUSRN1 = reader["CSRUSRN"].ToString(),
                                     csrtpno1 = reader["csrtpno"].ToString(),
+                                    CSRGXNO1 = reader["CSRGXNO"].ToString(),
                                 };
 
                                 mtolist.Add(details);
@@ -418,6 +419,7 @@ namespace SHE
             public string BRANCH1 { get; set; }
             public string CSRUSRN1 { get; set; }
             public string csrtpno1 { get; set; }
+            public string CSRGXNO1 { get; set; }
 
         }
 
@@ -445,12 +447,14 @@ namespace SHE
             string CLAIMINF1 = ((Label)row.FindControl("agentname")).Text;
             string BRANCH1 = ((Label)row.FindControl("BRANCH_NAME")).Text;
             string csrtpno1 = ((Label)row.FindControl("CSRTNO")).Text;
+            string CSRGXNO1 = ((Label)row.FindControl("CSRGXNO")).Text;
 
             // Store the data in session variables
             Session["CSRUSRN"] = CSRUSRN;
             Session["CLAIMINF1"] = CLAIMINF1;
             Session["BRANCH1"] = BRANCH1;
             Session["csrtpno1"] = csrtpno1;
+            Session["CSRGXNO1"] = CSRGXNO1;
 
             // Uncheck all other radio buttons in the GridView
             foreach (GridViewRow gridViewRow in GridView2.Rows)
@@ -542,6 +546,7 @@ namespace SHE
                 // Get the CSRUSRN value from session or another source
                 string CSRUSRN = Session["CSRUSRN"] as string; // Example: Retrieving from session
                 string csrtpno1 = Session["csrtpno1"] as string;
+                string CSRGXNO1 = Session["CSRGXNO1"] as string;
 
                 string userid = (string)Session["LoggedUser"];
 
@@ -599,7 +604,8 @@ namespace SHE
                                 ClientScript.RegisterStartupScript(this.GetType(), "displaySuccessMessage", "displayPopup('REASSIGNED');", true);
                                 UpdateButtonStates();
 
-                                SendMessageToMTO(csrtpno1);
+                                SendMessageToMTO(csrtpno1, CSRGXNO1);
+
 
                                 SubmitButton.Enabled = false;
                             }
@@ -662,7 +668,7 @@ namespace SHE
         }
 
         // Method to send message to MTO
-        private void SendMessageToMTO(string csrtpno1)
+        private void SendMessageToMTO(string csrtpno1, string CSRGXNO1)
         {
             try
             {
@@ -678,22 +684,44 @@ namespace SHE
                                     "VALUES (:recordSeq, :appId, :jobCategory, :smsType, :mobileNum, :textMsg, :shortCode, :recordStatus, :jobOtherInfo)";
 
                 using (OracleConnection oconn = new OracleConnection(ConfigurationManager.AppSettings["OracleDB"]))
-                using (OracleCommand insertCmd = new OracleCommand(insertSql, oconn))
                 {
-                    // Set parameters for insertion                    
-                    insertCmd.Parameters.Add("recordSeq", OracleType.Number).Value = nextRecordSequence;
-                    insertCmd.Parameters.Add("appId", OracleType.VarChar).Value = "SHE_INT_HEALTH_CSR"; // Hardcoded value
-                    insertCmd.Parameters.Add("jobCategory", OracleType.VarChar).Value = "CAT231"; // Hardcoded value
-                    insertCmd.Parameters.Add("smsType", OracleType.VarChar).Value = "I"; // Hardcoded value
-                    insertCmd.Parameters.Add("mobileNum", OracleType.VarChar).Value = csrtpno1; // Using the mobile number passed as parameter
-                    insertCmd.Parameters.Add("textMsg", OracleType.VarChar).Value = "A new task has been assigned to you, please check your SHE system. Reference No: " + refn1 + " Hospital: " + hospital + " Room No: " + roomNo;
-                    insertCmd.Parameters.Add("shortCode", OracleType.VarChar).Value = "SLIC"; // Provide appropriate values
-                    insertCmd.Parameters.Add("recordStatus", OracleType.VarChar).Value = "N"; // Provide appropriate values
-                    insertCmd.Parameters.Add("jobOtherInfo", OracleType.VarChar).Value = refn1; // Provide appropriate values
-
                     oconn.Open();
-                    // Execute the insert command
-                    insertCmd.ExecuteNonQuery();
+
+                    // Insert data with the first mobile number
+                    using (OracleCommand insertCmd = new OracleCommand(insertSql, oconn))
+                    {
+                        // Set parameters for insertion                    
+                        insertCmd.Parameters.Add("recordSeq", OracleType.Number).Value = nextRecordSequence;
+                        insertCmd.Parameters.Add("appId", OracleType.VarChar).Value = "SHE_INT_HEALTH_CSR"; // Hardcoded value
+                        insertCmd.Parameters.Add("jobCategory", OracleType.VarChar).Value = "CAT231"; // Hardcoded value
+                        insertCmd.Parameters.Add("smsType", OracleType.VarChar).Value = "I"; // Hardcoded value
+                        insertCmd.Parameters.Add("mobileNum", OracleType.VarChar).Value = csrtpno1; // Using the first mobile number passed as parameter
+                        insertCmd.Parameters.Add("textMsg", OracleType.VarChar).Value = "A new task has been assigned to you, please check your SHE system. Reference No: " + refn1 + " Hospital: " + hospital + " Room No: " + roomNo;
+                        insertCmd.Parameters.Add("shortCode", OracleType.VarChar).Value = "SLIC"; // Provide appropriate values
+                        insertCmd.Parameters.Add("recordStatus", OracleType.VarChar).Value = "N"; // Provide appropriate values
+                        insertCmd.Parameters.Add("jobOtherInfo", OracleType.VarChar).Value = refn1; // Provide appropriate values
+
+                        // Execute the insert command
+                        insertCmd.ExecuteNonQuery();
+                    }
+
+                    // Insert data with the second mobile number
+                    using (OracleCommand insertCmd = new OracleCommand(insertSql, oconn))
+                    {
+                        // Set parameters for insertion                    
+                        insertCmd.Parameters.Add("recordSeq", OracleType.Number).Value = nextRecordSequence; // Using the same record sequence
+                        insertCmd.Parameters.Add("appId", OracleType.VarChar).Value = "SHE_INT_HEALTH_CSR"; // Hardcoded value
+                        insertCmd.Parameters.Add("jobCategory", OracleType.VarChar).Value = "CAT231"; // Hardcoded value
+                        insertCmd.Parameters.Add("smsType", OracleType.VarChar).Value = "I"; // Hardcoded value
+                        insertCmd.Parameters.Add("mobileNum", OracleType.VarChar).Value = CSRGXNO1; // Using the second mobile number passed as parameter
+                        insertCmd.Parameters.Add("textMsg", OracleType.VarChar).Value = "A new task has been assigned to you, please check your SHE system. Reference No: " + refn1 + " Hospital: " + hospital + " Room No: " + roomNo;
+                        insertCmd.Parameters.Add("shortCode", OracleType.VarChar).Value = "SLIC"; // Provide appropriate values
+                        insertCmd.Parameters.Add("recordStatus", OracleType.VarChar).Value = "N"; // Provide appropriate values
+                        insertCmd.Parameters.Add("jobOtherInfo", OracleType.VarChar).Value = refn1; // Provide appropriate values
+
+                        // Execute the insert command
+                        insertCmd.ExecuteNonQuery();
+                    }
                 }
             }
             catch (Exception ex)
@@ -702,7 +730,6 @@ namespace SHE
                 // For example, log the error.
             }
         }
-
         // Method to get the next RECORD_SEQUENCE
         private int GetNextRecordSequence()
         {

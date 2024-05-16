@@ -1096,6 +1096,13 @@
                 </svg>--%>
             </div>
         </div>
+        <br />
+        <div class="row">
+            <div class="col-12 text-center">
+                <asp:Button runat="server" ID="backToDataView" OnClick="backClick" class="btn btn-primary mb-2 mb-sm-0" Style="width: 100%; max-width: 200px; border-radius: 5px; background-color: #4dc6d0; color: white; font-weight: bold; font-size: 15px; border-color: #4dc6d0" Text="Back" />
+            <%--<asp:Button ID="backToDataView" runat="server" Text="Back"  OnClick="backClick"/>--%>
+            </div>
+        </div>
     </div>
 
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>

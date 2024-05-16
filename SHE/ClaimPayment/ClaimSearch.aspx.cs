@@ -21,6 +21,7 @@ namespace SHE.ClaimPayment
                     string policy = Request.QueryString["policy"];
                     string epfno = Request.QueryString["epf"];
                     string claimRefNo = Request.QueryString["claimRef"];
+                    
 
                     policy = dc.Decrypt(policy);
                     epfno = dc.Decrypt(epfno);
@@ -55,6 +56,7 @@ namespace SHE.ClaimPayment
             string policy = policyno.Value;
             string epfno = epf.Value;
             string claimRefNo= claimRef.Value;
+            string fromNotifi = Request.QueryString["fromNotifi"];
 
             if ((policy == null || policy == "") && (epfno == null || epfno == "" ) && (claimRefNo == "" || claimRefNo == null))
             {
@@ -62,7 +64,7 @@ namespace SHE.ClaimPayment
             }
             else
             {
-                Response.Redirect("~/ClaimPayment/ClaimPaymentDetail.aspx?POLICYNO=" + dc.Encrypt(policy) + "&EPF=" + dc.Encrypt(epfno) +"&CLAIMREF=" + dc.Encrypt(claimRefNo));
+                Response.Redirect("~/ClaimPayment/ClaimPaymentDetail.aspx?POLICYNO=" + dc.Encrypt(policy) + "&EPF=" + dc.Encrypt(epfno) +"&CLAIMREF=" + dc.Encrypt(claimRefNo) + "&fromNotifi=" + fromNotifi);
             }
             
         }
