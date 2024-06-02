@@ -49,20 +49,20 @@
 
     <main>
         <div class="container d-flex justify-content-center align-items-center vh-75">
-            <div class="card" style="width: 75%">
+            <div class="card" style="width: 100%">
                 <div class="image-container">
                    <%-- <asp:Image runat="server" Style="height: 150px; width: 200px;" ImageUrl="~/images/GENERAL EST LOGO 1.png" />--%>
                      <asp:Image runat="server" Style="height: 150px; width: 200px;" ImageUrl="~/images/SHELogo.png" />
                 </div>
 
-                <div class="card-body row gap-3 p-5">
+                <div class="card-body d-flex flex-column gap-3 p-5">
 
-                    <asp:Button runat="server" CssClass="btn custom-button mx-auto" Style="width: 50%; border-radius: 5px; background-color: #4dc6d0; color: white; font-weight: bold; font-size: 16px; border-color: #4dc6d0;" Text="NOTIFICATIONS" PostBackUrl="~/Notifications.aspx" ID="Button5" />
-                    <asp:Button runat="server" CssClass="btn custom-button mx-auto" Style="width: 50%; border-radius: 5px; background-color: #4dc6d0; color: white; font-weight: bold; font-size: 16px; border-color: #4dc6d0;" Text="INQUIRY" ID="Button1" OnClick="Button1_Click" />
-                    <asp:Button runat="server" CssClass="btn custom-button mx-auto" Style="width: 50%; border-radius: 5px; background-color: #4dc6d0; color: white; font-weight: bold; font-size: 16px; border-color: #4dc6d0;" Text="CLAIM HISTORY" PostBackUrl="~/Claim_History/claimhist1.aspx" ID="Button4" />
-                    <asp:Button runat="server" CssClass="btn custom-button mx-auto" Style="width: 50%; border-radius: 5px; background-color: #4dc6d0; color: white; font-weight: bold; font-size: 16px; border-color: #4dc6d0;" Text="CLAIM PAYMENT" OnClick="Button2_Click" ID="Button2" />
+                    <asp:Button runat="server" CssClass="btn custom-button mx-auto" Style="width: 70%; border-radius: 5px; background-color: #4dc6d0; color: white; font-weight: bold; font-size: 16px; border-color: #4dc6d0;" Text="NOTIFICATIONS" PostBackUrl="~/Notifications.aspx" ID="Button5" />
+                    <asp:Button runat="server" CssClass="btn custom-button mx-auto" Style="width: 70%; border-radius: 5px; background-color: #4dc6d0; color: white; font-weight: bold; font-size: 16px; border-color: #4dc6d0;" Text="INQUIRY" ID="Button1" OnClick="Button1_Click" />
+                    <asp:Button runat="server" CssClass="btn custom-button mx-auto" Style="width: 70%; border-radius: 5px; background-color: #4dc6d0; color: white; font-weight: bold; font-size: 16px; border-color: #4dc6d0;" Text="CLAIM HISTORY" PostBackUrl="~/Claim_History/claimhist1.aspx" ID="Button4" />
+                    <asp:Button runat="server" CssClass="btn custom-button mx-auto" Style="width: 70%; border-radius: 5px; background-color: #4dc6d0; color: white; font-weight: bold; font-size: 16px; border-color: #4dc6d0;" Text="CLAIM PAYMENT" OnClick="Button2_Click" ID="Button2" />
                     <%--<asp:Button runat="server" CssClass="btn custom-button mx-auto" Style="width: 50%; border-radius: 0; background-color: transparent; color: black; font-weight: bold; font-size: 16px; border-color: #4dc6d0;" Text="SETTINGS" ID="Button3" />--%>
-                    <asp:Button runat="server" CssClass="btn custom-button mx-auto" Style="width: 50%; border-radius: 5px; background-color: red; color: white; font-weight: bold; font-size: 16px; border-color: red;" Text="EXIT" ID="Button6" />
+                    <asp:Button runat="server" CssClass="btn custom-button mx-auto" Style="width: 70%; border-radius: 5px; background-color: red; color: white; font-weight: bold; font-size: 16px; border-color: red;" Text="EXIT" OnClick="Exit_Click" ID="Button6" />
 
 
 

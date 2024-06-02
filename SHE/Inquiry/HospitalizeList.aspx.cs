@@ -333,11 +333,11 @@ namespace SHE.Inquiry
                         //dtb1.Columns.Add("REC_ADD_TIME", typeof(string));
                         //dtb1.Columns.Add("UPDATE_DATE_DIS", typeof(string));
                         //dtb1.Columns.Add("REC_UPDATE_TIME", typeof(string));
-                        //dtb1.Columns.Add("COORDINATOR_ADD", typeof(string));
+                        dtb1.Columns.Add("COORDINATOR_ADD", typeof(string));
                         //dtb1.Columns.Add("USR_ADMIN_UPDATE", typeof(string));
                         //dtb1.Columns.Add("DATE_ADMIN_UPDATE", typeof(string));
                         //dtb1.Columns.Add("TIME_ADMIN_UPDATE", typeof(string));
-                        //dtb1.Columns.Add("COORDINATOR_DIS", typeof(string));
+                        dtb1.Columns.Add("COORDINATOR_DIS", typeof(string));
 
                         dsMemDetails.Tables.Add(dtb1);
 
@@ -373,14 +373,14 @@ namespace SHE.Inquiry
                             //string distime = reader["SHADDTIM"].ToString();
                             //string update = reader["SHUPDDAT"].ToString();
                             //string uptime = reader["SHUPDTIM"].ToString();
-                            //string coordinator = reader["CIPERSON"].ToString();
+                            string coordinator = reader["CIPERSON"].ToString();
                             //string ciadd = reader["CIADDUSR"].ToString();
                             //string cidate = reader["CIADDDAT"].ToString();
                             //string citime = reader["CIADDTIM"].ToString();
-                            //string di_coordinator = reader["DIPERSON"].ToString();
+                            string di_coordinator = reader["DIPERSON"].ToString();
 
                             //dsMemDetails.Tables[0].Rows.Add(clmref, pname, hospital, roomno, phone, adddate, epf, policy, cname, user, disdate, distime, update, uptime, coordinator, ciadd, cidate, citime, di_coordinator);
-                            dsMemDetails.Tables[0].Rows.Add(clmref, pname, hospital);
+                            dsMemDetails.Tables[0].Rows.Add(clmref, pname, hospital, coordinator, di_coordinator);
                             this.GridView2.DataSource = dsMemDetails.Tables[0];
                             this.GridView2.DataBind();
                             hasRows = true;
@@ -470,11 +470,11 @@ namespace SHE.Inquiry
                         //dtb1.Columns.Add("REC_ADD_TIME", typeof(string));
                         //dtb1.Columns.Add("UPDATE_DATE_DIS", typeof(string));
                         //dtb1.Columns.Add("REC_UPDATE_TIME", typeof(string));
-                        //dtb1.Columns.Add("COORDINATOR_ADD", typeof(string));
+                        dtb1.Columns.Add("COORDINATOR_ADD", typeof(string));
                         //dtb1.Columns.Add("USR_ADMIN_UPDATE", typeof(string));
                         //dtb1.Columns.Add("DATE_ADMIN_UPDATE", typeof(string));
                         //dtb1.Columns.Add("TIME_ADMIN_UPDATE", typeof(string));
-                        //dtb1.Columns.Add("COORDINATOR_DIS", typeof(string));
+                        dtb1.Columns.Add("COORDINATOR_DIS", typeof(string));
 
                         dsMemDetails.Tables.Add(dtb1);
 
@@ -512,14 +512,14 @@ namespace SHE.Inquiry
                             //string distime = reader["SHADDTIM"].ToString();
                             //string update = reader["SHUPDDAT"].ToString();
                             //string uptime = reader["SHUPDTIM"].ToString();
-                            //string coordinator = reader["CIPERSON"].ToString();
+                            string coordinator = reader["CIPERSON"].ToString();
                             //string ciadd = reader["CIADDUSR"].ToString();
                             //string cidate = reader["CIADDDAT"].ToString();
                             //string citime = reader["CIADDTIM"].ToString();
-                            //string di_coordinator = reader["DIPERSON"].ToString();
+                            string di_coordinator = reader["DIPERSON"].ToString();
 
                            // dsMemDetails.Tables[0].Rows.Add(clmref, pname, hospital, roomno, phone, adddate, epf, policy, cname, user, disdate, distime, update, uptime, coordinator, ciadd, cidate, citime, di_coordinator);
-                            dsMemDetails.Tables[0].Rows.Add(clmref, pname, hospital);
+                            dsMemDetails.Tables[0].Rows.Add(clmref, pname, hospital, coordinator, di_coordinator);
 
                             this.GridView2.DataSource = dsMemDetails.Tables[0];
                             this.GridView2.DataBind();
@@ -610,11 +610,11 @@ namespace SHE.Inquiry
                         //dtb1.Columns.Add("REC_ADD_TIME", typeof(string));
                         //dtb1.Columns.Add("UPDATE_DATE_DIS", typeof(string));
                         //dtb1.Columns.Add("REC_UPDATE_TIME", typeof(string));
-                        //dtb1.Columns.Add("COORDINATOR_ADD", typeof(string));
+                        dtb1.Columns.Add("COORDINATOR_ADD", typeof(string));
                         //dtb1.Columns.Add("USR_ADMIN_UPDATE", typeof(string));
                         //dtb1.Columns.Add("DATE_ADMIN_UPDATE", typeof(string));
                         //dtb1.Columns.Add("TIME_ADMIN_UPDATE", typeof(string));
-                        //dtb1.Columns.Add("COORDINATOR_DIS", typeof(string));
+                        dtb1.Columns.Add("COORDINATOR_DIS", typeof(string));
 
                         dsMemDetails.Tables.Add(dtb1);
 
@@ -650,14 +650,14 @@ namespace SHE.Inquiry
                             //string distime = reader["SHADDTIM"].ToString();
                             //string update = reader["SHUPDDAT"].ToString();
                             //string uptime = reader["SHUPDTIM"].ToString();
-                            //string coordinator = reader["CIPERSON"].ToString();
+                            string coordinator = reader["CIPERSON"].ToString();
                             //string ciadd = reader["CIADDUSR"].ToString();
                             //string cidate = reader["CIADDDAT"].ToString();
                             //string citime = reader["CIADDTIM"].ToString();
-                            //string di_coordinator = reader["DIPERSON"].ToString();
+                            string di_coordinator = reader["DIPERSON"].ToString();
 
                             //dsMemDetails.Tables[0].Rows.Add(clmref, pname, hospital, roomno, phone, adddate, epf, policy, cname, user, disdate, distime, update, uptime, coordinator, ciadd, cidate, citime, di_coordinator);
-                            dsMemDetails.Tables[0].Rows.Add(clmref, pname, hospital);
+                            dsMemDetails.Tables[0].Rows.Add(clmref, pname, hospital, coordinator, di_coordinator);
 
                             this.GridView2.DataSource = dsMemDetails.Tables[0];
                             this.GridView2.DataBind();
@@ -751,11 +751,11 @@ namespace SHE.Inquiry
                         //dtb1.Columns.Add("REC_ADD_TIME", typeof(string));
                         //dtb1.Columns.Add("UPDATE_DATE_DIS", typeof(string));
                         //dtb1.Columns.Add("REC_UPDATE_TIME", typeof(string));
-                        //dtb1.Columns.Add("COORDINATOR_ADD", typeof(string));
+                        dtb1.Columns.Add("COORDINATOR_ADD", typeof(string));
                         //dtb1.Columns.Add("USR_ADMIN_UPDATE", typeof(string));
                         //dtb1.Columns.Add("DATE_ADMIN_UPDATE", typeof(string));
                         //dtb1.Columns.Add("TIME_ADMIN_UPDATE", typeof(string));
-                        //dtb1.Columns.Add("COORDINATOR_DIS", typeof(string));
+                        dtb1.Columns.Add("COORDINATOR_DIS", typeof(string));
 
                         dsMemDetails.Tables.Add(dtb1);
 
@@ -791,14 +791,14 @@ namespace SHE.Inquiry
                             //string distime = reader["SHADDTIM"].ToString();
                             //string update = reader["SHUPDDAT"].ToString();
                             //string uptime = reader["SHUPDTIM"].ToString();
-                            //string coordinator = reader["CIPERSON"].ToString();
+                            string coordinator = reader["CIPERSON"].ToString();
                             //string ciadd = reader["CIADDUSR"].ToString();
                             //string cidate = reader["CIADDDAT"].ToString();
                             //string citime = reader["CIADDTIM"].ToString();
-                            //string di_coordinator = reader["DIPERSON"].ToString();
+                            string di_coordinator = reader["DIPERSON"].ToString();
 
                             //dsMemDetails.Tables[0].Rows.Add(clmref, pname, hospital, roomno, phone, adddate, epf, policy, cname, user, disdate, distime, update, uptime, coordinator, ciadd, cidate, citime, di_coordinator);
-                            dsMemDetails.Tables[0].Rows.Add(clmref, pname, hospital);
+                            dsMemDetails.Tables[0].Rows.Add(clmref, pname, hospital, coordinator, di_coordinator);
 
                             this.GridView2.DataSource = dsMemDetails.Tables[0];
                             this.GridView2.DataBind();

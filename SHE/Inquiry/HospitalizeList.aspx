@@ -11,8 +11,10 @@
             top: -1%;
             background-color: #D8D8D8;
             z-index: 1;
-            border: none; /* Add the desired border style */
+            /*border: none;*/ /* Add the desired border style */
+            text-align:center;
         }
+
 
         label {
             font-weight: 400;
@@ -35,8 +37,10 @@
         }
 
         .gridViewHeaderColor {
-            background-color: #00ADBB; /* Light gray background color for headers */
+            background-color: #61d4de; /* Light gray background color for headers */
+            color: black;
         }
+   
 
         .gridViewItemColor {
             background-color: #70cbd1; /* White background color for items */
@@ -52,11 +56,11 @@
         }
 */
         .row-color-odd {
-            background-color: #fff; /* Light gray background color for odd rows */
+            background-color: #FFFFFF; /* Light gray background color for odd rows */
         }
 
         .row-color-even {
-            background-color: #61d4de; /* White background color for even rows */
+            background-color: #CFEFF2; /* White background color for even rows */
         }
     </style>
 
@@ -154,7 +158,7 @@
                                 <asp:GridView ID="GridView2" runat="server" DataKeyNames="CLAIM_REF_NO" class="w-100 " CellPadding="3" CellSpacing="1" EnableEventValidation="false"
                                     CssClass="table table-striped table-hover border-0 fw-normal table-bordered" OnRowDataBound="GridView2_RowDataBound" OnRowCommand="GridView2_RowCommand"
                                     GridLines="None" AutoGenerateColumns="false" Style="overflow: scroll;">
-                                    <HeaderStyle CssClass="sticky-header gridViewHeaderColor" />
+                                    <HeaderStyle CssClass="sticky-header gridViewHeaderColor fcolou" />
                                     <Columns>
                                         <asp:BoundField DataField="CLAIM_REF_NO" HeaderText="Claim Reference Number"
                                             HeaderStyle-CssClass="testClassHeader" ItemStyle-CssClass="testClass">
@@ -167,6 +171,16 @@
                                             <ItemStyle CssClass="testClass" Width="400px"></ItemStyle>
                                         </asp:BoundField>
                                         <asp:BoundField DataField="HOSPITAL" HeaderText="Hospital"
+                                            HeaderStyle-CssClass="testClassHeader" ItemStyle-CssClass="testClass">
+                                            <HeaderStyle CssClass="testClassHeader"></HeaderStyle>
+                                            <ItemStyle CssClass="testClass" Width="400px"></ItemStyle>
+                                        </asp:BoundField>
+                                        <asp:BoundField DataField="COORDINATOR_ADD" HeaderText="Addmitted Coordinator"
+                                            HeaderStyle-CssClass="testClassHeader" ItemStyle-CssClass="testClass">
+                                            <HeaderStyle CssClass="testClassHeader"></HeaderStyle>
+                                            <ItemStyle CssClass="testClass" Width="400px"></ItemStyle>
+                                        </asp:BoundField>
+                                        <asp:BoundField DataField="COORDINATOR_DIS" HeaderText="Discharge Coordinator"
                                             HeaderStyle-CssClass="testClassHeader" ItemStyle-CssClass="testClass">
                                             <HeaderStyle CssClass="testClassHeader"></HeaderStyle>
                                             <ItemStyle CssClass="testClass" Width="400px"></ItemStyle>
@@ -188,7 +202,7 @@
 
                 </div>
             </div>
-            <div class="d-flex justify-content-center align-items-center" style="min-height: 10vh; background-color: ">
+            <div class="d-flex justify-content-center align-items-center" style="min-height: 10vh;  ">
                 <div class="row">
                     <div class="row">
                         <div class="col-12">

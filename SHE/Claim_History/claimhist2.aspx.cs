@@ -84,10 +84,12 @@ namespace SHE.Claim_History
                             label7.InnerText = PolInfo[i].ClaimRemark.ToString();
                             lblPoNo.InnerText = dc.Decrypt(policy);
                             lblPeri.InnerText = PolInfo[i].PolicyPeriod.ToString();
+                            activeState.InnerHtml = PolInfo[i].ClaimRemark.ToString();
                         }
 
                     }
 
+                    
                     ///Renewal Date and Company Name
 
                     List<SHEPolicyData> polDetailsList = this.get_she_policy_details(dc.Decrypt(policy));
@@ -224,9 +226,9 @@ namespace SHE.Claim_History
                         for (int i = 0; i < limitInfo.Count; i++)
                         {
                             {
-                                Label35.InnerText = limitInfo[i].AnnualLimit.ToString();
-                                Label36.InnerText = limitInfo[i].EventLimit.ToString();
-
+                                Label35.InnerText = limitInfo[i].AnnualLimit.ToString("F2");
+                                Label36.InnerText = limitInfo[i].EventLimit.ToString("F2");
+                                Session["EventLimit"] = Label36.InnerText;
                             }
                         }
                     }
@@ -770,6 +772,7 @@ namespace SHE.Claim_History
             public string PolicyType { get; set; }
             public string ClaimRemark { get; set; }
 
+
         }
 
         public PolicyDetails[] GetPolicyDetails(string policyNo)
@@ -1012,18 +1015,18 @@ namespace SHE.Claim_History
                 for (int i = 0; i < limitInfo.Count; i++)
                 {
                     {
-                        label3.InnerText = limitInfo[i].AnnualLimit.ToString();
-                        label8.InnerText = limitInfo[i].EventLimit.ToString();
-                        label9.InnerText = limitInfo[i].OPDLimit.ToString();
+                        label3.InnerText = limitInfo[i].AnnualLimit.ToString("F2");
+                        label8.InnerText = limitInfo[i].EventLimit.ToString("F2");
+                        label9.InnerText = limitInfo[i].OPDLimit.ToString("F2");
 
                         int genRoomLimit = limitInfo[i].GenRoomLimit;
                         int prvRoomLimit = limitInfo[i].PrvRoomLimit;
                         int icuRoomLimit = limitInfo[i].ICURoomLimit;
 
                         int RoomLimit = genRoomLimit + prvRoomLimit;
-                        label11.InnerText = RoomLimit.ToString();
+                        label11.InnerText = RoomLimit.ToString("F2");
 
-                        label12.InnerText = icuRoomLimit.ToString();
+                        label12.InnerText = icuRoomLimit.ToString("F2");
 
                     }
                 }
@@ -1065,24 +1068,46 @@ namespace SHE.Claim_History
                 Label bal8 = GridView1.Rows[i].FindControl("bal8") as Label;
                 Label bal9 = GridView1.Rows[i].FindControl("bal9") as Label;
 
-                subval1.Text = sublimitInfoList[i].Subval1;
-                subval2.Text = sublimitInfoList[i].Subval2;
-                subval3.Text = sublimitInfoList[i].Subval3;
-                subval4.Text = sublimitInfoList[i].Subval4;
-                subval5.Text = sublimitInfoList[i].Subval5;
-                subval6.Text = sublimitInfoList[i].Subval6;
-                subval7.Text = sublimitInfoList[i].Subval7;
-                subval8.Text = sublimitInfoList[i].Subval8;
+                //commented by shalomi for add decimal point 
+                //subval1.Text = sublimitInfoList[i].Subval1;
+                //subval2.Text = sublimitInfoList[i].Subval2;
+                //subval3.Text = sublimitInfoList[i].Subval3;
+                //subval4.Text = sublimitInfoList[i].Subval4;
+                //subval5.Text = sublimitInfoList[i].Subval5;
+                //subval6.Text = sublimitInfoList[i].Subval6;
+                //subval7.Text = sublimitInfoList[i].Subval7;
+                //subval8.Text = sublimitInfoList[i].Subval8;
+
+                subval1.Text = decimal.Parse(sublimitInfoList[i].Subval1).ToString("F2");
+                subval2.Text = decimal.Parse(sublimitInfoList[i].Subval2).ToString("F2"); 
+                subval3.Text = decimal.Parse(sublimitInfoList[i].Subval3).ToString("F2"); 
+                subval4.Text = decimal.Parse(sublimitInfoList[i].Subval4).ToString("F2"); 
+                subval5.Text = decimal.Parse(sublimitInfoList[i].Subval5).ToString("F2"); 
+                subval6.Text = decimal.Parse(sublimitInfoList[i].Subval6).ToString("F2"); 
+                subval7.Text = decimal.Parse(sublimitInfoList[i].Subval7).ToString("F2"); 
+                subval8.Text = decimal.Parse(sublimitInfoList[i].Subval8).ToString("F2");
+
                 //subval9.Text = sublimitInfoList[i].Subval9;
 
-                paidam1.Text = PaidAmountInfoList[i].paidam1;
-                paidam2.Text = PaidAmountInfoList[i].paidam2;
-                paidam3.Text = PaidAmountInfoList[i].paidam3;
-                paidam4.Text = PaidAmountInfoList[i].paidam4;
-                paidam5.Text = PaidAmountInfoList[i].paidam5;
-                paidam6.Text = PaidAmountInfoList[i].paidam6;
-                paidam7.Text = PaidAmountInfoList[i].paidam7;
-                paidam8.Text = PaidAmountInfoList[i].paidam8;
+                //commented by shalomi for add decimal point 
+                //paidam1.Text = PaidAmountInfoList[i].paidam1;
+                //paidam2.Text = PaidAmountInfoList[i].paidam2;
+                //paidam3.Text = PaidAmountInfoList[i].paidam3;
+                //paidam4.Text = PaidAmountInfoList[i].paidam4;
+                //paidam5.Text = PaidAmountInfoList[i].paidam5;
+                //paidam6.Text = PaidAmountInfoList[i].paidam6;
+                //paidam7.Text = PaidAmountInfoList[i].paidam7;
+                //paidam8.Text = PaidAmountInfoList[i].paidam8;
+
+                paidam1.Text = decimal.Parse(PaidAmountInfoList[i].paidam1).ToString("F2");
+                paidam2.Text = decimal.Parse(PaidAmountInfoList[i].paidam2).ToString("F2");
+                paidam3.Text = decimal.Parse(PaidAmountInfoList[i].paidam3).ToString("F2");
+                paidam4.Text = decimal.Parse(PaidAmountInfoList[i].paidam4).ToString("F2");
+                paidam5.Text = decimal.Parse(PaidAmountInfoList[i].paidam5).ToString("F2");
+                paidam6.Text = decimal.Parse(PaidAmountInfoList[i].paidam6).ToString("F2");
+                paidam7.Text = decimal.Parse(PaidAmountInfoList[i].paidam7).ToString("F2");
+                paidam8.Text = decimal.Parse(PaidAmountInfoList[i].paidam8).ToString("F2");
+
                 //paidam9.Text = PaidAmountInfoList[i].paidam9;
 
                 int.TryParse(sublimitInfoList[i].Subval1, out int subval1Value);
@@ -1119,15 +1144,15 @@ namespace SHE.Claim_History
 
 
 
-                bal1.Text = val1.ToString();
-                bal2.Text = val2.ToString();
-                bal3.Text = val3.ToString();
-                bal4.Text = val4.ToString();
-                bal5.Text = val5.ToString();
-                bal6.Text = val6.ToString();
-                bal7.Text = val7.ToString();
-                bal8.Text = val8.ToString();
-                bal9.Text = val9.ToString();
+                bal1.Text = val1.ToString("F2");
+                bal2.Text = val2.ToString("F2");
+                bal3.Text = val3.ToString("F2");
+                bal4.Text = val4.ToString("F2");
+                bal5.Text = val5.ToString("F2");
+                bal6.Text = val6.ToString("F2");
+                bal7.Text = val7.ToString("F2");
+                bal8.Text = val8.ToString("F2");
+                bal9.Text = val9.ToString("F2");
 
 
             }
@@ -1150,17 +1175,17 @@ namespace SHE.Claim_History
             {
                 for (int i = 0; i < BenefitInfo.Count; i++)
                 {
-                    label14.InnerText = BenefitInfo[i].CicLimit.ToString();
+                    label14.InnerText = decimal.Parse(BenefitInfo[i].CicLimit).ToString("F2");
                     label15.InnerText = BenefitInfo[i].DayCareSurgeryCover.ToString();
-                    label17.InnerText = BenefitInfo[i].EndoscopyColonoscopyLimit.ToString();
-                    label18.InnerText = BenefitInfo[i].CatractLenceLimit.ToString();
+                    label17.InnerText = decimal.Parse(BenefitInfo[i].EndoscopyColonoscopyLimit).ToString("F2");
+                    label18.InnerText = decimal.Parse(BenefitInfo[i].CatractLenceLimit).ToString("F2");
                     label19.InnerText = BenefitInfo[i].FertilityCover.ToString();
                     label20.InnerText = BenefitInfo[i].CongenitalCover.ToString();
                     label21.InnerText = BenefitInfo[i].DentalDoctorsFeeLimit.ToString();
                     label22.InnerText = BenefitInfo[i].PolicyExcess.ToString();
                     label23.InnerText = BenefitInfo[i].TenMonthWaitPeriod.ToString();
-                    label24.InnerText = BenefitInfo[i].CeserianCoverLimit.ToString();
-                    label25.InnerText = BenefitInfo[i].NdcCoverLimit.ToString();
+                    label24.InnerText = decimal.Parse(BenefitInfo[i].CeserianCoverLimit).ToString("F2");
+                    label25.InnerText = decimal.Parse(BenefitInfo[i].NdcCoverLimit).ToString("F2");
                     label26.InnerText = BenefitInfo[i].ForcepVaccumLimit.ToString();
                     label27.InnerText = BenefitInfo[i].PregnancyRelatedCover.ToString();
 
@@ -1735,8 +1760,15 @@ namespace SHE.Claim_History
             {
                 for (int i = 0; i < PenClmDetails.Count; i++)
                 {
+                    var formattedPaymentAmount = "";
+                    if (PenClmDetails[i].PAYMENT_AMOUNT != null)
+                    {
+                        formattedPaymentAmount = decimal.Parse(PenClmDetails[i].PAYMENT_AMOUNT).ToString("F2");
+                    }
+                   
 
-                    ClmDetails.Tables[0].Rows.Add(PenClmDetails[i].CLAIMNO, PenClmDetails[i].ADMISSION_DATE, PenClmDetails[i].DISCHARGE_DATE, PenClmDetails[i].HOSPITAL, PenClmDetails[i].PATIENT_NAME, PenClmDetails[i].PAYMENT_AMOUNT, PenClmDetails[i].ROOMNUMBER, PenClmDetails[i].STATUS_TYPE_NAME);
+
+                    ClmDetails.Tables[0].Rows.Add(PenClmDetails[i].CLAIMNO, PenClmDetails[i].ADMISSION_DATE, PenClmDetails[i].DISCHARGE_DATE, PenClmDetails[i].HOSPITAL, PenClmDetails[i].PATIENT_NAME, formattedPaymentAmount, PenClmDetails[i].ROOMNUMBER, PenClmDetails[i].STATUS_TYPE_NAME);
 
 
                 }
@@ -2072,8 +2104,23 @@ namespace SHE.Claim_History
 
 
                     }
-                    prevclmdet.Tables[0].Rows.Add(PrevClmDetails[i].CLAIMNO, PrevClmDetails[i].PATIENTNAME, formattedDate, PrevClmDetails[i].CLAIMAMOUNT, PrevClmDetails[i].AMOUNTPAID);
+                    var formattedClaimAmount="";
+                    var formattedPaidAmount = "";
+                    if (PrevClmDetails[i].CLAIMAMOUNT != null)
+                    {
+                         formattedClaimAmount = decimal.Parse(PrevClmDetails[i].CLAIMAMOUNT).ToString("F2");
 
+                    }
+
+
+                    if (PrevClmDetails[i].AMOUNTPAID != null)
+                    {
+                        formattedPaidAmount  = decimal.Parse(PrevClmDetails[i].AMOUNTPAID).ToString("F2");
+                    }
+                    
+
+                    //prevclmdet.Tables[0].Rows.Add(PrevClmDetails[i].CLAIMNO, PrevClmDetails[i].PATIENTNAME, formattedDate, PrevClmDetails[i].CLAIMAMOUNT, PrevClmDetails[i].AMOUNTPAID);
+                    prevclmdet.Tables[0].Rows.Add(PrevClmDetails[i].CLAIMNO, PrevClmDetails[i].PATIENTNAME, formattedDate, formattedClaimAmount, formattedPaidAmount);
 
                 }
 

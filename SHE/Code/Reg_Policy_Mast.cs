@@ -32,11 +32,11 @@ public class Reg_Policy_Mast
     OracleConnection oraconn = new OracleConnection(ConfigurationManager.AppSettings["OracleDB"]);
     OracleConnection oconnLife = new OracleConnection(ConfigurationManager.AppSettings["OraLifeDB"]);
     public Reg_Policy_Mast()
-	{
-		//
-		// TODO: Add constructor logic here
-		//
-	}
+    {
+        //
+        // TODO: Add constructor logic here
+        //
+    }
 
     public Reg_Policy_Mast(string policNo)
     {
@@ -58,9 +58,9 @@ public class Reg_Policy_Mast
             {
                 OracleParameter orclParaPolicyNo = new OracleParameter();
                 orclParaPolicyNo.Value = policNo;
-                orclParaPolicyNo.ParameterName = "poln_v";                
+                orclParaPolicyNo.ParameterName = "poln_v";
 
-                cmd.Parameters.Add(orclParaPolicyNo);                
+                cmd.Parameters.Add(orclParaPolicyNo);
 
                 OracleDataReader PolicyDetailsReader = cmd.ExecuteReader();
 
@@ -71,7 +71,7 @@ public class Reg_Policy_Mast
                     if (!PolicyDetailsReader.IsDBNull(1)) { policy_end_date = PolicyDetailsReader.GetString(1); } else { policy_end_date = ""; }
                     if (!PolicyDetailsReader.IsDBNull(2)) { active = PolicyDetailsReader.GetString(2); } else { active = ""; }
                     if (!PolicyDetailsReader.IsDBNull(3)) { added_user = PolicyDetailsReader.GetString(3); } else { added_user = ""; }
-                    if (!PolicyDetailsReader.IsDBNull(4)) { added_date = PolicyDetailsReader.GetString(4); } else { added_date = ""; }                    
+                    if (!PolicyDetailsReader.IsDBNull(4)) { added_date = PolicyDetailsReader.GetString(4); } else { added_date = ""; }
                     if (!PolicyDetailsReader.IsDBNull(5)) { comp_name = PolicyDetailsReader.GetString(5); } else { comp_name = ""; }
                     if (!PolicyDetailsReader.IsDBNull(6)) { bus_reg_no = PolicyDetailsReader.GetString(6); } else { bus_reg_no = ""; }
                     if (!PolicyDetailsReader.IsDBNull(7)) { app_allowed = PolicyDetailsReader.GetString(7); } else { app_allowed = ""; }
@@ -105,23 +105,23 @@ public class Reg_Policy_Mast
                 oraconn.Open();
             }
 
-            string sql = "select POLICY_NO " + 
+            string sql = "select POLICY_NO " +
                          " from SHEDATA.SHE_POLICYMAST " +
-                         " where BUS_REG_NO = :bus_reg_num " ;
-                    
+                         " where BUS_REG_NO = :bus_reg_num ";
+
             using (OracleCommand cmd = new OracleCommand(sql, oraconn))
             {
                 OracleParameter orclParaBusRegNo = new OracleParameter();
                 orclParaBusRegNo.Value = bus_reg_no;
                 orclParaBusRegNo.ParameterName = "bus_reg_num";
 
-                cmd.Parameters.Add(orclParaBusRegNo);   
+                cmd.Parameters.Add(orclParaBusRegNo);
 
                 OracleDataReader PolicyDetailsReader = cmd.ExecuteReader();
 
                 while (PolicyDetailsReader.Read())
                 {
-                    if (!PolicyDetailsReader.IsDBNull(0)) { registeredPols.Add(PolicyDetailsReader.GetString(0)); } 
+                    if (!PolicyDetailsReader.IsDBNull(0)) { registeredPols.Add(PolicyDetailsReader.GetString(0)); }
                 }
                 PolicyDetailsReader.Close();
             }
@@ -164,7 +164,7 @@ public class Reg_Policy_Mast
                 orclParaBusRegNo.Value = bus_reg_no;
                 orclParaBusRegNo.ParameterName = "bus_reg_num";
 
-                cmd.Parameters.Add(orclParaBusRegNo);  
+                cmd.Parameters.Add(orclParaBusRegNo);
                 OracleDataReader companyNameReader = cmd.ExecuteReader();
 
                 while (companyNameReader.Read())
@@ -192,18 +192,18 @@ public class Reg_Policy_Mast
     }
 
     public DataSet getPolicyDetails(string policyNo)
-    {        
+    {
 
         DataSet ds = new DataSet();
-        string sql = "select to_char(A.POLICY_START_DATE, 'YYYY-MM-DD') EXPR1, to_char(A.POLICY_END_DATE, 'YYYY-MM-DD') EXPR2, c.stf_name, c.stf_contact_no, c.stf_email " + 
-            " from shedata.she_policymast A, shedata.she_policy_assigned_details B, SHEDATA.SHESTAFF C " + 
-            " where A.POLICY_NO = b.POLICY_NO " + 
-            " and B.ASSIGNED_TO_USER = c.stf_epf " + 
-            " and A.POLICY_NO = :polNum " + 
-            " and A.ACTIVE = 'Y' " + 
-            " and c.active = 'Y' " + 
+        string sql = "select to_char(A.POLICY_START_DATE, 'YYYY-MM-DD') EXPR1, to_char(A.POLICY_END_DATE, 'YYYY-MM-DD') EXPR2, c.stf_name, c.stf_contact_no, c.stf_email " +
+            " from shedata.she_policymast A, shedata.she_policy_assigned_details B, SHEDATA.SHESTAFF C " +
+            " where A.POLICY_NO = b.POLICY_NO " +
+            " and B.ASSIGNED_TO_USER = c.stf_epf " +
+            " and A.POLICY_NO = :polNum " +
+            " and A.ACTIVE = 'Y' " +
+            " and c.active = 'Y' " +
             " UNION" +
-            " select  to_char(POLICY_START_DATE, 'YYYY-MM-DD'), to_char(POLICY_END_DATE, 'YYYY-MM-DD'), null, null, null " + 
+            " select  to_char(POLICY_START_DATE, 'YYYY-MM-DD'), to_char(POLICY_END_DATE, 'YYYY-MM-DD'), null, null, null " +
             " from shedata.she_policymast where POLICY_NO not in ( " +
             " select POLICY_NO from shedata.she_policy_assigned_details ) and POLICY_NO = :polNum and ACTIVE = 'Y'";
         try
@@ -232,8 +232,8 @@ public class Reg_Policy_Mast
             {
                 oraconn.Close();
             }
-        }  
- 
+        }
+
         //ds.Tables[0].Columns[0].ColumnName = "Policy StartDate";
         //ds.Tables[0].Columns[1].ColumnName = "Policy End Date";
         //ds.Tables[0].Columns[2].ColumnName = "SLIC Officer/s";
@@ -241,7 +241,7 @@ public class Reg_Policy_Mast
         //ds.Tables[0].Columns[4].ColumnName = "Email Address";
 
         return ds;
-        
+
     }
 
     public int getEmployeesCount(string policyNo)
@@ -263,7 +263,7 @@ public class Reg_Policy_Mast
                 orclParaPolNo.Value = policyNo;
                 orclParaPolNo.ParameterName = "pol_num";
 
-                cmd.Parameters.Add(orclParaPolNo);  
+                cmd.Parameters.Add(orclParaPolNo);
                 OracleDataReader companyNameReader = cmd.ExecuteReader();
 
                 while (companyNameReader.Read())
@@ -294,9 +294,9 @@ public class Reg_Policy_Mast
     {
 
         DataSet ds = new DataSet();
-        string sql = "select MEM_NUMBER, NIC_NUMBER, MOBILE_NUMBER " + 
-                    " from SLIC_NET.SHE_POLICY_DETAILS " + 
-                    " where policy_number = :polNum " + 
+        string sql = "select MEM_NUMBER, NIC_NUMBER, MOBILE_NUMBER " +
+                    " from SLIC_NET.SHE_POLICY_DETAILS " +
+                    " where policy_number = :polNum " +
                     " order by MEM_NUMBER";
         try
         {
@@ -329,7 +329,7 @@ public class Reg_Policy_Mast
         //ds.Tables[0].Columns[0].ColumnName = "Member Number";
         //ds.Tables[0].Columns[1].ColumnName = "NIC Number";
         //ds.Tables[0].Columns[2].ColumnName = "Mobile Number";
-        
+
 
         return ds;
 
@@ -487,6 +487,116 @@ public class Reg_Policy_Mast
         }
 
         return usrTyp;
+    }
+
+    //get schema
+    public string getSchema(string policyNo, string empNo)
+    {
+        string SchemaName = "";
+        int SchemaID = 0; // Initialize SchemaID as an integer
+        try
+        {
+            if (oraconn.State == System.Data.ConnectionState.Closed)
+            {
+                oraconn.Open();
+            }
+
+            string sql = "SELECT S2EMGD FROM SHEDATA.SH02PF WHERE S2CPLN=:POLICYNO AND S2EPFN=:EPFNO AND ROWNUM = 1";
+
+
+            using (OracleCommand cmd = new OracleCommand(sql, oraconn))
+            {
+                OracleParameter orclParaBusRegNo = new OracleParameter();
+                orclParaBusRegNo.Value = policyNo;
+                orclParaBusRegNo.ParameterName = "POLICYNO";
+                OracleParameter orclParaEPFNO = new OracleParameter();
+                orclParaEPFNO.Value = empNo;
+                orclParaEPFNO.ParameterName = "EPFNO";
+
+                cmd.Parameters.Add(orclParaBusRegNo);
+                cmd.Parameters.Add(orclParaEPFNO);
+                OracleDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    // Use GetInt32 to correctly retrieve an integer value
+                    //SchemaID = reader.IsDBNull(0) ? 0 : reader.GetInt32(0);
+                    SchemaName = reader.IsDBNull(0) ? null : reader.GetString(0);
+                }
+                reader.Close();
+            }
+
+            
+        }
+        catch (Exception ex)
+        {
+            // Handle the exception appropriately.
+            throw ex;
+        }
+        finally
+        {
+            if (oraconn.State == System.Data.ConnectionState.Open)
+            {
+                oraconn.Close();
+            }
+        }
+        
+        return SchemaName;
+    }
+
+    //get event linit
+    public string GetEventLimit(string policyNo, string schema)
+    {
+        string eventLimit = "";
+
+        try
+        {
+            if (oraconn.State == System.Data.ConnectionState.Closed)
+            {
+                oraconn.Open();
+            }
+
+            string sql = "SELECT S4YRLM,S4EVLM,S4OPDL,S4RMC1,S4RMC2,S4RMC3 FROM SHEDATA.SH04PF WHERE S4CPLC=:POLICYNO AND S4EMGD=:SCHEMA AND ROWNUM=1 ";
+
+            using (OracleCommand cmd = new OracleCommand(sql, oraconn))
+            {
+                OracleParameter orclParaBusRegNo = new OracleParameter();
+                orclParaBusRegNo.Value = policyNo;
+                orclParaBusRegNo.ParameterName = "POLICYNO";
+
+                OracleParameter orclParaSchemaName = new OracleParameter();
+                //orclParaSchemaName.Value = schema.Trim().PadRight(10); 
+                orclParaSchemaName.Value = schema;
+                orclParaSchemaName.ParameterName = "SCHEMA";
+
+                cmd.Parameters.Add(orclParaBusRegNo);
+                cmd.Parameters.Add(orclParaSchemaName);
+                OracleDataReader reader = cmd.ExecuteReader();
+                if (reader.HasRows)
+                {
+
+                    while (reader.Read())
+                    {
+                        eventLimit = reader.GetInt32(1).ToString();
+                    }
+                }
+
+                reader.Close();
+            }
+        }
+        catch (Exception ex)
+        {
+            // Handle the exception appropriately.
+            throw ex;
+        }
+        finally
+        {
+            if (oraconn.State == System.Data.ConnectionState.Open)
+            {
+                oraconn.Close();
+            }
+        }
+        return eventLimit;
     }
 
 }

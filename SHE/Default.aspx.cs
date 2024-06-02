@@ -40,5 +40,10 @@ namespace SHE
         {
             Response.Redirect("~/ClaimPayment/ClaimSearch.aspx");
         }
+
+        protected void Exit_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("~/login.aspx");
+        }
     }
 }

@@ -159,6 +159,24 @@ namespace SHE.ClaimPayment
         protected global::System.Web.UI.WebControls.Panel panel2;
 
         /// <summary>
+        /// default_hed control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl default_hed;
+
+        /// <summary>
+        /// edit_hed control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl edit_hed;
+
+        /// <summary>
         /// Label1 control.
         /// </summary>
         /// <remarks>
@@ -240,6 +258,15 @@ namespace SHE.ClaimPayment
         protected global::System.Web.UI.WebControls.Label Label2;
 
         /// <summary>
+        /// hiddenEventLimit control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField hiddenEventLimit;
+
+        /// <summary>
         /// claNo control.
         /// </summary>
         /// <remarks>
@@ -267,6 +294,15 @@ namespace SHE.ClaimPayment
         protected global::System.Web.UI.HtmlControls.HtmlInputText execuName;
 
         /// <summary>
+        /// bhtNo3 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputText bhtNo3;
+
+        /// <summary>
         /// totBill control.
         /// </summary>
         /// <remarks>
@@ -291,7 +327,7 @@ namespace SHE.ClaimPayment
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputText R1;
+        protected global::System.Web.UI.HtmlControls.HtmlTextArea R1;
 
         /// <summary>
         /// R2 control.
@@ -300,7 +336,25 @@ namespace SHE.ClaimPayment
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputText R2;
+        protected global::System.Web.UI.HtmlControls.HtmlTextArea R2;
+
+        /// <summary>
+        /// ediReatxt control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl ediReatxt;
+
+        /// <summary>
+        /// editReason control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlTextArea editReason;
 
         /// <summary>
         /// claimSta control.
@@ -339,6 +393,15 @@ namespace SHE.ClaimPayment
         protected global::System.Web.UI.WebControls.Button Button2;
 
         /// <summary>
+        /// Button6 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button Button6;
+
+        /// <summary>
         /// panel3 control.
         /// </summary>
         /// <remarks>
@@ -364,6 +427,15 @@ namespace SHE.ClaimPayment
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl nameInsu;
+
+        /// <summary>
+        /// hosName control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl hosName;
 
         /// <summary>
         /// polNo2 control.
@@ -409,6 +481,24 @@ namespace SHE.ClaimPayment
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl totStaePayAm;
+
+        /// <summary>
+        /// rema1 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl rema1;
+
+        /// <summary>
+        /// rema2 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl rema2;
 
         /// <summary>
         /// Button5 control.

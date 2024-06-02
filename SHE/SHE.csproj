@@ -118,8 +118,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="About.aspx" />
+    <Content Include="ClaimPayment\ClaimPayList.aspx" />
     <Content Include="ClaimPayment\ClaimPaymentDetail.aspx" />
     <Content Include="ClaimPayment\ClaimSearch.aspx" />
+    <Content Include="ClaimPayment\ClaimStatementReprint.aspx" />
     <Content Include="Claim_History\claimhist1.aspx" />
     <Content Include="Claim_History\claimhist2.aspx" />
     <Content Include="Claim_History\claimhistory1_Redirect.aspx" />
@@ -155,6 +157,10 @@
     <Content Include="Images\ic_sharp-logout.png" />
     <Content Include="Images\login.png" />
     <Content Include="Images\New_Slic_Logo.png" />
+    <Content Include="Images\process.gif" />
+    <Content Include="Images\process2.gif" />
+    <Content Include="Images\process3.gif" />
+    <Content Include="Images\process4.gif" />
     <Content Include="Images\red.png" />
     <Content Include="Images\ri_settings-fill.png" />
     <Content Include="Images\SHELogo.png" />
@@ -173,6 +179,7 @@
     <Content Include="Inquiry\inquiry2.aspx" />
     <Content Include="Login.aspx" />
     <Content Include="Notifications.aspx" />
+    <Content Include="process3.gif" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.esm.js" />
@@ -237,6 +244,13 @@
     <Content Include="Site.Mobile.Master" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ClaimPayment\ClaimPayList.aspx.cs">
+      <DependentUpon>ClaimPayList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ClaimPayment\ClaimPayList.aspx.designer.cs">
+      <DependentUpon>ClaimPayList.aspx</DependentUpon>
+    </Compile>
     <Compile Include="ClaimPayment\ClaimPaymentDetail.aspx.cs">
       <DependentUpon>ClaimPaymentDetail.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -250,6 +264,13 @@
     </Compile>
     <Compile Include="ClaimPayment\ClaimSearch.aspx.designer.cs">
       <DependentUpon>ClaimSearch.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ClaimPayment\ClaimStatementReprint.aspx.cs">
+      <DependentUpon>ClaimStatementReprint.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ClaimPayment\ClaimStatementReprint.aspx.designer.cs">
+      <DependentUpon>ClaimStatementReprint.aspx</DependentUpon>
     </Compile>
     <Compile Include="Claim_History\claimhist1.aspx.cs">
       <DependentUpon>claimhist1.aspx</DependentUpon>

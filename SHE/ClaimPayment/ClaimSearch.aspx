@@ -23,9 +23,9 @@
         }
 
         .btn:hover {
-                color: gainsboro; /* Maintain the same color on hover */
-                background-color: #05ABB8; /* Maintain transparency on hover */
-            }
+            color: gainsboro; /* Maintain the same color on hover */
+            background-color: #05ABB8; /* Maintain transparency on hover */
+        }
 
         label {
             font-style: oblique;
@@ -49,7 +49,7 @@
         function clientFunctionValidationFinished() {
 
             //alert("test");
-            custom_alert('Successfully Processing wait...', 'Info');
+            custom_alert('Successfully Processing Please Wait...', 'Processing');
             return true;
 
         }
@@ -67,7 +67,7 @@
 
                     <div class="row mx-auto">
                         <div class="form-group col-sm-12 col-md-8 col-lg-6">
-                            <label for="reference"><b>Policy Number:</b></label>
+                            <label for="reference" style="font-style:normal"><b>Policy Number:</b></label>
                             <input runat="server" type="text" class="form-control" id="policyno" />
                         </div>
                     </div>
@@ -76,7 +76,7 @@
 
                     <div class="row mx-auto">
                         <div class="form-group col-sm-12 col-md-8 col-lg-6">
-                            <label for="epf" class="mr-2" id="epflbl" visible="true" runat="server"><b>Employee Number:</b></label>
+                            <label for="epf" class="mr-2" id="epflbl" visible="true" style="font-style:normal" runat="server"><b>Employee Number:</b></label>
                             <input runat="server" type="text" class="form-control" visible="true" id="epf" />
                         </div>
                     </div>
@@ -85,7 +85,7 @@
 
                     <div class="row mx-auto">
                         <div class="form-group col-sm-12 col-md-8 col-lg-6">
-                            <label for="claimRef" class="mr-2"><b>Reference Number:</b></label>
+                            <label for="claimRef" id="lblClaimRef" runat="server" style="font-style:normal" class="mr-2"><b>Reference Number:</b></label>
                             <input runat="server" type="text" class="form-control" id="claimRef" />
                         </div>
                     </div>
@@ -119,6 +119,8 @@
             if (!message)
                 message = 'No Message to Display.';
 
+            var imageUrl = '<%= ResolveUrl("~/images/process4.gif") %>';
+
             if (title == 'Alert') {
                 swal({
                     title: title,
@@ -135,11 +137,12 @@
                     button: false,
                     closeOnClickOutside: false,
                 });
-            } else if (title == 'Info') {
+            } else if (title == 'Processing') {
                 swal({
                     title: title,
                     text: message,
-                    icon: "success",
+                    icon: imageUrl,
+                    //icon: "Images/process3.gif",
                     button: false,
                     closeOnClickOutside: false,
                 });
@@ -172,9 +175,7 @@
                     return false;
                 }
             });
-        });
-
-        $(document).ready(function () {
+        }); $(document).ready(function () {
             // Show custom alerts
             var alertType = $("#lblAlertMessage").attr("data-alert-type");
             var message = $("#lblAlertMessage").text();
@@ -183,6 +184,6 @@
                 custom_alert(message, "Alert");
             }
         });
-    </script>
 
+    </script>
 </asp:Content>

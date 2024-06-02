@@ -12,12 +12,12 @@
         <%: Scripts.Render("~/bundles/modernizr") %>
     </asp:PlaceHolder>
 
-    <webopt:bundlereference runat="server" path="~/Content/css" />
+    <webopt:BundleReference runat="server" Path="~/Content/css" />
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
 
     <style>
         .bg-she {
-            background-color:#4dc6d0;
+            background-color: #4dc6d0;
         }
     </style>
 
@@ -43,36 +43,31 @@
             </Scripts>
         </asp:ScriptManager>
         <nav class="navbar navbar-expand-sm bg-she">
-            <div class="container-fluid">
-                <div class="d-flex align-items-center gap-6">
-                    
-                    <a runat="server" class="navbar-brand" href="~/Default.aspx" style="color: white;" >SLIC MEDI </a>
 
-                    
-
-                </div>
+            <div class="container-fluid d-flex justify-content-between align-items-center">                
+                    <a runat="server" class="navbar-brand" href="~/Default.aspx" style="color: white;" >SLIC MEDI - <%= logUser %> </a>  
+                <div class="d-flex align-items-center gap-3">
                 <asp:ImageButton runat="server" ImageUrl="~/images/ri_settings-fill.png" Style="width: 25px; margin-top: -15px;" OnClick="Logout_Click" />
-            </div>
-            <div>
                 <asp:ImageButton runat="server" ImageUrl="~/images/ic_sharp-logout.png" Style="width: 25px; margin-top: -15px;" OnClick="Logout_Click" />
-            </div>
-           <div style="color: white; text-align: center; margin-top: 5px; font-size: 12px;"> <!-- Corrected syntax: font-size: 8px; -->
-                <asp:ImageButton runat="server" ImageUrl="~/images/user (1).png" Style="width: 20px;" />
-                <!-- Adding a line break to separate the image and logUser -->
-                <%= logUser %>
+                </div>
             </div>
 
+            <%--<div style="color: white; text-align: center; margin-top: 5px; font-size: 12px;"> <!-- Corrected syntax: font-size: 8px; -->
+                <asp:ImageButton runat="server" ImageUrl="~/images/user (1).png" Style="width: 20px;" />--%>
+            <!-- Adding a line break to separate the image and logUser -->
+            <%-- <%= logUser %>
+            </div>--%>
         </nav>
 
 
-      
+
         <div class="container body-content">
             <asp:ContentPlaceHolder ID="MainContent" runat="server">
             </asp:ContentPlaceHolder>
-            <hr />
-            <footer>
+            <%-- <hr />--%>
+            <%--<footer style="bottom:10px;">
                 <p>&copy; <%: DateTime.Now.Year %> - My ASP.NET Application</p>
-            </footer>
+            </footer>--%>
         </div>
     </form>
     <asp:PlaceHolder runat="server">

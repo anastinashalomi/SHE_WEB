@@ -19,11 +19,11 @@
             margin-left: 8%;
         }
 
-        
+
         .btn:hover {
-                color: gainsboro; /* Maintain the same color on hover */
-                background-color: #05ABB8; /* Maintain transparency on hover */
-            }
+            color: gainsboro; /* Maintain the same color on hover */
+            background-color: #05ABB8; /* Maintain transparency on hover */
+        }
 
         .form-group {
             width: 300px;
@@ -34,7 +34,7 @@
         }
 
         .btn {
-            //background-color: #05ABB8;
+            /*//background-color: #05ABB8;*/
         }
 
         #exitbutton {
@@ -45,18 +45,23 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
             /* You can adjust the values to control the shadow appearance */
         }
+
+        .radioButtonList, .radioButtonList input, .radioButtonList label {
+            font-family: Arial, sans-serif; /* Replace with desired font */
+            font-style:normal;
+        }
     </style>
     <style>
-        .radioButtonList{
+        .radioButtonList {
             display: inline-block;
             margin-right: 10px; /* Adjust the spacing between radio buttons */
         }
     </style>
-    <script  type="text/javascript">
+    <script type="text/javascript">
         function clientFunctionValidationFinished() {
 
 
-            custom_alert('Successfully Processing wait...', 'Info');
+            custom_alert('Successfully Processing Please Wait...', 'Processing');
             return true;
 
         }
@@ -68,20 +73,22 @@
                 <h4 style="text-align: center;">SHE Hospitalization Details - Inquiry</h4>
                 <br />
                 <br />
-                 <asp:Label ID="lblAlertMessage" runat="server" ClientIDMode="Static" Style="display: none;"></asp:Label>
-                <div style="text-align: center;">
-                <asp:RadioButtonList ID="RadioButtonList1" runat="server" AutoPostBack="true" 
-                    OnSelectedIndexChanged="RadioButtonList1_SelectedIndexChanged" Class="radioButtonList" CssClass="radioButtonList">
-                    <asp:ListItem  Text="Use Date Range" Value="Date"></asp:ListItem>
-                    <asp:ListItem Text="Use Reference No" Value="Reference"></asp:ListItem>
-                </asp:RadioButtonList>
+                <asp:Label ID="lblAlertMessage" runat="server" ClientIDMode="Static" Style="display: none;"></asp:Label>
+                <asp:Panel ID="panel3" Class=" d-flex flex-column align-items-center ">
+                <div style="text-align: left;" >
+                    <asp:RadioButtonList ID="RadioButtonList1" runat="server" AutoPostBack="true"
+                        OnSelectedIndexChanged="RadioButtonList1_SelectedIndexChanged" CssClass="radioButtonList">
+                        <asp:ListItem Text="Use Date Range" Value="Date"></asp:ListItem>
+                        <asp:ListItem Text="Use Reference No" Value="Reference"></asp:ListItem>
+                    </asp:RadioButtonList>
                 </div>
+                </asp:Panel>
                 <br />
 
                 <asp:Panel ID="panel1" Visible="false" runat="server" DefaultButton="inquiry_submit" Class=" d-flex flex-column align-items-center ">
                     <div class="row mx-auto">
                         <div class="form-group col-sm-12 col-md-8 col-lg-6">
-                            <label for="fromdate"><b>From Date:</b></label>
+                            <label for="fromdate" style="font-style: normal"><b>From Date:</b></label>
                             <input runat="server" type="date" class="form-control" id="fromdate" onclick="hi" />
                         </div>
 
@@ -89,7 +96,7 @@
                     <br />
                     <div class="row mx-auto">
                         <div class="form-group col-sm-12 col-md-8 col-lg-6">
-                            <label for="todate"><b>To Date:</b></label>
+                            <label for="todate" style="font-style: normal"><b>To Date:</b></label>
                             <input runat="server" type="date" class="form-control" id="todate" />
                         </div>
                     </div>
@@ -100,7 +107,7 @@
                 <asp:Panel runat="server" Visible="false" ID="panel2" Class=" d-flex flex-column align-items-center ">
                     <div class="row mx-auto">
                         <div class="form-group col-sm-12 col-md-8 col-lg-6">
-                            <label for="reference"><b>SHE Reference No:</b></label>
+                            <label for="reference" style="font-style: normal"><b>SHE Reference No:</b></label>
                             <input runat="server" type="text" class="form-control" id="reference" />
                         </div>
                     </div>
@@ -110,10 +117,10 @@
                 <asp:Label runat="server" ID="error1" Style="color: red; padding: 4px;" Visible="false">** Select From Date **</asp:Label>
                 <asp:Label runat="server" ID="error2" Style="color: red; padding: 4px;" Visible="false">** Insert Date and Reference Number  **</asp:Label>
                 <asp:Label runat="server" ID="Label3" Style="color: red; padding: 4px;" Visible="false">** Select one option **</asp:Label>
-                <div class="d-flex justify-content-center">         
+                <div class="d-flex justify-content-center">
                     <asp:Button ID="exitbutton" runat="server" Text="Exit" CssClass="btn btn-danger mx-4" OnClick="exitbutton_Click" />
-                    <asp:Button ID="reset" runat="server" Text="Reset" CssClass="btn mx-4 btn-outline-secondary" OnClick="reset_Click" />                  
-                    <asp:Button ID="inquiry_submit" runat="server" Text="Submit" CssClass="btn btn-primary mx-4" OnClick="inquiry_submit_Click" OnClientClick="return clientFunctionValidationFinished()" ClientIDMode="Static"/>
+                    <asp:Button ID="reset" runat="server" Text="Reset" CssClass="btn mx-4 btn-outline-secondary" OnClick="reset_Click" />
+                    <asp:Button ID="inquiry_submit" runat="server" Text="Submit" CssClass="btn btn-primary mx-4" OnClick="inquiry_submit_Click" OnClientClick="return clientFunctionValidationFinished()" ClientIDMode="Static" />
                 </div>
 
 
@@ -132,6 +139,7 @@
 
             if (!message)
                 message = 'No Message to Display.';
+            var imageUrl = '<%= ResolveUrl("~/images/process4.gif") %>';
 
             if (title == 'Alert') {
                 swal({
@@ -149,11 +157,12 @@
                     button: false,
                     closeOnClickOutside: false,
                 });
-            } else if (title == 'Info') {
+            } else if (title == 'Processing') {
                 swal({
                     title: title,
                     text: message,
-                    icon: "info",
+                    icon: imageUrl,
+                    //icon: "success",
                     button: false,
                     closeOnClickOutside: false,
                 });
@@ -192,7 +201,7 @@
                         return false;
                     }
                 }
-                
+
             });
 
 
@@ -207,6 +216,6 @@
                 custom_alert(message, "Alert");
             }
         });
-    </script>  
+    </script>
 
 </asp:Content>

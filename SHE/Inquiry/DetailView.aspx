@@ -44,7 +44,7 @@
                         <div class="row justify-content-center mt-4">
                             <div class="col-md-8">
                                 <div class="form-group row">
-                                    <label for="lblreferenceNo" class="col-sm-3 col-form-label text-center" >Reference No </label>
+                                    <label for="lblreferenceNo" class="col-sm-3 col-form-label " style="font-style:normal">Reference No </label>
                                     <div class="col-sm-9">
                                         <input type="text" class="form-control" runat="server" readonly="readonly" id="referenceNo" placeholder="referenceNo" style="width: 70%;">
                                     </div>
@@ -56,7 +56,7 @@
                         <div class="row justify-content-center mt-4">
                             <div class="col-md-8">
                                 <div class="form-group row">
-                                    <label for="lblName" class="col-sm-3 col-form-label text-center">Patient Name  </label>
+                                    <label for="lblName" class="col-sm-3 col-form-label " style="font-style:normal">Patient Name  </label>
                                     <div class="col-sm-9">
                                         <input type="Text" class="form-control" runat="server" readonly="readonly" id="name" placeholder="Patient Name" style="width: 70%;">
                                     </div>
@@ -68,7 +68,7 @@
                         <div class="row justify-content-center mt-4">
                             <div class="col-md-8">
                                 <div class="form-group row">
-                                    <label for="lblHospital" class="col-sm-3 col-form-label text-center">Hosptal Name</label>
+                                    <label for="lblHospital" class="col-sm-3 col-form-label " style="font-style:normal">Hosptal Name</label>
                                     <div class="col-sm-9">
                                         <input type="Text" class="form-control" runat="server" readonly="readonly" id="hospitalName" placeholder="Hospital Name" style="width: 70%;">
                                     </div>
@@ -80,7 +80,7 @@
                         <div class="row justify-content-center mt-4">
                             <div class="col-md-8">
                                 <div class="form-group row">
-                                    <label for="lblRoomNo" class="col-sm-3 col-form-label text-center">Room No</label>
+                                    <label for="lblRoomNo" class="col-sm-3 col-form-label"  style="font-style:normal">Room No</label>
                                     <div class="col-sm-9">
                                         <input type="Text" class="form-control" runat="server" readonly="readonly" id="roomNo" placeholder="Room No" style="width: 70%;">
                                     </div>
@@ -92,7 +92,7 @@
                         <div class="row justify-content-center mt-4">
                             <div class="col-md-8">
                                 <div class="form-group row">
-                                    <label for="lblAdmittedDate" class="col-sm-3 col-form-label text-center">Admitted Date</label>
+                                    <label for="lblAdmittedDate" class="col-sm-3 col-form-label " style="font-style:normal">Admitted Date</label>
                                     <div class="col-sm-9">
                                         <input type="Text" class="form-control" runat="server" readonly="readonly" id="admittedDate" placeholder="Admitted Date" style="width: 70%;">
                                     </div>
@@ -105,7 +105,7 @@
                         <div class="row justify-content-center mt-4">
                             <div class="col-md-8">
                                 <div class="form-group row">
-                                    <label for="lblContactNo" class="col-sm-3 col-form-label text-center">Contact No</label>
+                                    <label for="lblContactNo" class="col-sm-3 col-form-label " style="font-style:normal">Contact No</label>
                                     <div class="col-sm-9">
                                         <input type="Text" class="form-control" runat="server" readonly="readonly" id="contactNo" placeholder="Contact No" style="width: 70%;">
                                     </div>
@@ -118,7 +118,7 @@
                         <div class="row justify-content-center mt-4">
                             <div class="col-md-8">
                                 <div class="form-group row">
-                                    <label for="lblDischargeDate" class="col-sm-3 col-form-label text-center">Discharge Date </label>
+                                    <label for="lblDischargeDate" class="col-sm-3 col-form-label " style="font-style:normal">Discharge Date </label>
                                     <div class="col-sm-9">
                                         <input type="Text" class="form-control" runat="server" readonly="readonly" id="dischargeDate" placeholder="Discharge Date " style="width: 70%;">
                                     </div>
@@ -131,7 +131,7 @@
                         <div class="row justify-content-center mt-4">
                             <div class="col-md-8">
                                 <div class="form-group row">
-                                    <label for="lblEmployeeNo" class="col-sm-3 col-form-label text-center">Employee No </label>
+                                    <label for="lblEmployeeNo" class="col-sm-3 col-form-label " style="font-style:normal">Employee No </label>
                                     <div class="col-sm-9">
                                         <input type="Text" class="form-control" runat="server" readonly="readonly" id="employeeNo" placeholder="Employee No " style="width: 70%;">
                                     </div>
@@ -144,7 +144,7 @@
                         <div class="row justify-content-center mt-4">
                             <div class="col-md-8">
                                 <div class="form-group row">
-                                    <label for="lblPolicyNo" class="col-sm-3 col-form-label text-center">Policy No  </label>
+                                    <label for="lblPolicyNo" class="col-sm-3 col-form-label " style="font-style:normal">Policy No  </label>
                                     <div class="col-sm-9">
                                         <input type="Text" class="form-control" runat="server" readonly="readonly" id="policyNo" placeholder="Policy No " style="width: 70%;">
                                     </div>

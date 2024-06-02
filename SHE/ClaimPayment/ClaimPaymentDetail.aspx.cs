@@ -21,6 +21,7 @@ namespace SHE.ClaimPayment
 {
     public partial class ClaimPaymentDetail : System.Web.UI.Page
     {
+        
         private const string host_ip = "http://172.24.90.100:8084";
 
         OdbcConnection db2conn = new OdbcConnection(ConfigurationManager.AppSettings["DB2"]);
@@ -34,7 +35,8 @@ namespace SHE.ClaimPayment
         string domainAndPort = "172.24.90.100:8084/Slicgeneral/SHE2_Intimation";
 
         EncryptDecrypt dc = new EncryptDecrypt();
-        string policy, epfno, claimRefNo, userName;
+        string policy, epfno, claimRefNo, userName, eventLimit, fromNotifiEdit;
+
         private List<ClaimData> claimDataList = new List<ClaimData>();
 
         private ClaimData claimDataset;
@@ -45,14 +47,39 @@ namespace SHE.ClaimPayment
             policy = Request.QueryString["POLICYNO"];
             epfno = Request.QueryString["EPF"];
             claimRefNo = Request.QueryString["CLAIMREF"];
+            fromNotifiEdit = Request.QueryString["fromNotifiEdit"];
+
 
             policy = dc.Decrypt(policy);
             epfno = dc.Decrypt(epfno);
             claimRefNo = dc.Decrypt(claimRefNo);
 
+            bool hasRows = false;
+
             if (!IsPostBack)
             {
+                Reg_Policy_Mast polObj = new Reg_Policy_Mast();
+                string SchemaName = polObj.getSchema(policy, epfno);
 
+                eventLimit = polObj.GetEventLimit(policy, SchemaName);
+                hiddenEventLimit.Value = decimal.Parse(eventLimit).ToString("F2");
+                Session["eventLimit"] = eventLimit;
+
+                if(fromNotifiEdit == "true")
+                {
+                   
+                    default_hed.Visible = false;
+                    edit_hed.Visible = true;
+                    editReason.Visible = true;
+                    Button2.Visible = false;
+                    Button6.Visible = true;
+                    ediReatxt.Visible = true;
+
+                }
+                else
+                {
+                    
+                }
 
                 if (oconn.State != ConnectionState.Open)
                 {
@@ -63,70 +90,31 @@ namespace SHE.ClaimPayment
 
                 try
                 {
-                    //use SHEDATA.SHHOSINF00BKUP or SHEDATA.SHHOSINF00 as your need
-                    if (epfno == "")
-                    {
+                   
+                        panel1.Visible = true; 
+
                         using (cmd)
                         {
-                            string exe_Select_date = "SELECT m.claimref, m.pname, m.cname, m.cphone, g.hospital_name, m.roomno, m.adddate, m.pidno, m.disdate, m.epf, m.policy, m.remark1, c.job_status, m.totbil, m.pdamt, c.job_type, m.bhtno, m.billNo" +
-                                                      " from shedata.cor_job_status c" +
-                                                      " INNER JOIN SHEDATA.SHHOSINF00 m  ON m.claimref = c.claimref" +
-                                                      " INNER JOIN GENERAL_CLAIM.CLAIM_HOSPITAL_DETAILS g ON m.hospital = g.hospital_id" +
-                                                      " WHERE m.claimref = :pin_claimref and m.policy = :pin_policy and c.cordinator_userid=:pin_log_user and c.job_type='D' and c.job_status='ACCEPTED'";
 
+                        string exe_Select_date;
 
-                            cmd.CommandText = exe_Select_date;
-
-                            cmd.Parameters.Add("pin_claimref", OracleType.VarChar).Value = claimRefNo;
-                            cmd.Parameters.Add("pin_policy", OracleType.VarChar).Value = policy;
-                            cmd.Parameters.Add("pin_log_user", OracleType.VarChar).Value = userName;
-
-                            OracleDataReader reader = cmd.ExecuteReader();
-
-                            if (reader.Read()) // Assuming only one row is expected
-                            {
-                                claimDataset = new ClaimData
-                                {
-                                    ClaimRef = reader["CLAIMREF"].ToString(),
-                                    PName = reader["pname"].ToString(),
-                                    CName = reader["cname"].ToString(),
-                                    CPhone = reader["cphone"].ToString(),
-                                    HospitalName = reader["hospital_name"].ToString(),
-                                    RoomNo = reader["roomno"].ToString(),
-                                    AddDate = reader["adddate"].ToString(),
-                                    PidNo = reader["pidno"].ToString(),
-                                    DisDate = reader["disdate"].ToString(),
-                                    Epf = reader["epf"].ToString(),
-                                    Policy = reader["policy"].ToString(),
-                                    Remark1 = reader["remark1"].ToString(),
-                                    JobStatus = reader["job_status"].ToString(),
-                                    TotBil = reader["totbil"].ToString(),
-                                    PDamt = reader["pdamt"].ToString(),
-                                    JobType = reader["job_type"].ToString(),
-                                    bilNo = reader["billNo"].ToString(),
-                                    bthNo = reader["bhtno"].ToString()
-                                };
-
-                                Session["ClaimData"] = claimDataset;
-                            }
-                            else
-                            {
-                                lblAlertMessage.Text = "Claim payment cant proceed. Because claim status not accepted.";
-                                lblAlertMessage.Attributes.Add("data-alert-title", "Alert");
-                                lblAlertMessage.Attributes.Add("data-alert-message", lblAlertMessage.Text);
-                                lblAlertMessage.Visible = true;
-                            }
+                        if (fromNotifiEdit == "true")
+                        {
+                            exe_Select_date = "SELECT m.claimref, m.pname, m.cname, m.cphone, g.hospital_name, m.roomno, m.adddate, m.pidno, m.disdate, m.epf, m.policy, m.claimno, m.remark1,m.remark2, c.job_status, m.totbil, m.pdamt, c.job_type, m.bhtno, m.billNo, m.aliment, c.CORDINATOR_USERID, m.FILECLO" +
+                                                     " from shedata.cor_job_status c" +
+                                                     " INNER JOIN SHEDATA.SHHOSINF00 m  ON m.claimref = c.claimref" +
+                                                     " INNER JOIN GENERAL_CLAIM.CLAIM_HOSPITAL_DETAILS g ON m.hospital = g.hospital_id" +
+                                                     " WHERE m.claimref = :pin_claimref and m.policy = :pin_policy and m.epf = :pin_epf and c.cordinator_userid=:pin_log_user and c.job_type='D' and c.job_status='COMPLETED' and (m.FILECLO is null or m.FILECLO='PN' or m.FILECLO = 'PD')";
                         }
-                    }
-                    else
-                    {
-                        using (cmd)
+                        else
                         {
-                            string exe_Select_date = "SELECT m.claimref, m.pname, m.cname, m.cphone, g.hospital_name, m.roomno, m.adddate, m.pidno, m.disdate, m.epf, m.policy, m.claimno, m.remark1, c.job_status, m.totbil, m.pdamt, c.job_type, m.bhtno, m.billNo" +
-                                                      " from shedata.cor_job_status c" +
-                                                      " INNER JOIN SHEDATA.SHHOSINF00 m  ON m.claimref = c.claimref" +
-                                                      " INNER JOIN GENERAL_CLAIM.CLAIM_HOSPITAL_DETAILS g ON m.hospital = g.hospital_id" +
-                                                      " WHERE m.claimref = :pin_claimref and m.policy = :pin_policy and m.epf = :pin_epf and c.cordinator_userid=:pin_log_user and c.job_type='D' and c.job_status='ACCEPTED'";
+                            exe_Select_date = "SELECT m.claimref, m.pname, m.cname, m.cphone, g.hospital_name, m.roomno, m.adddate, m.pidno, m.disdate, m.epf, m.policy, m.claimno, m.remark1,m.remark2, c.job_status, m.totbil, m.pdamt, c.job_type, m.bhtno, m.billNo, m.aliment, c.CORDINATOR_USERID, m.FILECLO" +
+                                                     " from shedata.cor_job_status c" +
+                                                     " INNER JOIN SHEDATA.SHHOSINF00 m  ON m.claimref = c.claimref" +
+                                                     " INNER JOIN GENERAL_CLAIM.CLAIM_HOSPITAL_DETAILS g ON m.hospital = g.hospital_id" +
+                                                     " WHERE m.claimref = :pin_claimref and m.policy = :pin_policy and m.epf = :pin_epf and c.cordinator_userid=:pin_log_user and c.job_type='D' and c.job_status='ACCEPTED' and (m.FILECLO is null or m.FILECLO='PN' or  m.FILECLO = 'PD') ";
+                        }
+                           
 
 
                             cmd.CommandText = exe_Select_date;
@@ -160,7 +148,10 @@ namespace SHE.ClaimPayment
                                     PDamt = reader["pdamt"].ToString(),
                                     JobType = reader["job_type"].ToString(),
                                     bilNo = reader["billNo"].ToString(),
-                                    bthNo = reader["bhtno"].ToString()
+                                    bthNo = reader["bhtno"].ToString(),
+                                    aliment = reader["aliment"].ToString(),
+                                    Remark2 = reader["remark2"].ToString(),
+                                    coordiUserId = reader["CORDINATOR_USERID"].ToString()
                                 };
 
                                 Session["ClaimData"] = claimDataset;
@@ -171,14 +162,12 @@ namespace SHE.ClaimPayment
                                 //lblAlertMessage.Text = "Cant proceed payment for this claim.";
 
 
-                                lblAlertMessage.Text = "Claim payment cant proceed. Because claim status not accepted.";
+                                lblAlertMessage.Text = "Claim payment cant proceed. Because claim status not accepted or claim was rejected.";
                                 lblAlertMessage.Attributes.Add("data-alert-title", "Alert");
                                 lblAlertMessage.Attributes.Add("data-alert-message", lblAlertMessage.Text);
                                 lblAlertMessage.Visible = true;
                             }
                         }
-
-                    }
 
                 }
                 catch (Exception ex)
@@ -209,9 +198,16 @@ namespace SHE.ClaimPayment
                     admitedDate.InnerText = claimDataset.AddDate;
                     dischargeDate.InnerText = claimDataset.DisDate;
                     patientName.InnerText = claimDataset.PName;
-                    billAmount.InnerText = claimDataset.TotBil;
-                    paidAmount.InnerText = claimDataset.PDamt;
+                    billAmount.InnerText = decimal.Parse(claimDataset.TotBil).ToString("F2");
+                    paidAmount.InnerText = decimal.Parse(claimDataset.PDamt).ToString("F2");
                     claimStatus.InnerText = claimDataset.JobStatus;
+                    totBill.Value = decimal.Parse(claimDataset.TotBil).ToString("F2");
+                    paidAmo.Value = decimal.Parse(claimDataset.PDamt).ToString("F2");
+                    bhtNo3.Value = claimDataset.bthNo;
+                    alment.Value = claimDataset.aliment;
+                    R1.Value = claimDataset.Remark1;
+                    R2.Value = claimDataset.Remark2;
+
                     if (claimDataset.JobType == "A")
                     {
                         jobType.InnerHtml = "ADMITED";
@@ -253,6 +249,7 @@ namespace SHE.ClaimPayment
                 execuName.Value = Session["LoggedUser"].ToString();
                 totBill.Value = billAmount.InnerText;
                 paidAmo.Value = paidAmount.InnerText;
+                
             }
 
             //clear alert messages if exist
@@ -260,17 +257,21 @@ namespace SHE.ClaimPayment
 
         }
 
+
+       
+
+
         protected void back_click(object sender, EventArgs e)
         {
             string fronNotificationPanel = Request.QueryString["fromNotifi"];
 
-            if (fronNotificationPanel == "true")
+            if (fronNotificationPanel == "true" || fromNotifiEdit == "true")
             {
                 Response.Redirect("~/Notifications.aspx");
             }
             else
             {
-                Response.Redirect("~/ClaimPayment/ClaimSearch.aspx");
+                Response.Redirect("~/ClaimPayment/ClaimPayList.aspx?POLICYNO=" + dc.Encrypt(policy) + "&EPF=" + dc.Encrypt(epfno));
                 
             }
 
@@ -313,12 +314,15 @@ namespace SHE.ClaimPayment
             string remark2 = R2.Value;
             string jobStatus = "COMPLETED";
             string jobStatus2 = "PD";
-            string bhtNo = "";
+            string bhtNo = bhtNo3.Value;
             int refNo = Int32.Parse(refNoo.InnerHtml);
             string billNo = "";
 
             string jobTypeVal = jobType.InnerHtml;
             string jobSatusVal = claimStatus.InnerHtml;
+
+            double evenLimi = Convert.ToDouble(eventLimit);
+            
 
             //check claim job type and status
             if (jobTypeVal == "DISCHARGE" && (jobSatusVal == "ACCEPTED" || jobSatusVal=="COMPLETED") )
@@ -413,8 +417,11 @@ namespace SHE.ClaimPayment
                                 polNo2.InnerHtml = claimData.Policy;
                                 nameInsu.InnerHtml = claimData.CName;
                                 refNo1.InnerHtml = claimData.ClaimRef;
-                                bhtNo2.InnerHtml = claimData.bthNo;
+                                bhtNo2.InnerHtml = bhtNo3.Value;
                                 billNo2.InnerHtml = claimData.bilNo;
+                                hosName.InnerHtml = claimData.HospitalName;
+                                rema1.InnerHtml = claimData.Remark1;
+                                rema2.InnerHtml = claimData.Remark2;
 
                                 string totalbillamo = totBill.Value;
                                 double totalBillAmount = Convert.ToDouble(totalbillamo);
@@ -584,8 +591,241 @@ namespace SHE.ClaimPayment
 
         }
 
-        //medical statement button click
 
+        //edit payment click
+        protected void claim_payment_edit(object sender, EventArgs e)
+        {
+
+
+            int claimRef = Int32.Parse(refNoo.InnerHtml);
+            string aliment = alment.Value;
+            string execName = execuName.Value;
+            double totalBillAm = Convert.ToDouble(totBill.Value);
+            double paidAmount = Convert.ToDouble(paidAmo.Value);
+            string remark1 = R1.Value;
+            string remark2 = R2.Value;
+            string jobStatus = "COMPLETED";
+            string jobStatus2 = "PD";
+            string bhtNo = bhtNo3.Value;
+            int refNo = Int32.Parse(refNoo.InnerHtml);
+            string billNo = "";
+
+            string jobTypeVal = jobType.InnerHtml;
+            string jobSatusVal = claimStatus.InnerHtml;
+
+            double evenLimi = Convert.ToDouble(eventLimit);
+
+
+            //check claim job type and status
+            if (jobTypeVal == "DISCHARGE" && (jobSatusVal == "ACCEPTED" || jobSatusVal == "COMPLETED"))
+            {
+
+                //use API for update claim payment details
+                using (WebClient webClient = new System.Net.WebClient())
+                {
+                    try
+                    {
+                        WebClient n = new WebClient();
+
+                        var json = n.DownloadString(host_ip + "/SHE_Tab_API/GIService.svc/ClaimPayment?claimNo=" + claimRef + "&aliment=" + aliment + "&exName=" + execName + "&totalBill=" + totalBillAm + "&paidAmount=" + paidAmount + "&remark1=" + remark1 + "&remark2=" + remark2 +
+                        "&claimStatus=" + jobStatus2 + "&userName=" + userName + "&bhtNo=" + bhtNo + "&billNo=" + billNo + "&refNo=" + refNo);
+                        ;
+
+                        JavaScriptSerializer serializer = new JavaScriptSerializer();
+                        var result = serializer.Deserialize<dynamic>(json);
+
+                        string dataT = result["Data"];
+                        int idT = result["ID"];
+                        int execution = 0;
+
+
+
+                        if (idT == 200)
+                        {
+                            string jbType = "";
+                            if (jobType.InnerHtml == "ADMITED")
+                            {
+                                jbType = "A";
+                            }
+                            else if (jobType.InnerHtml == "DISCHARGE")
+                            {
+                                jbType = "D";
+                            }
+                            else
+                            {
+                                jbType = "";
+
+                            }
+
+                            //update job status table
+                            string exe_Update = "update shedata.cor_job_status set JOB_STATUS =:pin_jobSta WHERE CLAIMREF = :pin_cliRef and CORDINATOR_USERID = :cordId and JOB_STATUS = :job_status and JOB_TYPE = :job_type";
+
+                            OracleTransaction transaction = null;
+                            oconn.Open();
+                            try
+                            {
+                                transaction = oconn.BeginTransaction();
+
+                                OracleCommand cmd_backup = oconn.CreateCommand();
+                                cmd_backup.CommandType = CommandType.Text;
+                                cmd_backup.CommandText = exe_Update;
+
+                                cmd_backup.Parameters.Add(":pin_jobSta", OracleType.VarChar).Value = jobStatus;
+                                cmd_backup.Parameters.Add(":pin_cliRef", OracleType.VarChar).Value = claimRef;
+                                cmd_backup.Parameters.Add(":cordId", OracleType.VarChar).Value = userName;
+                                cmd_backup.Parameters.Add(":job_status", OracleType.VarChar).Value = claimStatus.InnerHtml;
+                                cmd_backup.Parameters.Add(":job_type", OracleType.VarChar).Value = jbType;
+
+                                cmd_backup.Transaction = transaction;
+                                execution = cmd_backup.ExecuteNonQuery();
+
+                                transaction.Commit();
+                            }
+
+                            catch (OracleException ex)
+                            {
+                                result = false;
+                                transaction.Rollback();
+                            }
+
+                            finally
+                            {
+                                oconn.Close();
+                                oconn.Dispose();
+                            }
+                            //end of update
+
+                            if (execution > 0)
+                            {
+                                int execution2 = 0;
+                                //insert edit record to reason table 
+                                string exe_insert_reason = "INSERT INTO shedata.reject_reason(CLAIM_REF, JOB_TYPE ,CLAIM_STATUS, REJECT_REASON, UPDATE_USER, UPDATE_DATE,ACTION, PAY_UP_REA) " +
+                                                    "VALUES (:claimref, 'D', 'PD', 'No', :updUser, :editDate, 'Edit_Payment', :payEditRea)";
+                                OracleTransaction transaction2 = null;
+
+                                OracleConnection oconn2 = new OracleConnection(ConfigurationManager.AppSettings["OracleDB"]);
+
+                                if (oconn2.State != ConnectionState.Open)
+                                {
+
+                                    oconn2.Open();
+                                }
+                                try
+                                {
+                                    transaction2 = oconn2.BeginTransaction();
+
+                                    OracleCommand cmd_backup2 = oconn2.CreateCommand();
+                                    cmd_backup2.CommandType = CommandType.Text;
+                                    cmd_backup2.CommandText = exe_insert_reason;
+
+                                    cmd_backup2.Parameters.Add(":claimref", OracleType.VarChar).Value = claimRef;
+                                    cmd_backup2.Parameters.Add(":updUser", OracleType.VarChar).Value = userName;
+                                    cmd_backup2.Parameters.Add(":editDate", OracleType.VarChar).Value = DateTime.Now.ToString("dd-MMM-yy").ToUpper();
+                                    cmd_backup2.Parameters.Add(":payEditRea", OracleType.VarChar).Value = editReason.InnerHtml;
+
+                                    cmd_backup2.Transaction = transaction2;
+                                    execution2 = cmd_backup2.ExecuteNonQuery();
+
+                                    transaction2.Commit();
+                                }
+
+                                catch (OracleException ex)
+                                {
+                                    result = false;
+                                    transaction2.Rollback();
+                                }
+
+                                finally
+                                {
+                                    oconn2.Close();
+                                    oconn2.Dispose();
+                                }
+                                //end of insert
+
+                                if(execution2 >0)
+                                {
+                                    lblAlertMessage.Text = "Payment details was edited";
+                                    lblAlertMessage.Attributes.Add("data-alert-title", "Success");
+                                    lblAlertMessage.Attributes.Add("data-alert-message", lblAlertMessage.Text);
+                                    lblAlertMessage.Visible = true;
+
+                                    Button4.Visible = true;
+                                    panel3.Visible = true;
+                                    panel2.Visible = false;
+
+                                    ClaimData claimData = Session["ClaimData"] as ClaimData;
+                                    polNo2.InnerHtml = claimData.Policy;
+                                    nameInsu.InnerHtml = claimData.CName;
+                                    refNo1.InnerHtml = claimData.ClaimRef;
+                                    bhtNo2.InnerHtml = bhtNo3.Value;
+                                    billNo2.InnerHtml = claimData.bilNo;
+                                    hosName.InnerHtml = claimData.HospitalName;
+                                    rema1.InnerHtml = claimData.Remark1;
+                                    rema2.InnerHtml = claimData.Remark2;
+
+                                    string totalbillamo = totBill.Value;
+                                    double totalBillAmount = Convert.ToDouble(totalbillamo);
+                                    totStAm.InnerHtml = totalBillAmount.ToString("0.00");
+
+                                    string totPayAmount = paidAmo.Value;
+                                    double totPayAmount2 = Convert.ToDouble(totPayAmount);
+                                    totStaePayAm.InnerHtml = totPayAmount2.ToString("0.00");
+
+                                }
+                                else
+                                {
+                                    lblAlertMessage.Text = "Claim payment detail not edited";
+                                    lblAlertMessage.Attributes.Add("data-alert-title", "Alert");
+                                    lblAlertMessage.Attributes.Add("data-alert-message", lblAlertMessage.Text);
+                                    lblAlertMessage.Visible = true;
+                                }
+
+                                
+
+                            }
+                            else
+                            {
+                                lblAlertMessage.Text = "Claim payment detail not edited";
+                                lblAlertMessage.Attributes.Add("data-alert-title", "Alert");
+                                lblAlertMessage.Attributes.Add("data-alert-message", lblAlertMessage.Text);
+                                lblAlertMessage.Visible = true;
+
+
+                            }
+
+
+
+                        }
+                        else
+                        {
+                            lblAlertMessage.Text = "Claim payment detail not edited";
+                            lblAlertMessage.Attributes.Add("data-alert-title", "Alert");
+                            lblAlertMessage.Attributes.Add("data-alert-message", lblAlertMessage.Text);
+                            lblAlertMessage.Visible = true;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        throw ex;
+                        //this.lblErrorMsg.Text = "No data found for this policy no";
+                    }
+
+                }
+            }
+            else
+            {
+                lblAlertMessage.Text = "Claim payment cant proceed. Because claim status not accepted.";
+                lblAlertMessage.Attributes.Add("data-alert-title", "Alert");
+                lblAlertMessage.Attributes.Add("data-alert-message", lblAlertMessage.Text);
+                lblAlertMessage.Visible = true;
+            }
+            //end of update claim payment using API
+
+        }
+
+        //end of edit payment
+
+        //medical statement button click
         protected async void down_recei_pdf(object sender, EventArgs e)
         {
             byte[] pdfBytes = await GenerateCovernote();
@@ -614,6 +854,9 @@ namespace SHE.ClaimPayment
                 string referenceNo = claimData.ClaimRef;
                 string bhtNo = claimData.bthNo;
                 string billNo = claimData.bilNo;
+                string hospitalName = claimData.HospitalName;
+                string remark1 = claimData.Remark1;
+                string remark2 = claimData.Remark2;
 
                 string totalbillamo = totBill.Value;
                 double totalBillAmount = Convert.ToDouble(totalbillamo);
@@ -622,6 +865,70 @@ namespace SHE.ClaimPayment
                 string totPayAmount = paidAmo.Value;
                 double totPayAmount2 = Convert.ToDouble(totPayAmount);
                 string ftotPayAmount2 = totPayAmount2.ToString("0.00");
+
+                string coorId = claimData.coordiUserId;
+                string coorName = "";
+
+
+                // for get coordinatoer name for the job
+
+
+                if (oconn.State != ConnectionState.Open)
+                {
+                    oconn.Open();
+                }
+
+                OracleCommand cmd = oconn.CreateCommand();
+
+                try
+                {
+
+                    using (cmd)
+                    {
+                        string exe_Select_date = "SELECT s.CSRNAME, s.CSRBRNC,s.CSRUSRN,s.csrtpno, s.CSRGXNO FROM shedata.sheglxag s WHERE s.CSRSTAT = 'Y' AND s.CSRGTAB = 'Y' and  s.csrusrn= :pin_userId ";
+
+
+                        cmd.CommandText = exe_Select_date;
+
+                        cmd.Parameters.Add("pin_userId", OracleType.VarChar).Value = coorId;
+
+
+                        OracleDataReader reader = cmd.ExecuteReader();
+
+                        if (reader.Read()) // Assuming only one row is expected
+                        {
+
+                            coorName = reader["CSRNAME"].ToString();
+                        }
+                        else
+                        {
+                            lblAlertMessage.Text = "Claim statement reprint cant proceed. Because claim status not completed.";
+                            lblAlertMessage.Attributes.Add("data-alert-title", "Alert");
+                            lblAlertMessage.Attributes.Add("data-alert-message", lblAlertMessage.Text);
+                            lblAlertMessage.Visible = true;
+                        }
+                    }
+
+
+                }
+                catch (Exception ex)
+                {
+                    string msgs = "ERROR:" + ex.Message;
+                    Console.WriteLine(cmd.CommandText);
+                    foreach (OracleParameter p in cmd.Parameters)
+                    {
+                        Console.WriteLine(p.ParameterName + " = " + p.Value);
+                    }
+
+                    Console.WriteLine(ex.Message);
+                }
+                finally
+                {
+                    if (oconn.State == ConnectionState.Open)
+                    {
+                        oconn.Close();
+                    }
+                }
 
 
                 int RECEIPTNUMBER = 111;
@@ -674,7 +981,7 @@ namespace SHE.ClaimPayment
                     paragraph1.SpacingBefore = 70f;
                     document.Add(paragraph1);
 
-                    Paragraph paragraph2 = new Paragraph("_____________________", fontBold);
+                    Paragraph paragraph2 = new Paragraph(hospitalName, fontBold);
                     paragraph2.IndentationLeft = 10f; // Set left margin
                     paragraph2.SpacingBefore = 10f;
                     document.Add(paragraph2);
@@ -710,7 +1017,11 @@ namespace SHE.ClaimPayment
                     PdfPCell cell12 = new PdfPCell(new Phrase(formattedTotalBillAmount, normalFont));
                     PdfPCell cell13 = new PdfPCell(new Phrase("Amount Payable by Insurance(Rs.) :", normalFont));
                     PdfPCell cell14 = new PdfPCell(new Phrase(ftotPayAmount2, normalFont));
-                   
+                    PdfPCell cell15 = new PdfPCell(new Phrase("Remark 1 :", normalFont));
+                    PdfPCell cell16 = new PdfPCell(new Phrase(remark1, normalFont));
+                    PdfPCell cell17 = new PdfPCell(new Phrase("Remark 2 :", normalFont));
+                    PdfPCell cell18 = new PdfPCell(new Phrase(remark2, normalFont));
+
 
 
                     cell1.Padding = 3f;
@@ -727,7 +1038,12 @@ namespace SHE.ClaimPayment
                     cell12.Padding = 3f;
                     cell13.Padding = 3f;
                     cell14.Padding = 3f;
-                    
+                    cell15.Padding = 3f;
+                    cell16.Padding = 3f;
+                    cell17.Padding = 3f;
+                    cell18.Padding = 3f;
+
+
 
                     //cell1.Border = PdfPCell.NO_BORDER;
                     //cell2.Border = PdfPCell.NO_BORDER;
@@ -743,7 +1059,7 @@ namespace SHE.ClaimPayment
                     //cell12.Border = PdfPCell.NO_BORDER;
                     //cell13.Border = PdfPCell.NO_BORDER;
                     //cell14.Border = PdfPCell.NO_BORDER;
-                    
+
 
                     table4.AddCell(cell1);
                     table4.AddCell(cell2);
@@ -759,8 +1075,12 @@ namespace SHE.ClaimPayment
                     table4.AddCell(cell12);
                     table4.AddCell(cell13);
                     table4.AddCell(cell14);
-                    
-                  
+                    table4.AddCell(cell15);
+                    table4.AddCell(cell16);
+                    table4.AddCell(cell17);
+                    table4.AddCell(cell18);
+
+
                     document.Add(table4);
 
                     //end of statement details
@@ -778,7 +1098,16 @@ namespace SHE.ClaimPayment
                     table5.DefaultCell.Border = PdfPCell.BOX; // Remove borders for all cells
                     table5.SpacingBefore = 20f;
 
-                    PdfPCell cell51 = new PdfPCell(new Phrase("______________________", normalFont));
+                    Font font1 = new Font();
+                    font1.SetStyle(Font.UNDERLINE);
+
+                    Phrase phrase = new Phrase();
+                    phrase.Add(new Chunk("              ", normalFont)); // Adding spaces before the name
+                    phrase.Add(new Chunk(coorName, font1));                // Adding the underlined name
+                    phrase.Add(new Chunk("         ", normalFont)); // Adding spaces after the name
+
+                    PdfPCell cell51 = new PdfPCell(phrase);
+                    //PdfPCell cell51 = new PdfPCell(new Phrase("            "+ coorName + "     ", font1));
                     PdfPCell cell52 = new PdfPCell(new Phrase("______________________", normalFont));
                     PdfPCell cell53 = new PdfPCell(new Phrase("______________________", normalFont));
                     PdfPCell cell54 = new PdfPCell(new Phrase("Authorized Signature ", normalFont));
@@ -883,6 +1212,9 @@ namespace SHE.ClaimPayment
             public string clamNo { get; set; }
             public string bthNo { get; set; }
             public string bilNo { get; set; }
+            public string Remark2 { get; set; }
+            public string coordiUserId { get; set; }
+            public string aliment { get; set; }
         }
 
     }

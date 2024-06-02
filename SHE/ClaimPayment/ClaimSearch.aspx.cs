@@ -30,11 +30,17 @@ namespace SHE.ClaimPayment
                     policyno.Value = policy;
                     epf.Value = epfno;
                     claimRef.Value = claimRefNo;
+
+                    claimRef.Disabled = true;
+                    epf.Disabled = true;
+                    policyno.Disabled = true;
                 }
                 else
                 {
                     //epflbl.Visible = false;
                     //epf.Visible = false;
+                    claimRef.Visible = false;
+                    lblClaimRef.Visible = false;
                 }
                 
 
@@ -62,8 +68,16 @@ namespace SHE.ClaimPayment
             {
                 //error2.Visible = true;
             }
+            else if (claimRefNo == null || claimRefNo == "")
+            {
+                Response.Redirect("~/ClaimPayment/ClaimPayList.aspx?POLICYNO=" + dc.Encrypt(policy) + "&EPF=" + dc.Encrypt(epfno) );
+            }
             else
             {
+                policyno.Disabled = true;
+                epf.Disabled = true;
+                claimRef.Disabled = true;
+                
                 Response.Redirect("~/ClaimPayment/ClaimPaymentDetail.aspx?POLICYNO=" + dc.Encrypt(policy) + "&EPF=" + dc.Encrypt(epfno) +"&CLAIMREF=" + dc.Encrypt(claimRefNo) + "&fromNotifi=" + fromNotifi);
             }
             

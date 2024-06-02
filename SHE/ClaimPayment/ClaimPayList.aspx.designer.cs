@@ -11,8 +11,17 @@ namespace SHE.ClaimPayment
 {
 
 
-    public partial class ClaimSearch
+    public partial class ClaimPayList
     {
+
+        /// <summary>
+        /// hiddenEndDate control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField hiddenEndDate;
 
         /// <summary>
         /// lblAlertMessage control.
@@ -24,84 +33,66 @@ namespace SHE.ClaimPayment
         protected global::System.Web.UI.WebControls.Label lblAlertMessage;
 
         /// <summary>
-        /// policyno control.
+        /// panel1 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputText policyno;
+        protected global::System.Web.UI.WebControls.Panel panel1;
 
         /// <summary>
-        /// epflbl control.
+        /// datediv control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl epflbl;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl datediv;
 
         /// <summary>
-        /// epf control.
+        /// label1 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputText epf;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl label1;
 
         /// <summary>
-        /// lblClaimRef control.
+        /// label2 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblClaimRef;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl label2;
 
         /// <summary>
-        /// claimRef control.
+        /// gridview2update control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputText claimRef;
+        protected global::System.Web.UI.UpdatePanel gridview2update;
 
         /// <summary>
-        /// error control.
+        /// GridView2 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl error;
+        protected global::System.Web.UI.WebControls.GridView GridView2;
 
         /// <summary>
-        /// error2 control.
+        /// backbutton control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label error2;
-
-        /// <summary>
-        /// Back control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button Back;
-
-        /// <summary>
-        /// claimPay_submit control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button claimPay_submit;
+        protected global::System.Web.UI.WebControls.Button backbutton;
     }
 }

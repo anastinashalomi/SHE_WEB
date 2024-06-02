@@ -1,9 +1,6 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" MasterPageFile="~/Site.Master"  CodeBehind="inquiry2.aspx.cs" Inherits="SHE.Inquiry.inquiry2" %>
 <%@ Import Namespace="SHE.Code"%>
 
-
-
-
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     <asp:HiddenField runat="server" ID="hiddenEndDate"/>
     <style>

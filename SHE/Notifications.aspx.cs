@@ -10,11 +10,15 @@ using System.Data.OracleClient;
 using System.Data.SqlClient;
 using System.Web.UI.WebControls;
 using System.Web.UI;
+using System.Net;
+using System.Web.Script.Serialization;
 
 namespace SHE
 {
     public partial class Notifications : System.Web.UI.Page
     {
+        private const string host_ip = "http://172.24.90.100:8084";
+
         private object dc;
         private object fromDateValue;
         private object toDateValue;
@@ -264,13 +268,18 @@ namespace SHE
                         RemarkLabel.Text = reader["remark1"].ToString();
                         JobStatusLabel.Text = reader["job_status"].ToString();
                         Job_Typelabel.Text = reader["JOB_TYPE"].ToString();
+
                         // You can continue setting other labels here
+
+                        FetchClaimAction(claimRef1, joType, userid);
 
                         switch (JobStatusLabel.Text.Trim())
                         {
                             case "ACCEPTED":
                                 btnAccept.Enabled = false;
                                 btnReassign.Enabled = true;
+                                btnreject.Enabled = true;
+                                btnremovereject.Enabled = true;
                                 btnClaimHistory.Enabled = true;
                                 btnBack.Enabled = true;
 
@@ -280,6 +289,8 @@ namespace SHE
                             case "NOT_UPDATED":
                                 btnAccept.Enabled = true;
                                 btnReassign.Enabled = true;
+                                btnreject.Enabled = true;
+                                btnremovereject.Enabled = true;
                                 btnClaimHistory.Enabled = true;
                                 btnClaimPayment.Enabled = false;
                                 btnBack.Enabled = true;
@@ -288,13 +299,19 @@ namespace SHE
                                 btnAccept.Enabled = false;
                                 btnReassign.Enabled = false;
                                 btnClaimHistory.Enabled = true;
+                                btnreject.Enabled = false;
+                                btnremovereject.Enabled = false;
                                 btnClaimPayment.Enabled = false;
                                 btnBack.Enabled = true;
+                                rePrint.Enabled = true;
+                                payEdit.Enabled = true;
                                 break;
                             case "REASSIGNED":
                                 btnAccept.Enabled = false;
                                 btnReassign.Enabled = false;
                                 btnClaimHistory.Enabled = false;
+                                btnreject.Enabled = false;
+                                btnremovereject.Enabled = false;
                                 btnClaimPayment.Enabled = false;
                                 btnBack.Enabled = true;
                                 break;
@@ -302,6 +319,33 @@ namespace SHE
                                 // Handle other cases as needed
                                 break;
                         }
+                    }
+                }
+            }
+        }
+
+        private void FetchClaimAction(string claimRef1, string jobType, string userId)
+        {
+            string sqlClaimAction = "SELECT ACTION FROM shedata.reject_reason WHERE CLAIM_REF = :claimRef AND JOB_TYPE = :jobType AND UPDATE_USER = :updateUser AND (CLAIM_STATUS = 'RJ' OR CLAIM_STATUS IS NULL)";
+
+            using (OracleConnection oconn = new OracleConnection(ConfigurationManager.AppSettings["OracleDB"]))
+            using (OracleCommand cmd = new OracleCommand(sqlClaimAction, oconn))
+            {
+                cmd.Parameters.Add("claimRef", OracleType.VarChar).Value = claimRef1;
+                cmd.Parameters.Add("jobType", OracleType.VarChar).Value = jobType;
+                cmd.Parameters.Add("updateUser", OracleType.VarChar).Value = userId;
+
+                oconn.Open();
+
+                using (OracleDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        Claim_Action.Text = reader["ACTION"].ToString();
+                    }
+                    else
+                    {
+                        Claim_Action.Text = "No action found";
                     }
                 }
             }
@@ -634,6 +678,8 @@ namespace SHE
                 case "ACCEPTED":
                     btnAccept.Enabled = false;
                     btnReassign.Enabled = true;
+                    btnreject.Enabled = true;
+                    btnremovereject.Enabled = true;
                     btnClaimHistory.Enabled = true;
                     btnBack.Enabled = true;
 
@@ -643,7 +689,9 @@ namespace SHE
                 case "NOT_UPDATED":
                     btnAccept.Enabled = true;
                     btnReassign.Enabled = true;
-                    btnClaimHistory.Enabled = false;
+                    btnreject.Enabled = true;
+                    btnremovereject.Enabled = true;
+                    btnClaimHistory.Enabled = true;
                     btnClaimPayment.Enabled = false;
                     btnBack.Enabled = true;
                     break;
@@ -651,13 +699,20 @@ namespace SHE
                     btnAccept.Enabled = false;
                     btnReassign.Enabled = false;
                     btnClaimHistory.Enabled = true;
-                    btnClaimPayment.Enabled = true;
+                    btnreject.Enabled = false;
+                    btnremovereject.Enabled = false;
+                    btnClaimPayment.Enabled = false;
                     btnBack.Enabled = true;
+                    rePrint.Enabled = true;
+                    payEdit.Enabled = true;
                     break;
+
                 case "REASSIGNED":
                     btnAccept.Enabled = false;
                     btnReassign.Enabled = false;
                     btnClaimHistory.Enabled = false;
+                    btnreject.Enabled = false;
+                    btnremovereject.Enabled = false;
                     btnClaimPayment.Enabled = false;
                     btnBack.Enabled = true;
                     break;
@@ -795,8 +850,364 @@ namespace SHE
         }
 
 
+        protected void btnReject_Click(object sender, EventArgs e)
+        {
+
+            PanelOne.Visible = false;
+            PanelTwo.Visible = false;
+
+            // Show PanelThree
+            PanelThree.Visible = false;
+            Panelfour.Visible = true;
+        }
+        //       protected void reject_submit_Click(object sender, EventArgs e)
+        //        {
+        //        try
+        //        {
+        //        // Get the values from the TextBox and session
+        //        string rejectReason = rejectReasonTextBox.Text;
+        //        string refn1 = ClaimReferenceLabel.Text;
+        //        string jobType = Job_Typelabel.Text;
+        //        string userId = (string)Session["LoggedUser"];
+
+        //        // Check if the reject reason is empty
+        //        if (string.IsNullOrWhiteSpace(rejectReason))
+        //        {
+        //            // Display error message and return
+        //            ClientScript.RegisterStartupScript(this.GetType(), "PopupScript", "displayPopup1('REJECTION NOT INSERTED: Reject Reason is empty', false);", true);
+        //            return;
+        //        }
 
 
+        //        // Check if data already exists for the given claim reference, job type, and user
+        //        string connectionString = ConfigurationManager.AppSettings["OracleDB"];
+        //        using (OracleConnection connection = new OracleConnection(connectionString))
+        //        {
+        //            connection.Open();
+        //            string selectQuery = "SELECT COUNT(*) FROM shedata.reject_reason WHERE CLAIM_REF = :claimRef AND JOB_TYPE = :jobType AND UPDATE_USER = :updateUser AND CLAIM_STATUS = 'RJ' AND ACTION = 'Reject claim'";
+        //            using (OracleCommand selectCommand = new OracleCommand(selectQuery, connection))
+        //            {
+        //                selectCommand.Parameters.Add(new OracleParameter("claimRef", OracleType.VarChar)).Value = refn1;
+        //                selectCommand.Parameters.Add(new OracleParameter("jobType", OracleType.VarChar)).Value = jobType;
+        //                selectCommand.Parameters.Add(new OracleParameter("updateUser", OracleType.VarChar)).Value = userId;
+        //                int count = Convert.ToInt32(selectCommand.ExecuteScalar());
+
+        //                if (count > 0)
+        //                {
+        //                    // Data exists, perform an update
+        //                    string updateQuery = "UPDATE shedata.reject_reason SET REJECT_REASON = :rejectReason, UPDATE_DATE = SYSDATE WHERE CLAIM_REF = :claimRef AND JOB_TYPE = :jobType AND UPDATE_USER = :updateUser AND CLAIM_STATUS = 'RJ' AND ACTION = 'Reject claim'";
+        //                    using (OracleCommand updateCommand = new OracleCommand(updateQuery, connection))
+        //                    {
+        //                        updateCommand.Parameters.Add(new OracleParameter("rejectReason", OracleType.VarChar)).Value = rejectReason;
+        //                        updateCommand.Parameters.Add(new OracleParameter("claimRef", OracleType.VarChar)).Value = refn1;
+        //                        updateCommand.Parameters.Add(new OracleParameter("jobType", OracleType.VarChar)).Value = jobType;
+        //                        updateCommand.Parameters.Add(new OracleParameter("updateUser", OracleType.VarChar)).Value = userId;
+        //                        int rowsAffected = updateCommand.ExecuteNonQuery();
+
+        //                        if (rowsAffected > 0)
+        //                        {
+        //                            // Data updated successfully, display success message
+        //                            ClientScript.RegisterStartupScript(this.GetType(), "PopupScript", "displayPopup1('REJECTION UPDATED', true);", true);
+        //                            rejectReasonTextBox.Text = "";
+        //                        }
+        //                        else
+        //                        {
+        //                            // No data updated, display failure message
+        //                            ClientScript.RegisterStartupScript(this.GetType(), "PopupScript", "displayPopup1('REJECTION NOT UPDATED', false);", true);
+        //                        }
+        //                    }
+        //                }
+        //                else
+        //                {
+        //                    // Data doesn't exist, perform an insert
+        //                    string insertQuery = "INSERT INTO shedata.reject_reason (CLAIM_REF, JOB_TYPE, CLAIM_STATUS, REJECT_REASON, UPDATE_USER, UPDATE_DATE, ACTION, PAY_UP_REA, ACTIVE_STATUS) " +
+        //                                         "VALUES (:claimRef, :jobType, 'RJ', :rejectReason, :updateUser, SYSDATE, 'Reject claim', 'no', 0)";
+        //                    using (OracleCommand insertCommand = new OracleCommand(insertQuery, connection))
+        //                    {
+        //                        insertCommand.Parameters.Add(new OracleParameter("claimRef", OracleType.VarChar)).Value = refn1;
+        //                        insertCommand.Parameters.Add(new OracleParameter("jobType", OracleType.VarChar)).Value = jobType;
+        //                        insertCommand.Parameters.Add(new OracleParameter("rejectReason", OracleType.VarChar)).Value = rejectReason;
+        //                        insertCommand.Parameters.Add(new OracleParameter("updateUser", OracleType.VarChar)).Value = userId;
+        //                        int rowsAffected = insertCommand.ExecuteNonQuery();
+
+        //                        if (rowsAffected > 0)
+        //                        {
+        //                            // Data inserted successfully, display success message
+        //                            ClientScript.RegisterStartupScript(this.GetType(), "PopupScript", "displayPopup1('REJECTION INSERTED', true);", true);
+        //                            rejectReasonTextBox.Text = "";
+        //                        }
+        //                        else
+        //                        {
+        //                            // No data inserted, display failure message
+        //                            ClientScript.RegisterStartupScript(this.GetType(), "PopupScript", "displayPopup1('REJECTION NOT INSERTED', false);", true);
+        //                        }
+        //                    }
+        //                }
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        // Handle exception (e.g., log the error, show a message to the user, etc.)
+        //        // For demonstration, we can just rethrow it
+        //        throw new Exception("An error occurred while processing the reject reason: " + ex.Message);
+        //    }
+        //}
+
+        protected void reject_submit_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                // Get the values from the TextBox and session
+                string rejectReason = rejectReasonTextBox.Text;
+                string refn1 = ClaimReferenceLabel.Text;
+                string jobType = Job_Typelabel.Text;
+                string userId = (string)Session["LoggedUser"];
+
+
+                // Check if the reject reason is empty
+                if (string.IsNullOrWhiteSpace(rejectReason))
+                {
+                    // Display error message and return
+                    ClientScript.RegisterStartupScript(this.GetType(), "PopupScript", "displayPopup1('REJECTION NOT INSERTED: Reject Reason is empty', false);", true);
+                    return;
+                }
+
+                bool apiCallSuccessful = false;
+
+                // Call the API to change claim status
+                using (System.Net.WebClient webClient = new WebClient())
+                {
+                    try
+                    {
+                        string url = $"{host_ip}/SHE_Tab_API/Service.svc/ClaimStatusChange?refNo=" + refn1 + "&claimStatus=REJECT";
+                        string json = webClient.DownloadString(url);
+
+                        JavaScriptSerializer serializer = new JavaScriptSerializer();
+                        var result = serializer.Deserialize<dynamic>(json);
+
+                        if (result["ID"] == 200)
+                        {
+                            apiCallSuccessful = true;
+                        }
+                        else
+                        {
+                            ClientScript.RegisterStartupScript(this.GetType(), "PopupScript", "displayPopup1('API call failed.', false);", true);
+                            return;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        ClientScript.RegisterStartupScript(this.GetType(), "PopupScript", $"displayPopup1('API call error: {ex.Message}', false);", true);
+                        return;
+                    }
+                }
+
+                if (apiCallSuccessful)
+                {
+                    // Check if data already exists for the given claim reference, job type, and user
+                    string connectionString = ConfigurationManager.AppSettings["OracleDB"];
+                    using (OracleConnection connection = new OracleConnection(connectionString))
+                    {
+                        connection.Open();
+                        string selectQuery = "SELECT COUNT(*) FROM shedata.reject_reason WHERE CLAIM_REF = :claimRef AND JOB_TYPE = :jobType AND UPDATE_USER = :updateUser AND CLAIM_STATUS = 'RJ' AND ACTION = 'Reject claim'";
+                        using (OracleCommand selectCommand = new OracleCommand(selectQuery, connection))
+                        {
+                            selectCommand.Parameters.Add(new OracleParameter("claimRef", OracleType.VarChar)).Value = refn1;
+                            selectCommand.Parameters.Add(new OracleParameter("jobType", OracleType.VarChar)).Value = jobType;
+                            selectCommand.Parameters.Add(new OracleParameter("updateUser", OracleType.VarChar)).Value = userId;
+                            int count = Convert.ToInt32(selectCommand.ExecuteScalar());
+
+                            if (count > 0)
+                            {
+                                // Data exists, perform an update
+                                string updateQuery = "UPDATE shedata.reject_reason SET REJECT_REASON = :rejectReason, UPDATE_DATE = SYSDATE WHERE CLAIM_REF = :claimRef AND JOB_TYPE = :jobType AND UPDATE_USER = :updateUser AND (CLAIM_STATUS = 'RJ' OR CLAIM_STATUS IS NULL) AND (ACTION = 'Reject claim' OR ACTION = 'Remove Claim Rejection'";
+                                using (OracleCommand updateCommand = new OracleCommand(updateQuery, connection))
+                                {
+                                    updateCommand.Parameters.Add(new OracleParameter("rejectReason", OracleType.VarChar)).Value = rejectReason;
+                                    updateCommand.Parameters.Add(new OracleParameter("claimRef", OracleType.VarChar)).Value = refn1;
+                                    updateCommand.Parameters.Add(new OracleParameter("jobType", OracleType.VarChar)).Value = jobType;
+                                    updateCommand.Parameters.Add(new OracleParameter("updateUser", OracleType.VarChar)).Value = userId;
+                                    int rowsAffected = updateCommand.ExecuteNonQuery();
+
+                                    if (rowsAffected > 0)
+                                    {
+                                        // Data updated successfully, display success message
+                                        ClientScript.RegisterStartupScript(this.GetType(), "PopupScript", "displayPopup1('REJECTION UPDATED', true);", true);
+                                        rejectReasonTextBox.Text = "";
+                                    }
+                                    else
+                                    {
+                                        // No data updated, display failure message
+                                        ClientScript.RegisterStartupScript(this.GetType(), "PopupScript", "displayPopup1('REJECTION NOT UPDATED', false);", true);
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                // Data doesn't exist, perform an insert
+                                string insertQuery = "INSERT INTO shedata.reject_reason (CLAIM_REF, JOB_TYPE, CLAIM_STATUS, REJECT_REASON, UPDATE_USER, UPDATE_DATE, ACTION, PAY_UP_REA, ACTIVE_STATUS) " +
+                                                     "VALUES (:claimRef, :jobType, 'RJ', :rejectReason, :updateUser, SYSDATE, 'Reject claim', 'no', 0)";
+                                using (OracleCommand insertCommand = new OracleCommand(insertQuery, connection))
+                                {
+                                    insertCommand.Parameters.Add(new OracleParameter("claimRef", OracleType.VarChar)).Value = refn1;
+                                    insertCommand.Parameters.Add(new OracleParameter("jobType", OracleType.VarChar)).Value = jobType;
+                                    insertCommand.Parameters.Add(new OracleParameter("rejectReason", OracleType.VarChar)).Value = rejectReason;
+                                    insertCommand.Parameters.Add(new OracleParameter("updateUser", OracleType.VarChar)).Value = userId;
+                                    int rowsAffected = insertCommand.ExecuteNonQuery();
+
+                                    if (rowsAffected > 0)
+                                    {
+                                        // Data inserted successfully, display success message
+                                        ClientScript.RegisterStartupScript(this.GetType(), "PopupScript", "displayPopup1('REJECTION INSERTED', true);", true);
+                                        rejectReasonTextBox.Text = "";
+                                    }
+                                    else
+                                    {
+                                        // No data inserted, display failure message
+                                        ClientScript.RegisterStartupScript(this.GetType(), "PopupScript", "displayPopup1('REJECTION NOT INSERTED', false);", true);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle exception (e.g., log the error, show a message to the user, etc.)
+                // For demonstration, we can just rethrow it
+                throw new Exception("An error occurred while processing the reject reason: " + ex.Message);
+            }
+        }
+
+
+
+        protected void rejectBack_Click(object sender, EventArgs e)
+        {
+            PanelTwo.Visible = true;
+            Panelfour.Visible = false;
+            PanelFive.Visible = false;
+
+            Response.Redirect("~/Notifications.aspx");
+        }
+
+
+        protected void Remove_Rejection_click(object sender, EventArgs e)
+        {
+
+            PanelOne.Visible = false;
+            PanelTwo.Visible = false;
+
+            // Show PanelThree
+            PanelThree.Visible = false;
+            Panelfour.Visible = false;
+            PanelFive.Visible = true;
+
+        }
+        protected void reject_removesubmit_Click(object sender, EventArgs e)
+        {
+            string refn1 = ClaimReferenceLabel.Text;
+            string jobType = Job_Typelabel.Text;
+            string removerejectReason = rejectionRemove.Text;
+
+
+            // Check if removal reason is provided
+            if (string.IsNullOrWhiteSpace(removerejectReason))
+            {
+                // Display error message for empty reason
+                ClientScript.RegisterStartupScript(this.GetType(), "PopupScript", "displayPopup1('Please provide a removal reason.', false);", true);
+                return;
+            }
+
+            bool apiCallSuccessful3 = false;
+
+            // Call the API to change claim status
+            using (WebClient webClient = new WebClient())
+            {
+                try
+                {
+                    string url = $"{host_ip}/SHE_Tab_API/Service.svc/ClaimStatusChange?refNo={refn1}&claimStatus=PENDING";
+                    string json = webClient.DownloadString(url);
+
+                    JavaScriptSerializer serializer = new JavaScriptSerializer();
+                    var result = serializer.Deserialize<dynamic>(json);
+
+                    if (result["ID"] == 200)
+                    {
+                        apiCallSuccessful3 = true;
+                    }
+                    else
+                    {
+                        ClientScript.RegisterStartupScript(this.GetType(), "PopupScript", "displayPopup1('API call failed.', false);", true);
+                        return;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ClientScript.RegisterStartupScript(this.GetType(), "PopupScript", $"displayPopup1('API call error: {ex.Message}', false);", true);
+                    return;
+                }
+            }
+
+            if (apiCallSuccessful3)
+            {
+                // The record exists, proceed with the update
+                string updateSql = "UPDATE shedata.reject_reason SET ACTIVE_STATUS = 1, REMOVE_REJECTION = :removerejectReason, REJECTION_REMOVE_DATE = SYSDATE, CLAIM_STATUS = NULL, ACTION = 'Remove Claim Rejection' WHERE ACTIVE_STATUS = 0 AND CLAIM_REF = :refn1 AND job_type = :jobType";
+
+                using (OracleConnection oconn = new OracleConnection(ConfigurationManager.AppSettings["OracleDB"]))
+                using (OracleCommand cmd = new OracleCommand(updateSql, oconn))
+                {
+                    cmd.Parameters.Add(new OracleParameter(":removerejectReason", OracleType.VarChar)).Value = removerejectReason;
+                    cmd.Parameters.Add(new OracleParameter(":refn1", OracleType.VarChar)).Value = refn1;
+                    cmd.Parameters.Add(new OracleParameter(":jobType", OracleType.VarChar)).Value = jobType;
+
+                    try
+                    {
+                        oconn.Open();
+                        int rowsAffected = cmd.ExecuteNonQuery();
+                        if (rowsAffected > 0)
+                        {
+                            // Update successful, display success message
+                            ClientScript.RegisterStartupScript(this.GetType(), "PopupScript", "displayPopup1('REJECTION REMOVED', true);", true);
+                            rejectionRemove.Text = "";
+                            remove_reject.Enabled = true;
+                        }
+                        else
+                        {
+                            // No rows were affected, display error message
+                            ClientScript.RegisterStartupScript(this.GetType(), "PopupScript", "displayPopup1('No rejection found to remove.', false);", true);
+                            rejectionRemove.Text = "";
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        // Handle the exception
+                        ClientScript.RegisterStartupScript(this.GetType(), "PopupScript", $"displayPopup1('Database error: {ex.Message}', false);", true);
+                    }
+                }
+            }
+        }
+
+        protected void Reprint_Click(object sender, EventArgs e)
+        {
+
+            EncryptDecrypt dc = new EncryptDecrypt();
+            var policy = dc.Encrypt(PolicyLabel.Text);
+            var epfno = dc.Encrypt(EPFLabel.Text);
+            var clamRef = dc.Encrypt(ClaimReferenceLabel.Text);
+            Response.Redirect("~/ClaimPayment/ClaimStatementReprint.aspx?policy=" + policy + "&epf=" + epfno + "&claimRef=" + clamRef + "&fromNotifi=true");
+
+        }
+        protected void Edit_Pay_Click(object sender, EventArgs e)
+        {
+
+            EncryptDecrypt dc = new EncryptDecrypt();
+            var policy = dc.Encrypt(PolicyLabel.Text);
+            var epfno = dc.Encrypt(EPFLabel.Text);
+            var clamRef = dc.Encrypt(ClaimReferenceLabel.Text);
+            Response.Redirect("~/ClaimPayment/ClaimPaymentDetail.aspx?POLICYNO=" + policy + "&EPF=" + epfno + "&CLAIMREF=" + clamRef + "&fromNotifiEdit=true");
+        }
 
     }
 }

@@ -213,6 +213,15 @@ namespace SHE.Claim_History
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblComNam;
 
         /// <summary>
+        /// activeState control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl activeState;
+
+        /// <summary>
         /// lblReDate control.
         /// </summary>
         /// <remarks>
@@ -240,15 +249,6 @@ namespace SHE.Claim_History
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblDebNoteNo;
 
         /// <summary>
-        /// lblCriIlLim control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblCriIlLim;
-
-        /// <summary>
         /// lblCriEmp2 control.
         /// </summary>
         /// <remarks>
@@ -256,6 +256,15 @@ namespace SHE.Claim_History
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblCriEmp2;
+
+        /// <summary>
+        /// lblCriIlLim control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblCriIlLim;
 
         /// <summary>
         /// lblPeri control.
